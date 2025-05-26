@@ -3,7 +3,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebas
 import { getAuth } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyClyvd-D1Xm414aUsCv7tWvpsxd84r0zos",
   authDomain: "ubus-a445a.firebaseapp.com",
   projectId: "ubus-a445a",
   storageBucket: "ubus-a445a.appspot.com",
