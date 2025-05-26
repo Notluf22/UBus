@@ -1,11 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <title>UBus - Phone Login</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "ubus-a445a.firebaseapp.com",
+      projectId: "ubus-a445a",
+      storageBucket: "ubus-a445a.appspot.com",
+      messagingSenderId: "1088324118594",
+      appId: "1:1088324118594:web:00dc5b9c4a35c7c246a5db",
+      measurementId: "G-NX9Y9J793J"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let confirmationResult;
+
+    window.onload = () => {
+      window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+        size: 'invisible',
+        callback: (response) => {
+          console.log("reCAPTCHA verified");
+        }
+      }, auth);
+    };
+
+    window.sendOTP = () => {
+      const phoneNumber = document.getElementById("phone").value;
+      const appVerifier = window.recaptchaVerifier;
+
+      signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+        .then((result) => {
+          confirmationResult = result;
+          alert("OTP sent!");
+        }).catch((error) => {
+          console.error("Error during signInWithPhoneNumber", error);
+          alert(error.message);
+        });
+    };
+
+    window.verifyOTP = () => {
+      const code = document.getElementById("otp").value;
+      confirmationResult.confirm(code).then((result) => {
+        const user = result.user;
+        alert("Login successful!");
+        console.log("User signed in:", user);
+      }).catch((error) => {
+        console.error("Error verifying OTP:", error);
+        alert("Incorrect OTP");
+      });
+    };
+  </script>
 </head>
 <body>
-    
+  <h2>Login with Phone Number</h2>
+  <input type="text" id="phone" placeholder="+91XXXXXXXXXX" />
+  <div id="recaptcha-container"></div>
+  <button onclick="sendOTP()">Send OTP</button>
+
+  <br><br>
+
+  <input type="text" id="otp" placeholder="Enter OTP" />
+  <button onclick="verifyOTP()">Verify OTP</button>
 </body>
 </html>
