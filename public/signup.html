@@ -1,48 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>UBus Sign Up</title>
-  <style>
-    body { background-color: black; color: bisque; text-align: center; font-family: sans-serif; padding-top: 50px; }
-    input, button { padding: 10px; margin: 8px; border-radius: 5px; border: none; }
-    button { background-color: orange; color: white; cursor: pointer; }
-    table { margin: auto; }
-  </style>
-</head>
-<body>
-  <h2>UBus Sign Up</h2>
-
-  <!-- Step 1: Phone number -->
-  <form id="phoneForm">
-    <table>
-      <tr><td><input type="text" id="phoneNumber" placeholder="+91XXXXXXXXXX" required></td></tr>
-      <tr><td><div id="recaptcha-container"></div></td></tr>
-      <tr><td><button type="submit">Send OTP</button></td></tr>
-    </table>
-  </form>
-
-  <!-- Step 2: Enter OTP -->
-  <form id="otpForm" style="display:none;">
-    <table>
-      <tr><td><input type="text" id="otpCode" placeholder="Enter OTP" required></td></tr>
-      <tr><td><button type="submit">Verify OTP</button></td></tr>
-    </table>
-  </form>
-
-  <!-- Step 3: Set password -->
-  <form id="passwordForm" style="display:none;">
-    <table>
-      <tr><td><input type="password" id="passwordCreate" placeholder="Create Password" required></td></tr>
-      <tr><td><button type="submit">Create Account</button></td></tr>
-    </table>
-  </form>
-
-  <p>Already have an account? <a href="login.html">Log in</a></p>
-
+  <meta charset="UTF-8">
+  <title>UBus SignUp</title>
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyClyvd-D1Xm414aUsCv7tWvpsxd84r0zos",
@@ -59,11 +23,7 @@
     const db = getFirestore(app);
 
     let confirmationResult;
-
-    window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
-      'size': 'invisible',
-      'callback': () => console.log("reCAPTCHA solved")
-    }, auth);
+    let verifiedPhone = "";
 
     async function hashPassword(password) {
       const msgUint8 = new TextEncoder().encode(password);
@@ -71,48 +31,70 @@
       return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    document.getElementById("phoneForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const phone = document.getElementById("phoneNumber").value.trim();
-      signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
-        .then(result => {
-          confirmationResult = result;
-          alert("OTP sent.");
-          document.getElementById("phoneForm").style.display = "none";
-          document.getElementById("otpForm").style.display = "block";
-        })
-        .catch(error => alert("Error: " + error.message));
-    });
+    window.onload = () => {
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        size: 'invisible',
+        callback: () => {}
+      });
 
-    document.getElementById("otpForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const otp = document.getElementById("otpCode").value.trim();
-      confirmationResult.confirm(otp)
-        .then(() => {
-          alert("OTP verified. Create your password.");
-          document.getElementById("otpForm").style.display = "none";
-          document.getElementById("passwordForm").style.display = "block";
-        })
-        .catch(error => alert("OTP verification failed: " + error.message));
-    });
+      document.getElementById("sendOtpBtn").addEventListener("click", async () => {
+        const phone = document.getElementById("signupPhone").value.trim();
+        try {
+          confirmationResult = await signInWithPhoneNumber(auth, phone, window.recaptchaVerifier);
+          alert("OTP sent!");
+        } catch (error) {
+          alert("Error sending OTP: " + error.message);
+        }
+      });
 
-    document.getElementById("passwordForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const password = document.getElementById("passwordCreate").value;
-      const phone = document.getElementById("phoneNumber").value.trim();
-      const hashedPass = await hashPassword(password);
+      document.getElementById("verifyOtpBtn").addEventListener("click", async () => {
+        const code = document.getElementById("otp").value;
+        try {
+          const result = await confirmationResult.confirm(code);
+          verifiedPhone = result.user.phoneNumber;
+          alert("Phone verified! Now create a password.");
+        } catch (error) {
+          alert("OTP verification failed: " + error.message);
+        }
+      });
 
-    await setDoc(doc(db, "users", phoneNumber), {
-  phone: phoneNumber,
-  passwordHash: passwordHash
-});
-alert("Account created successfully! Please log in.");
-window.location.href = "index.html"; // Redirect to login
+      document.getElementById("createPasswordBtn").addEventListener("click", async () => {
+        const password = document.getElementById("password").value;
+        if (!verifiedPhone) {
+          alert("Verify your phone number first.");
+          return;
+        }
 
-
-      alert("Account created. You can now log in.");
-      window.location.href = "login.html";
-    });
+        const passwordHash = await hashPassword(password);
+        try {
+          await setDoc(doc(db, "users", verifiedPhone), {
+            phone: verifiedPhone,
+            passwordHash: passwordHash
+          });
+          alert("Account created successfully! Please log in.");
+          window.location.href = "index.html";
+        } catch (error) {
+          alert("Error saving password: " + error.message);
+        }
+      });
+    };
   </script>
+</head>
+<body bgcolor="black" style="color:bisque">
+  <center>
+    <h2>UBus SignUp</h2>
+    <div id="recaptcha-container"></div>
+    <form>
+      <table>
+        <tr><td><input type="text" id="signupPhone" placeholder="Phone (+91...)"><br><br></td></tr>
+        <tr><td><button type="button" id="sendOtpBtn">Send OTP</button><br><br></td></tr>
+        <tr><td><input type="text" id="otp" placeholder="Enter OTP"><br><br></td></tr>
+        <tr><td><button type="button" id="verifyOtpBtn">Verify OTP</button><br><br></td></tr>
+        <tr><td><input type="password" id="password" placeholder="Create Password"><br><br></td></tr>
+        <tr><td><button type="button" id="createPasswordBtn">Create Password</button></td></tr>
+      </table>
+    </form>
+    <p>Already have an account? <a href="index.html">Log in</a></p>
+  </center>
 </body>
 </html>

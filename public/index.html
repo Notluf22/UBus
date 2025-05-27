@@ -3,50 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>UBus Login</title>
-  <style>
-    body {
-      background-color: black;
-      color: bisque;
-      text-align: center;
-      font-family: sans-serif;
-      padding-top: 50px;
-    }
-    input, button {
-      padding: 10px;
-      margin: 8px;
-      border-radius: 5px;
-      border: none;
-    }
-    button {
-      background-color: orange;
-      color: white;
-      cursor: pointer;
-    }
-    table {
-      margin: auto;
-    }
-  </style>
-</head>
-<body>
-  <h2>UBus Login</h2>
-  <form id="loginForm">
-    <table>
-      <tr>
-        <td><input type="text" id="loginPhone" placeholder="+91XXXXXXXXXX" required></td>
-      </tr>
-      <tr>
-        <td><input type="password" id="loginPassword" placeholder="Password" required></td>
-      </tr>
-      <tr>
-        <td><button type="submit">Log In</button></td>
-      </tr>
-    </table>
-  </form>
-  <p>Don't have an account? <a href="signup.html">Sign up</a></p>
-
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyClyvd-D1Xm414aUsCv7tWvpsxd84r0zos",
@@ -67,33 +26,49 @@
       return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const phone = document.getElementById("loginPhone").value.trim();
-      const password = document.getElementById("loginPassword").value;
+    window.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("loginForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const phone = document.getElementById("loginPhone").value.trim();
+        const password = document.getElementById("loginPassword").value;
 
-      try {
-        const docRef = doc(db, "users", phone);
-        const docSnap = await getDoc(docRef);
+        try {
+          const userDoc = doc(db, "users", phone);
+          const docSnap = await getDoc(userDoc);
 
-        if (!docSnap.exists()) {
-          alert("User not found.");
-          return;
+          if (!docSnap.exists()) {
+            alert("User not found.");
+            return;
+          }
+
+          const userData = docSnap.data();
+          const hashedInput = await hashPassword(password);
+
+          if (hashedInput === userData.passwordHash) {
+  alert("Login successful!");
+  window.location.href = `dashboard.html?phone=${encodeURIComponent(phone)}`;
+}
+ else {
+            alert("Incorrect password.");
+          }
+        } catch (err) {
+          alert("Error during login: " + err.message);
         }
-
-        const userData = docSnap.data();
-        const hashedInput = await hashPassword(password);
-
-        if (hashedInput === userData.passwordHash) {
-          alert("Login successful!");
-          window.location.href = "dashboard.html";
-        } else {
-          alert("Incorrect password.");
-        }
-      } catch (error) {
-        alert("Login failed: " + error.message);
-      }
+      });
     });
   </script>
+</head>
+<body>
+  <center>
+    <h2>UBus Login</h2>
+    <form id="loginForm">
+      <table>
+        <tr><td><input type="text" id="loginPhone" placeholder="Phone (+91...)"><br><br></td></tr>
+        <tr><td><input type="password" id="loginPassword" placeholder="Password"><br><br></td></tr>
+      </table>
+      <button type="submit">Log In</button><br><br>
+    </form>
+    <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+  </center>
 </body>
 </html>
