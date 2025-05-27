@@ -1,21 +1,20 @@
 // auth.js
-import { auth } from './firebaseConfig.js';
 import { RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+import { auth } from './firebaseConfig.js';
 
 let confirmationResult;
 
-window.setupRecaptcha = function () {
+function setupRecaptcha() {
   window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
     size: 'invisible',
     callback: (response) => {
       console.log("reCAPTCHA verified");
     }
   }, auth);
-};
+}
 
-window.sendOTP = function () {
+function sendOTP() {
   const phoneNumber = document.getElementById("phone").value;
-  setupRecaptcha();
   const appVerifier = window.recaptchaVerifier;
 
   signInWithPhoneNumber(auth, phoneNumber, appVerifier)
@@ -25,19 +24,21 @@ window.sendOTP = function () {
     })
     .catch((error) => {
       console.error("Error sending OTP:", error);
+      alert("Error: " + error.message);
     });
-};
+}
 
-window.verifyOTP = function () {
+function verifyOTP() {
   const code = document.getElementById("otp").value;
   confirmationResult.confirm(code)
     .then((result) => {
-      const user = result.user;
       alert("Login successful!");
-      console.log("User signed in:", user);
+      console.log("User:", result.user);
     })
     .catch((error) => {
       console.error("Error verifying OTP:", error);
       alert("Incorrect OTP");
     });
-};
+}
+
+export { setupRecaptcha, sendOTP, verifyOTP };
