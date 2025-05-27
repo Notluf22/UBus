@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>UBus Sign Up</title>
+  <style>
+    body { background-color: black; color: bisque; text-align: center; font-family: sans-serif; padding-top: 50px; }
+    input, button { padding: 10px; margin: 8px; border-radius: 5px; border: none; }
+    button { background-color: orange; color: white; cursor: pointer; }
+    table { margin: auto; }
+  </style>
+</head>
+<body>
+  <h2>UBus Sign Up</h2>
+
+  <!-- Step 1: Phone number -->
+  <form id="phoneForm">
+    <table>
+      <tr><td><input type="text" id="phoneNumber" placeholder="+91XXXXXXXXXX" required></td></tr>
+      <tr><td><div id="recaptcha-container"></div></td></tr>
+      <tr><td><button type="submit">Send OTP</button></td></tr>
+    </table>
+  </form>
+
+  <!-- Step 2: Enter OTP -->
+  <form id="otpForm" style="display:none;">
+    <table>
+      <tr><td><input type="text" id="otpCode" placeholder="Enter OTP" required></td></tr>
+      <tr><td><button type="submit">Verify OTP</button></td></tr>
+    </table>
+  </form>
+
+  <!-- Step 3: Set password -->
+  <form id="passwordForm" style="display:none;">
+    <table>
+      <tr><td><input type="password" id="passwordCreate" placeholder="Create Password" required></td></tr>
+      <tr><td><button type="submit">Create Account</button></td></tr>
+    </table>
+  </form>
+
+  <p>Already have an account? <a href="login.html">Log in</a></p>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyClyvd-D1Xm414aUsCv7tWvpsxd84r0zos",
+      authDomain: "ubus-a445a.firebaseapp.com",
+      projectId: "ubus-a445a",
+      storageBucket: "ubus-a445a.appspot.com",
+      messagingSenderId: "1088324118594",
+      appId: "1:1088324118594:web:00dc5b9c4a35c7c246a5db",
+      measurementId: "G-NX9Y9J793J"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let confirmationResult;
+
+    window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+      'size': 'invisible',
+      'callback': () => console.log("reCAPTCHA solved")
+    }, auth);
+
+    async function hashPassword(password) {
+      const msgUint8 = new TextEncoder().encode(password);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+      return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    document.getElementById("phoneForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const phone = document.getElementById("phoneNumber").value.trim();
+      signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
+        .then(result => {
+          confirmationResult = result;
+          alert("OTP sent.");
+          document.getElementById("phoneForm").style.display = "none";
+          document.getElementById("otpForm").style.display = "block";
+        })
+        .catch(error => alert("Error: " + error.message));
+    });
+
+    document.getElementById("otpForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const otp = document.getElementById("otpCode").value.trim();
+      confirmationResult.confirm(otp)
+        .then(() => {
+          alert("OTP verified. Create your password.");
+          document.getElementById("otpForm").style.display = "none";
+          document.getElementById("passwordForm").style.display = "block";
+        })
+        .catch(error => alert("OTP verification failed: " + error.message));
+    });
+
+    document.getElementById("passwordForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const password = document.getElementById("passwordCreate").value;
+      const phone = document.getElementById("phoneNumber").value.trim();
+      const hashedPass = await hashPassword(password);
+
+      await setDoc(doc(db, "users", phone), {
+        phone,
+        passwordHash: hashedPass,
+        createdAt: new Date().toISOString()
+      });
+
+      alert("Account created. You can now log in.");
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>
