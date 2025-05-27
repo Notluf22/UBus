@@ -1,6 +1,7 @@
-//auth.js
 import { RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 import { auth } from './firebaseConfig.js';
+
+let confirmationResult; // Define globally for verifyOTP()
 
 function setupRecaptcha() {
   if (!auth) {
@@ -31,10 +32,7 @@ function setupRecaptcha() {
     }
   }
 }
-    // Must render it!
-    window.recaptchaVerifier.render().then((widgetId) => {
-      window.recaptchaWidgetId = widgetId;
-    });
+
 function sendOTP() {
   const phoneNumber = document.getElementById("phone").value;
   if (!phoneNumber) {
