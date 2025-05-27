@@ -102,11 +102,13 @@
       const phone = document.getElementById("phoneNumber").value.trim();
       const hashedPass = await hashPassword(password);
 
-      await setDoc(doc(db, "users", phone), {
-        phone,
-        passwordHash: hashedPass,
-        createdAt: new Date().toISOString()
-      });
+    await setDoc(doc(db, "users", phoneNumber), {
+  phone: phoneNumber,
+  passwordHash: passwordHash
+});
+alert("Account created successfully! Please log in.");
+window.location.href = "index.html"; // Redirect to login
+
 
       alert("Account created. You can now log in.");
       window.location.href = "login.html";
