@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>UBus Phone Signup & Login</title>
+  <meta charset="UTF-8">
+  <title>UBus Login</title>
   <style>
     body {
       background-color: black;
       color: bisque;
-      font-family: Arial, sans-serif;
       text-align: center;
-      padding: 30px;
+      font-family: sans-serif;
+      padding-top: 50px;
     }
     input, button {
       padding: 10px;
@@ -17,7 +18,7 @@
       border: none;
     }
     button {
-      background-color: #ff9800;
+      background-color: orange;
       color: white;
       cursor: pointer;
     }
@@ -27,58 +28,26 @@
   </style>
 </head>
 <body>
-
-  <center>
-
-    <h2>UBus Phone Authentication</h2>
-
-    <!-- Step 1: Phone OTP Send -->
-    <form id="phoneForm">
-      <table>
-        <tr><td><input type="text" id="phoneNumber" placeholder="+91XXXXXXXXXX" required></td></tr>
-        <tr><td><div id="recaptcha-container"></div></td></tr>
-        <tr><td><button type="submit">Send OTP</button></td></tr>
-      </table>
-    </form>
-
-    <!-- Step 2: Enter OTP -->
-    <form id="otpForm" style="display:none;">
-      <table>
-        <tr><td><input type="text" id="otpCode" placeholder="Enter OTP" required></td></tr>
-        <tr><td><button type="submit">Verify OTP</button></td></tr>
-      </table>
-    </form>
-
-    <!-- Step 3: Create Password -->
-    <form id="passwordForm" style="display:none;">
-      <table>
-        <tr><td><input type="password" id="passwordCreate" placeholder="Create Password" required></td></tr>
-        <tr><td><button type="submit">Create Password</button></td></tr>
-      </table>
-    </form>
-
-    <hr style="width: 50%; margin: 30px auto; border-color: bisque;">
-
-    <h2>UBus Login with Phone & Password</h2>
-
-    <!-- Login form -->
-    <form id="loginForm">
-      <table>
-        <tr><td><input type="text" id="loginPhone" placeholder="+91XXXXXXXXXX" required></td></tr>
-        <tr><td><input type="password" id="loginPassword" placeholder="Password" required></td></tr>
-        <tr><td><button type="submit">Login</button></td></tr>
-      </table>
-    </form>
-
-  </center>
+  <h2>UBus Login</h2>
+  <form id="loginForm">
+    <table>
+      <tr>
+        <td><input type="text" id="loginPhone" placeholder="+91XXXXXXXXXX" required></td>
+      </tr>
+      <tr>
+        <td><input type="password" id="loginPassword" placeholder="Password" required></td>
+      </tr>
+      <tr>
+        <td><button type="submit">Log In</button></td>
+      </tr>
+    </table>
+  </form>
+  <p>Don't have an account? <a href="signup.html">Sign up</a></p>
 
   <script type="module">
-
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyClyvd-D1Xm414aUsCv7tWvpsxd84r0zos",
       authDomain: "ubus-a445a.firebaseapp.com",
@@ -90,131 +59,41 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Globals
-    let confirmationResult;
-
-    // Setup invisible reCAPTCHA
-    window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
-      'size': 'invisible',
-      'callback': () => { console.log('reCAPTCHA solved'); }
-    }, auth);
-
-    // Utility: Hash password with SHA-256
     async function hashPassword(password) {
       const msgUint8 = new TextEncoder().encode(password);
       const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    // DOM elements
-    const phoneForm = document.getElementById('phoneForm');
-    const otpForm = document.getElementById('otpForm');
-    const passwordForm = document.getElementById('passwordForm');
-    const loginForm = document.getElementById('loginForm');
-
-    // Step 1: Send OTP
-    phoneForm.addEventListener('submit', (e) => {
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const phoneNumber = document.getElementById('phoneNumber').value.trim();
-      if (!phoneNumber) return alert("Enter phone number");
-
-      signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
-        .then(result => {
-          confirmationResult = result;
-          alert('OTP sent!');
-          phoneForm.style.display = 'none';
-          otpForm.style.display = 'block';
-        })
-        .catch(error => {
-          alert("Error sending OTP: " + error.message);
-        });
-    });
-
-    // Step 2: Verify OTP
-    otpForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const code = document.getElementById('otpCode').value.trim();
-      if (!code) return alert("Enter OTP");
-
-      confirmationResult.confirm(code)
-        .then(userCredential => {
-          alert('OTP verified! Please create a password.');
-          otpForm.style.display = 'none';
-          passwordForm.style.display = 'block';
-        })
-        .catch(error => {
-          alert("OTP verification failed: " + error.message);
-        });
-    });
-
-    // Step 3: Create password and store in Firestore
-    passwordForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const password = document.getElementById('passwordCreate').value;
-      if (password.length < 6) return alert("Password must be at least 6 characters");
-
-      const phoneNumber = document.getElementById('phoneNumber').value.trim();
-      const hashedPass = await hashPassword(password);
-
-      // Save phone + hashed password in Firestore
-      try {
-        await setDoc(doc(db, 'users', phoneNumber), {
-          phone: phoneNumber,
-          passwordHash: hashedPass,
-          createdAt: new Date().toISOString()
-        });
-        alert("Password created successfully! You can now login.");
-        passwordForm.style.display = 'none';
-        phoneForm.style.display = 'block';
-
-        // Clear fields
-        document.getElementById('phoneNumber').value = '';
-        document.getElementById('otpCode').value = '';
-        document.getElementById('passwordCreate').value = '';
-
-      } catch (err) {
-        alert("Failed to save password: " + err.message);
-      }
-    });
-
-    // Login form (phone + password check)
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const loginPhone = document.getElementById('loginPhone').value.trim();
-      const loginPassword = document.getElementById('loginPassword').value;
-
-      if (!loginPhone || !loginPassword) {
-        alert("Enter phone and password");
-        return;
-      }
+      const phone = document.getElementById("loginPhone").value.trim();
+      const password = document.getElementById("loginPassword").value;
 
       try {
-        const docRef = doc(db, 'users', loginPhone);
+        const docRef = doc(db, "users", phone);
         const docSnap = await getDoc(docRef);
 
         if (!docSnap.exists()) {
-          alert("User not found! Please signup first.");
+          alert("User not found.");
           return;
         }
 
         const userData = docSnap.data();
-        const hashedInputPass = await hashPassword(loginPassword);
+        const hashedInput = await hashPassword(password);
 
-        if (hashedInputPass === userData.passwordHash) {
-          alert("Login successful! Welcome.");
-          // Proceed with logged-in user flow here
+        if (hashedInput === userData.passwordHash) {
+          alert("Login successful!");
+          window.location.href = "dashboard.html";
         } else {
           alert("Incorrect password.");
         }
-      } catch (err) {
-        alert("Login failed: " + err.message);
+      } catch (error) {
+        alert("Login failed: " + error.message);
       }
     });
-
   </script>
 </body>
 </html>
