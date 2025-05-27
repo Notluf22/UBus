@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UBus - Your Route Your Time</title>
+</head>
+<body>
+  <h1>Welcome to UBus</h1>
+
+  <h2>Phone Authentication</h2>
+  <input type="tel" id="phone" placeholder="Enter phone number (+91XXXXXXXXXX)" />
+  <button id="send-otp-btn">Send OTP</button>
+  <div id="recaptcha-container"></div>
+
+  <input type="text" id="otp" placeholder="Enter OTP" />
+  <button id="verify-otp-btn">Verify OTP</button>
+
+  <hr>
+
+  <h2>Firestore Operations (after login)</h2>
+  <button id="add-booking-btn">Add Dummy Booking</button>
+  <button id="update-location-btn">Update Bus Location</button>
+
+  <script type="module">
+    import { auth, db } from './firebaseConfig.js';
+    import { setupRecaptcha, sendOTP, verifyOTP } from './auth.js';
+
+    // 1. Run reCAPTCHA setup on load
+    document.addEventListener("DOMContentLoaded", () => {
+  setupRecaptcha(); // ✅ Only after DOM and modules are loaded
+});
+
+
+    // 2. Event listeners for buttons
+    document.getElementById('send-otp-btn').addEventListener('click', () => {
+      // Ensure recaptcha is setup before sending OTP
+      if (!window.recaptchaVerifier) setupRecaptcha();
+      sendOTP();
+    });
+
+    document.getElementById('verify-otp-btn').addEventListener('click', verifyOTP);
+    document.getElementById('add-booking-btn').addEventListener('click', addBooking);
+    document.getElementById('update-location-btn').addEventListener('click', updateBusLocation);
+
+    // 3. Firestore Functions
+    async function addBooking() {
+      try {
+        const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js");
+        const docRef = await addDoc(collection(db, "bookings"), {
+          userId: auth.currentUser ? auth.currentUser.uid : "unauthenticated_user",
+          busId: "bus456",
+          source: "Station A",
+          destination: "Station B",
+          time: "10:30 AM"
+        });
+        console.log("Booking ID:", docRef.id);
+        alert("Booking added!");
+      } catch (e) {
+        console.error("Error adding booking:", e);
+        alert("Error adding booking: " + e.message);
+      }
+    }
+
+    async function updateBusLocation() {
+      try {
+        const { doc, setDoc } = await import("https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js");
+        await setDoc(doc(db, "buses", "bus123"), {
+          lat: 8.5241,
+          lng: 76.9366,
+          updatedAt: new Date()
+        });
+        console.log("Bus location updated");
+        alert("Bus location updated!");
+      } catch (e) {
+        console.error("Error updating location:", e);
+        alert("Error updating location: " + e.message);
+      }
+    }
+  </script>
+</body>
+</html>
