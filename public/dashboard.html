@@ -1,36 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8" />
   <title>UBus Dashboard</title>
-  <script type="module">
-    // You can expand this later to manage session or token
-    window.onload = () => {
-      const params = new URLSearchParams(window.location.search);
-      const phone = params.get("phone");
-      
-      if (!phone) {
-        alert("You are not logged in.");
-        window.location.href = "index.html";
-        return;
-      }
-      
-      document.getElementById("welcomeMsg").innerText = `Welcome, ${phone}!`;
-    };
-  </script>
 </head>
 <body>
   <center>
-    <h1 id="welcomeMsg">Welcome!</h1>
-    <p>This is your dashboard page.</p>
-    <button onclick="logout()">Log out</button>
+    <h2>Welcome to UBus Dashboard</h2>
+    <p>You have successfully logged in!</p>
   </center>
-  
-  <script>
-    function logout() {
-      // For now, just redirect to login page
-      window.location.href = "index.html";
-    }
-  </script>
 </body>
 </html>
