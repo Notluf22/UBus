@@ -1,8 +1,7 @@
 // firebaseConfig.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 
+// Your actual Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyClyvd-D1Xm414aUsCv7tWvpsxd84r0zos",
   authDomain: "ubus-a445a.firebaseapp.com",
@@ -13,8 +12,5 @@ const firebaseConfig = {
   measurementId: "G-NX9Y9J793J"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-export { auth, db }; 
+// Initialize and export Firebase app
+export const app = initializeApp(firebaseConfig);
