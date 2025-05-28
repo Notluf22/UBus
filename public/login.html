@@ -1,103 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>UBus Login</title>
   <link rel="icon" href="logo-transparent-png.png">
   <style>
-  body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #000;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
 
-.container {
-  display: flex;
-  background: #000;
-  padding: 20px;
-}
+    .container {
+      display: flex;
+      background: #000;
+      padding: 20px;
+    }
 
-.left-panel img {
-  width: 450px;
-  height: auto;
-  border-radius: 10px;
-}
+    .left-panel img {
+      width: 450px;
+      height: auto;
+      border-radius: 10px;
+    }
 
-.right-panel {
-  margin-left: 100px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+    .right-panel {
+      margin-left: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-.login-box {
-  background: #121212;
-  padding: 30px;
-  border: 1px solid #333;
-  border-radius: 8px;
-  width: 300px;
-  text-align: center;
-}
+    .login-box {
+      background: #121212;
+      padding: 30px;
+      border: 1px solid #333;
+      border-radius: 8px;
+      width: 300px;
+      text-align: center;
+    }
 
-.login-box h1 {
-  font-family: 'Billabong', cursive;
-  font-size: 3rem;
-  margin-bottom: 20px;
-}
+    .login-box h1 {
+      font-family: 'Billabong', cursive;
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
 
-.login-box input {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 10px;
-  background: #262626;
-  border: 1px solid #333;
-  border-radius: 4px;
-  color: white;
-}
+    .login-box input {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      background: #262626;
+      border: 1px solid #333;
+      border-radius: 4px;
+      color: white;
+    }
 
-.login-btn {
-  width: 100%;
-  padding: 10px;
-  background:green;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  font-weight: bold;
-  margin-top: 10px;
-  cursor: pointer;
-}
-
-
+    .submit {
+      width: 100%;
+      padding: 10px;
+      background: green;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      font-weight: bold;
+      margin-top: 10px;
+      cursor: pointer;
+    }
 
 
-.signup-box {
-  background: #121212;
-  border: 1px solid #333;
-  padding: 20px;
-  margin-top: 10px;
-  text-align: center;
-  width: 250px;
-}
 
-.signup-box a {
-  color: #3797f0;
-  text-decoration: none;
-}
 
-.footer {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 0.75rem;
-  color: #666;
-  max-width: 300px;
-}
-</style>
+    .signup-box {
+      background: #121212;
+      border: 1px solid #333;
+      padding: 20px;
+      margin-top: 10px;
+      text-align: center;
+      width: 250px;
+    }
+
+    .signup-box a {
+      color: #3797f0;
+      text-decoration: none;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.75rem;
+      color: #666;
+      max-width: 300px;
+    }
+  </style>
 </head>
+
 <body>
   <div class="container">
     <div class="left-panel">
@@ -106,83 +108,22 @@
     <div class="right-panel">
       <div class="login-box">
         <h1>UBus Login</h1>
-        <input type="text" placeholder="Phone number"required />
-        <input type="password" placeholder="Password" required/>
-        <button class="login-btn">Log in</button>
-        
-      <div class="signup-box">
-        <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+        <input type="email" placeholder="Email" id="email" required />
+        <input type="password" placeholder="Password" id="password" required />
+        <button class="submit" id="submit">Log in</button>
+
+        <div class="signup-box">
+          <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+        </div>
+        <div class="footer">
+          <p>About Blog Jobs Help API Privacy Terms Locations UBus Lite Threads</p>
+          <p>English (INDIA) © 2025 UBus from JOSH,FENU,FULTON,JOYAL</p>
+        </div>
       </div>
-      <div class="footer">
-        <p>About Blog Jobs Help API Privacy Terms Locations UBus Lite Threads</p>
-        <p>English (INDIA) © 2025 UBus from JOSH,FENU,FULTON,JOYAL</p>
-      </div>
-    </div>
     </div>
   </div>
-  <script type="module">
-  import { auth, db } from "./firebaseConfig.js";
-  import {
-    setupRecaptcha,
-    sendOTP,
-    verifyOTP,
-    hashPassword,
-    getUserData
-  } from "./auth.js";
-
-  const phoneInput = document.querySelector("input[placeholder='Phone number']");
-  const passwordInput = document.querySelector("input[placeholder='Password']");
-  const loginBtn = document.querySelector(".login-btn");
-
-  loginBtn.addEventListener("click", async () => {
-    const phone = phoneInput.value.trim();
-    const password = passwordInput.value;
-
-    if (!phone || !password) {
-      alert("Please enter phone and password.");
-      return;
-    }
-
-    try {
-      setupRecaptcha();
-
-      // Send OTP and get confirmationResult
-      const confirmationResult = await sendOTP(phone);
-      const otp = prompt("OTP sent to your phone. Enter OTP:");
-      if (!otp) {
-        alert("OTP is required.");
-        return;
-      }
-
-      // Verify OTP and get Firebase user
-      const user = await verifyOTP(confirmationResult, otp);
-
-      // Fetch user data by UID (consistent key in Firestore)
-      const userData = await getUserData(user.uid);
-      if (!userData) {
-        alert("Account not found.");
-        return;
-      }
-
-      // Hash the entered password
-      const enteredHash = await hashPassword(password);
-
-      // Compare with stored hash
-      if (enteredHash === userData.passwordHash) {
-        alert("Login successful");
-        window.location.href = "dashboard.html";
-      } else {
-        alert("Incorrect password");
-      }
-    } catch (err) {
-      alert("Login failed: " + err.message);
-    }
-  });
-</script>
-
-
-<!-- Required container for invisible reCAPTCHA -->
-<div id="recaptcha-container" style="display:none;"></div>
+  <script type="module" src="login.js" defer></script>
 
 </body>
+
 </html>
