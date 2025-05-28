@@ -120,45 +120,19 @@
     </div>
     </div>
   </div>
-  <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+  <script>
+  document.querySelector('.login-btn').onclick = () => {
+    const phone = document.querySelectorAll('input')[0].value;
+    const password = document.querySelectorAll('input')[1].value;
+    const storedPassword = localStorage.getItem(phone);
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyClyvd-D1Xm414aUsCv7tWvpsxd84r0zos",
-    authDomain: "ubus-a445a.firebaseapp.com",
-    projectId: "ubus-a445a",
-    storageBucket: "ubus-a445a.appspot.com",
-    messagingSenderId: "1088324118594",
-    appId: "1:1088324118594:web:00dc5b9c4a35c7c246a5db",
-    measurementId: "G-NX9Y9J793J"
+    if (storedPassword === password) {
+      alert('Login successful');
+      window.location.href = 'dashboard.html';
+    } else {
+      alert('Password is incorrect');
+    }
   };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  const loginButton = document.querySelector(".login-btn");
-
-  loginButton.addEventListener("click", async () => {
-    const phoneInput = document.querySelector("input[placeholder='Phone number']").value.trim();
-    const passwordInput = document.querySelector("input[placeholder='Password']").value;
-
-    if (!phoneInput || !passwordInput) {
-      alert("Please enter both phone number and password.");
-      return;
-    }
-
-    // Format phone as pseudo-email for login
-    const emailLikeUsername = `${phoneInput}@ubus.com`;
-
-    try {
-      await signInWithEmailAndPassword(auth, emailLikeUsername, passwordInput);
-      alert("Login successful!");
-      window.location.href = "dashboard.html";    
-    } catch (error) {
-      alert("Login failed: " + error.message);
-    }
-  });
 </script>
 
 </body>
