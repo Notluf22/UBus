@@ -46,16 +46,14 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Listen for login state
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const phone = user.email?.split('@')[0];
-        document.getElementById('userPhone').innerText = `Logged in as: ${phone}`;
-      } else {
-        // Redirect to login if not logged in
-        window.location.href = "login.html";
-      }
-    });
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    const phone = user.phoneNumber; // ✅ Directly use phone number
+    document.getElementById('userPhone').innerText = `Logged in as: ${phone}`;
+  } else {
+    window.location.href = "login.html"; // Not logged in → redirect
+  }
+});
 
     // Logout
     document.getElementById("logoutBtn").addEventListener("click", () => {
