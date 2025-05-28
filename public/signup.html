@@ -205,13 +205,19 @@
     const phone = phoneInput.value.trim();
     if (!phone) return alert("Please enter phone number");
 
-    setupRecaptcha();
-    try {
-      confirmationResult = await signInWithPhoneNumber(auth, phone, window.recaptchaVerifier);
-      alert("OTP sent!");
-    } catch (error) {
-      alert("Error sending OTP: " + error.message);
+    function setupRecaptcha() {
+  setTimeout(() => {
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+        size: 'invisible',
+        callback: (response) => {
+          console.log("reCAPTCHA solved");
+        }
+      }, auth);
     }
+  }, 100); // ⏱️ Delay slightly to let Firebase setup complete
+}
+
   });
 
   document.querySelector(".login-btn1").addEventListener("click", async () => {
