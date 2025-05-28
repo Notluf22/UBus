@@ -158,5 +158,45 @@
       </div>
     </div>
   </div>
+  <script>
+  let verified = false;
+
+  document.querySelector('.login-btn3').onclick = () => {
+    const phone = document.querySelectorAll('input')[0].value;
+    if (phone) {
+      alert('OTP sent to ' + phone);
+    }
+  };
+
+  document.querySelector('.login-btn1').onclick = () => {
+    const otp = document.querySelectorAll('input')[2].value;
+    if (otp === '123456') { // You can use any OTP logic
+      alert('OTP verified');
+      verified = true;
+    } else {
+      alert('Invalid OTP');
+    }
+  };
+
+  document.querySelector('.login-btn').onclick = () => {
+    if (!verified) {
+      alert('Please verify OTP first');
+      return;
+    }
+
+    const phone = document.querySelectorAll('input')[0].value;
+    const password = document.querySelectorAll('input')[1].value;
+
+    if (phone && password) {
+      localStorage.setItem(phone, password);
+      alert('Signup successful');
+      window.location.href = 'login.html';
+    } else {
+      alert('Fill in all fields');
+    }
+  };
+</script>
+
 </body>
 </html>
+

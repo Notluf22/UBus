@@ -120,5 +120,20 @@
     </div>
     </div>
   </div>
+  <script>
+  document.querySelector('.login-btn').onclick = () => {
+    const phone = document.querySelectorAll('input')[0].value;
+    const password = document.querySelectorAll('input')[1].value;
+    const storedPassword = localStorage.getItem(phone);
+
+    if (storedPassword === password) {
+      alert('Login successful');
+      window.location.href = 'dashboard.html';
+    } else {
+      alert('Password is incorrect');
+    }
+  };
+</script>
+
 </body>
 </html>
