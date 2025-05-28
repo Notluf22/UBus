@@ -120,20 +120,69 @@
     </div>
     </div>
   </div>
-  <script>
-  document.querySelector('.login-btn').onclick = () => {
-    const phone = document.querySelectorAll('input')[0].value;
-    const password = document.querySelectorAll('input')[1].value;
-    const storedPassword = localStorage.getItem(phone);
+  <script type="module">
+  import { auth, db } from "./firebaseConfig.js";
+  import {
+    setupRecaptcha,
+    sendOTP,
+    verifyOTP,
+    hashPassword,
+    getUserData
+  } from "./auth.js";
 
-    if (storedPassword === password) {
-      alert('Login successful');
-      window.location.href = 'dashboard.html';
-    } else {
-      alert('Password is incorrect');
+  const phoneInput = document.querySelector("input[placeholder='Phone number']");
+  const passwordInput = document.querySelector("input[placeholder='Password']");
+  const loginBtn = document.querySelector(".login-btn");
+
+  loginBtn.addEventListener("click", async () => {
+    const phone = phoneInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!phone || !password) {
+      alert("Please enter phone and password.");
+      return;
     }
-  };
+
+    try {
+      setupRecaptcha();
+
+      // Send OTP and get confirmationResult
+      const confirmationResult = await sendOTP(phone);
+      const otp = prompt("OTP sent to your phone. Enter OTP:");
+      if (!otp) {
+        alert("OTP is required.");
+        return;
+      }
+
+      // Verify OTP and get Firebase user
+      const user = await verifyOTP(confirmationResult, otp);
+
+      // Fetch user data by UID (consistent key in Firestore)
+      const userData = await getUserData(user.uid);
+      if (!userData) {
+        alert("Account not found.");
+        return;
+      }
+
+      // Hash the entered password
+      const enteredHash = await hashPassword(password);
+
+      // Compare with stored hash
+      if (enteredHash === userData.passwordHash) {
+        alert("Login successful");
+        window.location.href = "dashboard.html";
+      } else {
+        alert("Incorrect password");
+      }
+    } catch (err) {
+      alert("Login failed: " + err.message);
+    }
+  });
 </script>
+
+
+<!-- Required container for invisible reCAPTCHA -->
+<div id="recaptcha-container" style="display:none;"></div>
 
 </body>
 </html>
