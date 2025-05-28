@@ -1,128 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>UBus Signin</title>
+  <title>UBus Login</title>
   <link rel="icon" href="logo-transparent-png.png">
   <style>
-  body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #000;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
 
-.container {
-  display: flex;
-  background: #000;
-  padding: 20px;
-}
+    .container {
+      display: flex;
+      background: #000;
+      padding: 20px;
+    }
 
-.login-box {
-  background: #121212;
-  padding: 30px;
-  border: 1px solid #333;
-  border-radius: 8px;
-  width: 300px;
-  text-align: center;
-}
+    .left-panel img {
+      width: 450px;
+      height: auto;
+      border-radius: 10px;
+    }
 
-.login-box h1 {
-  font-family: 'Billabong', cursive;
-  font-size: 3rem;
-  margin-bottom: 20px;
-}
+    .right-panel {
+      margin-left: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-.login-box input {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 10px;
-  background: #262626;
-  border: 1px solid #333;
-  border-radius: 4px;
-  color: white;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-}
+    .login-box {
+      background: #121212;
+      padding: 30px;
+      border: 1px solid #333;
+      border-radius: 8px;
+      width: 300px;
+      text-align: center;
+    }
 
-.submit {
-  width: 100%;
-  padding: 10px;
-  background:green;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  font-weight: bold;
-  margin-top: 10px;
-  cursor: pointer;
-}
-.login-btn1 {
-  width: 100%;
-  padding: 10px;
-  background:green;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  font-weight: bold;
-  margin-top: 10px;
-  cursor: pointer;
-}
-.login-btn2 {
-  width: 100%;
-  padding: 10px;
-  background:green;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  font-weight: bold;
-  margin-top: 10px;
-  cursor: pointer;
-}
-.login-btn3 {
-  width: 100%;
-  padding: 10px;
-  background: green;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  font-weight: bold;
-  margin-top: 10px;
-  margin-bottom: 10px; 
-  cursor: pointer;
-}
+    .login-box h1 {
+      font-family: 'Billabong', cursive;
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+
+    .login-box input {
+     background-color: #383737;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+    color: #808080;
+    margin-bottom: 8px;
+    padding: 10px 10px;
+    width: 90%;
+    }
+
+    .submit {
+      width: 60%;
+      padding: 10px;
+      background: green;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      font-weight: bold;
+      margin-top: 10px;
+      cursor: pointer;
+      text-align: center;
+    }
 
 
-.signup-box {
-  background: #121212;
-  border: 1px solid #333;
-  padding: 20px;
-  margin-top: 10px;
-  text-align: center;
-  width: 300px;
-}
 
-.signup-box a {
-  color: #3797f0;
-  text-decoration: none;
-}
 
-.footer {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 0.75rem;
-  color: #666;
-  max-width: 300px;
-}
-.otp-actions {
-  display: flex;
-  justify-content: space-between;
-  gap: 30px;
-  margin-top: 10px;
-}
+    .signup-box {
+      background: #121212;
+      padding: 20px;
+      margin-top: 10px;
+      text-align: center;
+      font-size: medium;
+      width: 255px;
+    }
 
+    .signup-box a {
+      color: #3797f0;
+      text-decoration: none;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.75rem;
+      color: #666;
+      max-width: 300px;
+    }
 </style>
 </head>
 <body>
@@ -132,7 +107,7 @@
     </div>
     <div class="right-panel">
       <div class="login-box">
-        <h1>UBus Signup</h1>
+        <h1>Signup</h1>
         <input type="email" placeholder="Email" id="email" required />
         <input type="password" placeholder="Create Password" id="password" required/>
         
