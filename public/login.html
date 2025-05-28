@@ -72,6 +72,9 @@
   cursor: pointer;
 }
 
+
+
+
 .signup-box {
   background: #121212;
   border: 1px solid #333;
@@ -103,12 +106,12 @@
     <div class="right-panel">
       <div class="login-box">
         <h1>UBus Login</h1>
-        <input type="text" id="phone" placeholder="Phone number" required />
-        <input type="password" id="password" placeholder="Password" required/>
-        <button class="login-btn" onclick="loginUser()">Log in</button>
+        <input type="text" placeholder="Phone number"required />
+        <input type="password" placeholder="Password" required/>
+        <button class="login-btn">Log in</button>
         
       <div class="signup-box">
-        <p>Don't have an account? <a href="UBus signin.html">Sign up</a></p>
+        <p>Don't have an account? <a href="signup.html">Sign up</a></p>
       </div>
       <div class="footer">
         <p>About Blog Jobs Help API Privacy Terms Locations UBus Lite Threads</p>
@@ -117,40 +120,5 @@
     </div>
     </div>
   </div>
-
-  <script type="module">
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyArUGTPKRwMAS9LZWDbmaNAYayQF5ei5bw",
-      authDomain: "ubus-a445a.firebaseapp.com",
-      projectId: "ubus-a445a",
-      storageBucket: "ubus-a445a.appspot.com",
-      messagingSenderId: "1088324118594",
-      appId: "1:1088324118594:web:00dc5b9c4a35c7c246a5db",
-      measurementId: "G-NX9Y9J793J"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    window.loginUser = function () {
-      const phone = document.getElementById("phone").value.trim();
-      const password = document.getElementById("password").value;
-
-      // Using phone as username via email-like formatting
-      const email = `${phone}@ubus.com`;
-
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          alert("Login successful!");
-          // Redirect or show dashboard here
-        })
-        .catch((error) => {
-          alert("Login failed: " + error.message);
-        });
-    };
-  </script>
 </body>
 </html>

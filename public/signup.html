@@ -1,101 +1,162 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>UBus SIGNUP</title>
+  <meta charset="UTF-8">
+  <title>UBus Signin</title>
+  <link rel="icon" href="logo-transparent-png.png">
+  <style>
+  body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #000;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  display: flex;
+  background: #000;
+  padding: 20px;
+}
+
+.login-box {
+  background: #121212;
+  padding: 30px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+}
+
+.login-box h1 {
+  font-family: 'Billabong', cursive;
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.login-box input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #262626;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: white;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 10px;
+  background:green;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.login-btn1 {
+  width: 100%;
+  padding: 10px;
+  background:green;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.login-btn2 {
+  width: 100%;
+  padding: 10px;
+  background:green;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.login-btn3 {
+  width: 100%;
+  padding: 10px;
+  background: green;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 10px; 
+  cursor: pointer;
+}
+
+
+.signup-box {
+  background: #121212;
+  border: 1px solid #333;
+  padding: 20px;
+  margin-top: 10px;
+  text-align: center;
+  width: 300px;
+}
+
+.signup-box a {
+  color: #3797f0;
+  text-decoration: none;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.75rem;
+  color: #666;
+  max-width: 300px;
+}
+.otp-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  margin-top: 10px;
+}
+
+</style>
 </head>
-<body bgcolor="black" style="color:bisque">
-  <center>
-    <h2>UBus SignUp</h2>
-    <input type="text" id="signupPhone" placeholder="Phone (+91...)"><br><br>
-    <div id="recaptcha-container"></div>
-    <button type="button" id="sendOtpBtn">Send OTP</button><br><br>
-    
-    <input type="text" id="otp" placeholder="Enter OTP"><br><br>
-    <button type="button" id="verifyOtpBtn">Verify OTP</button><br><br>
-    
-    <div id="passwordSection" style="display:none;">
-      <input type="password" id="password" placeholder="Create Password"><br><br>
-      <button type="button" id="createPasswordBtn">Create Password</button>
+<body>
+  <div class="container">
+    <div class="left-panel">
+      <img src="images-removebg-preview.png" alt="App Preview" />
     </div>
-    
-    <p>Already have an account? <a href="index.html">Log in</a></p>
-  </center>
+    <div class="right-panel">
+      <div class="login-box">
+        <h1>UBus Signup</h1>
+        <input type="text" placeholder="Phone number"required />
+        <input type="password" placeholder="Password" required/>
+        <button class="login-btn3">Send OTP</button>
+        <input type="text" placeholder="Enter OTP">
+       
+       <div class="otp-actions">
+  <button class="login-btn1">Submit</button>
+  <button class="login-btn2">Resend OTP</button>
+</div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import {
-      getAuth,
-      RecaptchaVerifier,
-      signInWithPhoneNumber
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import {
-      getFirestore,
-      doc,
-      setDoc
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyClyvd-D1Xm414aUsCv7tWvpsxd84r0zos",
-      authDomain: "ubus-a445a.firebaseapp.com",
-      projectId: "ubus-a445a",
-      storageBucket: "ubus-a445a.appspot.com",
-      messagingSenderId: "1088324118594",
-      appId: "1:1088324118594:web:00dc5b9c4a35c7c246a5db",
-      measurementId: "G-NX9Y9J793J"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    let confirmationResult;
-
-    window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
-      'size': 'invisible',
-      'callback': (response) => {
-        // reCAPTCHA solved
-      }
-    }, auth);
-
-    document.getElementById("sendOtpBtn").addEventListener("click", async () => {
-      const phone = document.getElementById("signupPhone").value.trim();
-      if (!phone) return alert("Enter phone number");
-      try {
-        confirmationResult = await signInWithPhoneNumber(auth, phone, window.recaptchaVerifier);
-        alert("OTP sent");
-      } catch (error) {
-        alert("Error sending OTP: " + error.message);
-      }
-    });
-
-    document.getElementById("verifyOtpBtn").addEventListener("click", async () => {
-      const otp = document.getElementById("otp").value.trim();
-      if (!otp) return alert("Enter the OTP");
-      try {
-        await confirmationResult.confirm(otp);
-        document.getElementById("passwordSection").style.display = "block";
-        alert("OTP Verified");
-      } catch (error) {
-        alert("Invalid OTP");
-      }
-    });
-
-    document.getElementById("createPasswordBtn").addEventListener("click", async () => {
-      const phone = document.getElementById("signupPhone").value.trim();
-      const password = document.getElementById("password").value;
-      if (!password) return alert("Enter a password");
-
-      const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(password));
-      const hashHex = Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
-
-      try {
-        await setDoc(doc(db, "users", phone), { passwordHash: hashHex });
-        alert("Account created successfully");
-        window.location.href = "index.html";
-      } catch (error) {
-        alert("Error saving password: " + error.message);
-      }
-    });
-  </script>
+        
+        <button class="login-btn">Log in</button>
+       
+        
+       
+      </div>
+      <div class="signup-box">
+        <p>Have an account? <a href="login.html">Log in</a></p>
+      </div>
+      <div class="footer">
+        <p>About Blog Jobs Help API Privacy Terms Locations UBus Lite Threads</p>
+        <p>English (INDIA) © 2025 UBus from JOSH,FENU,FULTON,JOYAL</p>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
