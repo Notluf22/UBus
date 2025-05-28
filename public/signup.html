@@ -48,7 +48,7 @@
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
-.login-btn {
+.submit {
   width: 100%;
   padding: 10px;
   background:green;
@@ -133,18 +133,10 @@
     <div class="right-panel">
       <div class="login-box">
         <h1>UBus Signup</h1>
-        <input type="text" placeholder="Phone number"required />
-        <input type="password" placeholder="Password" required/>
-        <button class="login-btn3">Send OTP</button>
-        <input type="text" placeholder="Enter OTP">
-       
-       <div class="otp-actions">
-  <button class="login-btn1">Submit</button>
-  <button class="login-btn2">Resend OTP</button>
-</div>
-
+        <input type="email" placeholder="Email" id="email" required />
+        <input type="password" placeholder="Create Password" id="password" required/>
         
-        <button class="login-btn">Log in</button>
+        <button class="submit" id="submit" type="submit">Create Account</button>
        
         
        
@@ -158,158 +150,8 @@
       </div>
     </div>
   </div>
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-  import {
-    getAuth,
-    RecaptchaVerifier,
-    signInWithPhoneNumber
-  } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-  import {
-    getFirestore,
-    doc,
-    setDoc,
-    getDoc
-  } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+<script type="module" src="signup.js" defer></script>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyClyvd-D1Xm414aUsCv7tWvpsxd84r0zos",
-    authDomain: "ubus-a445a.firebaseapp.com",
-    projectId: "ubus-a445a",
-    storageBucket: "ubus-a445a.appspot.com",
-    messagingSenderId: "1088324118594",
-    appId: "1:1088324118594:web:00dc5b9c4a35c7c246a5db",
-    measurementId: "G-NX9Y9J793J"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  let confirmationResult = null;
-  let otpVerified = false;
-  let currentUser = null;
-
-  const phoneInput = document.querySelector("input[placeholder='Phone number']");
-  const passwordInput = document.querySelector("input[placeholder='Password']");
-  const otpInput = document.querySelector("input[placeholder='Enter OTP']");
-
-  // Setup reCAPTCHA verifier (invisible)
-  function setupRecaptcha() {
-    if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
-        size: 'invisible',
-        callback: () => console.log("reCAPTCHA solved"),
-      }, auth);
-    }
-  }
-
-  // Check if phone number already exists (by searching Firestore for any user with this phone number)
-  async function isPhoneRegistered(phone) {
-    // WARNING: This requires an index or querying all users
-    // If you want to index by phone, you can create a collection with phone as ID or add a phone field and query by it
-    // Here, simplest way (if small user base): iterate all users (not scalable)
-    // Better is to store phone as doc ID (but you want UID)
-    // So here, let's do a Firestore query:
-    const usersRef = db.collection ? db.collection('users') : null; // fallback
-    if (!usersRef) {
-      // Using modular SDK you need query API:
-      // We'll do a simple workaround: Try to get doc by phone (if you saved it earlier)
-      const docRef = doc(db, "users", phone);
-      const docSnap = await getDoc(docRef);
-      return docSnap.exists();
-    }
-    return false; // fallback
-  }
-
-  // Send OTP button click
-  document.querySelector(".login-btn3").addEventListener("click", async () => {
-    const phone = phoneInput.value.trim();
-    if (!phone) {
-      alert("Enter phone number");
-      return;
-    }
-
-    try {
-      // Since you want to use UID as doc id, you cannot check by phone easily in Firestore, so skip this or add a separate phone index collection
-
-      setupRecaptcha();
-
-      confirmationResult = await signInWithPhoneNumber(auth, phone, window.recaptchaVerifier);
-      alert("OTP sent to " + phone);
-    } catch (error) {
-      alert("Failed to send OTP: " + error.message);
-    }
-  });
-
-  // Verify OTP button click
-  document.querySelector(".login-btn1").addEventListener("click", async () => {
-    const otp = otpInput.value.trim();
-    if (!otp) {
-      alert("Enter OTP");
-      return;
-    }
-
-    if (!confirmationResult) {
-      alert("Please send OTP first");
-      return;
-    }
-
-    try {
-      const userCredential = await confirmationResult.confirm(otp);
-      currentUser = userCredential.user;
-      otpVerified = true;
-      alert("OTP verified! Now set your password and click Signup.");
-    } catch (error) {
-      alert("Invalid OTP: " + error.message);
-    }
-  });
-
-  // Signup (store user info) button click
-  document.querySelector(".login-btn").addEventListener("click", async () => {
-    if (!otpVerified || !currentUser) {
-      alert("Please verify OTP first");
-      return;
-    }
-
-    const password = passwordInput.value;
-    if (!password) {
-      alert("Enter a password");
-      return;
-    }
-
-    // Hash password with SHA-256
-    const hashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(password));
-    const passwordHash = Array.from(new Uint8Array(hashBuffer))
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('');
-
-    // Save user info under user.uid (not phone)
-    try {
-      // First check if user doc already exists (optional)
-      const userDocRef = doc(db, "users", currentUser.uid);
-      const userDocSnap = await getDoc(userDocRef);
-      if (userDocSnap.exists()) {
-        alert("User already registered.");
-        return;
-      }
-
-      await setDoc(userDocRef, {
-        phoneNumber: currentUser.phoneNumber,
-        passwordHash: passwordHash
-      });
-
-      alert("Signup successful! Redirecting to login...");
-      window.location.href = "login.html";
-
-    } catch (error) {
-      alert("Error saving user: " + error.message);
-    }
-  });
-</script>
-
-
-<!-- Add this div before </body> for Firebase reCAPTCHA -->
-<div id="recaptcha-container" style="display:none;"></div>
 
 
 </body>

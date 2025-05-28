@@ -1,5 +1,5 @@
 // auth.js
-import { auth, db } from "./firebaseConfig.js";
+import { auth, db } from "./signup.js";
 import {
   RecaptchaVerifier,
   signInWithPhoneNumber

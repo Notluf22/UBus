@@ -16,3 +16,13 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+const email = document.getElementById('email').value;
+const password = document.getElementById('password').value;
+
+const submit = document.getElementById('submit').value;
+if(submit){
+submit.addEventListener("click", function (event) {
+  event.preventDefault()
+  alert("success")
+})
+}
