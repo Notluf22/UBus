@@ -1,124 +1,144 @@
- html, body {
-    height: 100%;
-  }
+ html,
  body {
-      font-family: Arial, sans-serif;
-      background-color: rgb(18, 140, 168);
-      
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .container {
-      width: 80%;
-      max-width: 600px;
-      background: rgb(168, 162, 162);
-      margin-top: 50px;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      text-align: center;
-      justify-content: center;
-    }
-    .swap-button {
-       position: relative;
-      background: rgb(38, 161, 38);
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      bottom: 26px;
-      left: -40px;
-    
-    }
-    .button-container {
-  position: relative;
-}
-  
+     height: 100%;
+ }
 
-    table {
-      margin: auto;
-    }
-    td {
-      padding: 10px;
-    }
-    #useremail {
-      font-size: 0.9em;
-      color: gray;
-      margin-top: 10px;
-    }
-    .bus-card {
-      border: 1px solid #ccc;
-      padding: 12px;
-      margin-top: 10px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      text-align: left;
-    }
-    .fromicon{
-      width: 24px;           
-  height: 30px;           
-  margin-right: 20px;       
-  
-    }
-     .toicon{
-      width: 24px;           
-  height: 30px;           
-  margin-right: 20px;  
-  position: relative;
-  bottom: 40px;     
-  
-    }
-    
-    .swapicon{
-      width: 24px;           
-  height: 20px;           
-  margin-right: 20px;     
-  position: relative; 
-  bottom: 20px;
+ body {
+     font-family: Arial, sans-serif;
+     background: rgb(0, 9, 10);
+     margin: 0;
+     padding: 0;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+ }
+
+ .container {
+     width: 80%;
+     max-width: 600px;
+     background: rgb(228, 211, 211);
+     margin-top: 50px;
+     padding: 30px;
+     border-radius: 10px;
+     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+     text-align: center;
+     position: relative;
+     top: 20%;
+     left:0%
+ }
+
+ .swap-button {
+     position: absolute;
+     background: rgb(40, 143, 40);
+     color: white;
+     border: none;
+     padding: 8px 12px;
+     border-radius: 5px;
+     cursor: pointer;
+     bottom: 26px;
+     right: 180px;
+
+ }
+
+ .button-container {
+     position: relative;
+ }
+
+
+ table {
+     margin: auto;
+ }
+
+ td {
+     padding: 10px;
+ }
+
+ #useremail {
+     font-size: 0.9em;
+     color: gray;
+     margin-top: 10px;
+ }
+
+ .bus-card {
+     border: 1px solid #ccc;
+     padding: 12px;
+     margin-top: 10px;
+     border-radius: 8px;
+     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+     text-align: left;
+ }
+
+ .fromicon {
+     width: 24px;
+     height: 30px;
+     margin-right: 20px;
      
-  
-    }
-    #from {
-      position: relative;
-      right: 10px;
-      height: 30px;
-      width: 250px;
-      border: 2px solid #1a1a1a;
-      
 
-      
-    }
-     #to{
-      position: relative;
-      right: 10px;
-      height: 30px;
-      width: 250px;
-      bottom: 40px;
-      border: 2px solid #1a1a1a;
+ }
 
-     }
-    #swapBtn{
-      position: relative;
-      left: 250px;
-    }
+ .toicon {
+     width: 24px;
+     height: 30px;
+     margin-right: 20px;
+     position: relative;
+     bottom: 50px;
+     color: red;
     
-   .sub-button{
-    position: relative;
-    background-color: rgb(13, 143, 13);
-    color: aliceblue;
-    height: 30px;
-    width: 90px;
-    font-weight:bold;
-    top: 85px;
-    right: 190px;
-    border-radius: 10px;
-    margin: 1;
-    border: none;
-   }
-    button:active{
+
+ }
+
+ .swapicon {
+     width: 24px;
+     height: 20px;
+     margin-right: 20px;
+     position: relative;
+     bottom: 25px;
+
+
+ }
+
+ #from {
+     position: relative;
+     right: 10px;
+     height: 30px;
+     width: 250px;
+       border: 2px solid #1a1a1a;
+
+
+
+
+ }
+
+ #to {
+     position: relative;
+     right: 10px;
+     height: 30px;
+     width: 250px;
+     bottom: 50px;
+       border: 2px solid #1a1a1a;
+
+ }
+
+ #swapBtn {
+     position: relative;
+     left: 250px;
+ }
+
+ .sub-button {
+
+     background-color: rgb(20, 118, 20);
+     color: aliceblue;
+     height: 30px;
+     width: 90px;
+     font-weight: bold;
+     position: relative;
+     top: 65px;
+     right: 210px;
+     border-radius: 10px;
+     margin: 1;
+     border: none;
+ }
+
+ button:active {
      background-color: red;
-    }
+ }
