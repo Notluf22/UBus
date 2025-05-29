@@ -1,1 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UBus</title>
+  <link rel="icon" href="logo-transparent-png.png">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: black;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+ .container {
+      width: 80%;
+      max-width: 600px;
+      background:white;
+      margin-top: 50px;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+   
+ 
+    .swap-button {
+    
+      background:green;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 10px 0;
+    }
+    .swap-button2 {
+      background:green;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 10px 0;
+      display: flex;
+      justify-content:flex-end;
+    }
 
+</style>
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>UBus</h1>
+    <h2>Catch Your Bus </h2>
+    <img src="Capture.PNG"
+
+<form>
+  <table>
+
+<tr>
+  <td><img src="trip_origin_30dp_000000_FILL0_wght400_GRAD0_opsz24 (1).png"></td>
+  <td><input type="text" id="from" placeholder="Enter Starting Location"><br><br></td>   
+</tr>
+<tr>
+  <td><img src="route_30dp_000000_FILL0_wght400_GRAD0_opsz24.png"> </td> <td> <button class="swap-button" onclick="swapFields(event)">⇅</button></td>
+  <td><button type="submit" class="swap-button2">SEARCH</button></td>
+
+</tr>
+<tr>
+  <td><img src="location_on_30dp_000000_FILL0_wght400_GRAD0_opsz24.png"></td>
+  <td><input type="text" id="to" placeholder="Enter Your Destination"><br><br></td>          
+</tr>
+</table>
+</form>
+
+   
+  <script>
+   function swapFields(event) {
+  event.preventDefault(); // Prevents form submission
+  const fromInput = document.getElementById("from");
+  const toInput = document.getElementById("to");
+  const temp = fromInput.value;
+  fromInput.value = toInput.value;
+  toInput.value = temp;
+}
+
+  </script>
+</body>
+</html>
