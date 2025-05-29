@@ -98,26 +98,17 @@
     const auth = getAuth(app);
 
     // Protect dashboard access
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById('userPhone').innerText = `Logged in as: ${user.phoneNumber}`;
-      } else {
-        // Redirect if not logged in
+onAuthStateChanged(auth, (user) => {
+    if (user && user.email) {
+      // ✅ Only allow email-authenticated users
+      document.getElementById('useremail').innerText = `Logged in as: ${user.email}`;
+    } else {
+      
+      signOut(auth).then(() => {
         window.location.href = "login.html";
-      }
-    });
-
-    // Logout logic
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      signOut(auth)
-        .then(() => {
-          alert("You have been logged out.");
-          window.location.href = "login.html";
-        })
-        .catch((error) => {
-          alert("Logout failed: " + error.message);
-        });
-    });
+      });
+    }
+  });
    function swapFields(event) {
   event.preventDefault(); // Prevents form submission
   const fromInput = document.getElementById("from");
