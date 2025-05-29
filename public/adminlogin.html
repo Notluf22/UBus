@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>UBus Login</title>
+  <title>UBus Admin Login</title>
   <link rel="icon" href="logo-transparent-png.png">
   <style>
     body {
@@ -46,10 +46,9 @@
     }
 
     .login-box h1 {
-      text-align: center;
       font-family: 'Billabong', cursive;
       font-size: 3rem;
-      margin-top: 20px;
+      margin-bottom: 20px;
     }
 
     .login-box input {
@@ -99,37 +98,50 @@
       color: #666;
       max-width: 300px;
     }
-</style>
+
+    .user{
+      color: #3797f0;
+      text-decoration: none;
+    }
+    #login{
+      color: #3797f0;
+      text-decoration: none;
+    }
+   #email{
+      color:white;
+    }
+    #password{
+      color:white;
+    }
+  </style>
 </head>
+
 <body>
   <div class="container">
     <div class="left-panel">
-      <a href="login.html"><img src="images-removebg-preview.png" alt="App Preview" /></a>
+      <a href="adminlogin.html"><img src="images-removebg-preview.png" alt="App Preview" /></a>
     </div>
     <div class="right-panel">
       <div class="login-box">
-        <h1>Signup</h1>
+        <h1> Admin Login</h1>
         <input type="email" placeholder="Email" id="email" required />
-        <input type="password" placeholder="Create Password" id="password" required/>
-        
-        <button class="submit" id="submit" type="submit">Create Account</button>
-       
-        
-       
-      </div>
-      <div class="signup-box">
-        <p>Have an account? <a href="login.html">Log in</a></p>
-      </div>
-      <div class="footer">
-        <p>About Blog Jobs Help API Privacy Terms Locations UBus Lite Threads</p>
-        <p>English (INDIA) © 2025 UBus from JOSH,FENU,FULTON,JOYAL</p>
+        <input type="password" placeholder="Password" id="password" required />
+        <button class="submit" id="submit">Log in</button>
+
+        <div class="signup-box">
+          <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+        </div>
+        <div class="footer">
+          <p>About Blog Jobs Help API Privacy Terms Locations</p>
+          
+            <p><a href="login.html" id="login">User Login</a></p>
+          
+        </div>
       </div>
     </div>
   </div>
-<script type="module" src="signup.js" defer></script>
-
-
+  <script type="module" src="admin.js" defer></script>
 
 </body>
-</html>
 
+</html>
