@@ -1,58 +1,83 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>UBus Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UBus</title>
   <link rel="icon" href="logo-transparent-png.png">
   <style>
-    body {
-      background-color: #000;
-      color: #fff;
+ body {
       font-family: Arial, sans-serif;
+      background: #0d3843;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+ .container {
+      width: 80%;
+      max-width: 600px;
+      background:white;
+      margin-top: 50px;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       text-align: center;
-      padding: 50px;
+      
     }
-
-    h1 {
-      color: #00ff00;
-      margin-bottom: 20px;
-    }
-
-    #userPhone {
-      font-size: 1.2rem;
-      color: #bbb;
-      margin-bottom: 40px;
-    }
-
-    .logout-btn {
-      padding: 10px 20px;
-      background-color: red;
+   
+ 
+    .swap-button {
+      background:green;
       color: white;
       border: none;
+      padding: 8px 12px;
       border-radius: 5px;
-      font-weight: bold;
       cursor: pointer;
+      margin: 10px 0;
     }
-
-    .footer {
-      margin-top: 50px;
-      font-size: 0.75rem;
-      color: #666;
+    .swap-button2 {
+      background:green;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 10px 0;
+      display: flex;
+      justify-content:flex-end;
     }
   </style>
 </head>
 <body>
-  <h1>Welcome to UBus Dashboard</h1>
-  <div id="userPhone">Loading user...</div>
-  <button class="logout-btn" id="logoutBtn">Logout</button>
+  <div class="container">
+    <h1>UBus</h1>
+    <h2>Catch Your Bus </h2>
 
-  <div class="footer">
-    <p>© 2025 UBus from JOSH, FENU, FULTON, JOYAL</p>
-  </div>
+<form>
+  <table>
 
+<tr>
+  <td><label for="from">FROM:</label></td>
+  <td><input type="text" id="from" placeholder="Enter Starting Location"><br><br></td>   
+</tr>
+<tr>
+  <td><button class="swap-button" onclick="swapFields(event)">⇅</button></td>
+  <td><button type="submit" class="swap-button2">SEARCH</button></td>
+
+</tr>
+<tr>
+  <td><label for="to">TO:</label></td>
+  <td><input type="text" id="to" placeholder="Enter Your Destination"><br><br></td>          
+</tr>
+</table>
+</form>
+
+   
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
     import {
       getAuth,
       onAuthStateChanged,
@@ -93,6 +118,15 @@
           alert("Logout failed: " + error.message);
         });
     });
+   function swapFields(event) {
+  event.preventDefault(); // Prevents form submission
+  const fromInput = document.getElementById("from");
+  const toInput = document.getElementById("to");
+  const temp = fromInput.value;
+  fromInput.value = toInput.value;
+  toInput.value = temp;
+}
+
   </script>
 </body>
 </html>
