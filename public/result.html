@@ -1,117 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bus Search Results - UBus</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      margin: 0;
-      padding: 20px;
-    }
-
-    h2 {
-      text-align: center;
-      font-size: 28px;
-    }
-
-    .bus {
-      background: white;
-      padding: 15px;
-      margin: 15px auto;
-      max-width: 600px;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-
-    .bus strong {
-      font-size: 18px;
-    }
-
-    .back-btn {
-      display: block;
-      margin: 20px auto;
-      background: green;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
-      text-decoration: none;
-      text-align: center;
-      width: fit-content;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Search Results - UBus</title>
+  <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
-  <h2>Available Buses</h2>
-  <div id="results">Loading buses...</div>
-  <a href="dashboard.html" class="back-btn">⬅ Back to Dashboard</a>
+  <div class="container">
+    <h1>Search Results</h1>
+    <div id="results"></div>
+    <button onclick="goBack()">← Back to Dashboard</button>
+  </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      query,
-      where,
-      getDocs
-    } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+  <script>
+    function goBack() {
+      window.location.href = "login.html"; // or your dashboard filename
+    }
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyClyvd-D1Xm414aUsCv7tWvpsxd84r0zos",
-      authDomain: "ubus-a445a.firebaseapp.com",
-      projectId: "ubus-a445a",
-      storageBucket: "ubus-a445a.appspot.com",
-      messagingSenderId: "1088324118594",
-      appId: "1:1088324118594:web:00dc5b9c4a35c7c246a5db",
-      measurementId: "G-NX9Y9J793J"
-    };
+    const resultsDiv = document.getElementById('results');
+    const buses = JSON.parse(sessionStorage.getItem('searchResults'));
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    const from = sessionStorage.getItem("searchFrom");
-    const to = sessionStorage.getItem("searchTo");
-    const resultsDiv = document.getElementById("results");
-
-    if (!from || !to) {
-      resultsDiv.innerHTML = "<p>Missing search inputs. Please go back and try again.</p>";
+    if (!buses || buses.length === 0) {
+      resultsDiv.innerHTML = "<p>No buses found.</p>";
     } else {
-      const q = query(
-        collection(db, "buses"),
-        where("from", "==", from),
-        where("to", "==", to)
-      );
-
-      getDocs(q)
-        .then((snapshot) => {
-          if (snapshot.empty) {
-            resultsDiv.innerHTML = "<p>No buses found for this route.</p>";
-            return;
-          }
-
-          let output = "";
-          snapshot.forEach((doc) => {
-            const data = doc.data();
-            output += `
-              <div class="bus">
-                <strong>${data.busName || "Bus"} (${data.busNumber})</strong><br>
-                Type: ${data.busType}<br>
-                Fare: ₹${data.fare}<br>
-                Time: ${data.departureTime} → ${data.arrivalTime}<br>
-                Route: ${Array.isArray(data.route) ? data.route.join(" → ") : data.route}
-              </div>
-            `;
-          });
-
-          resultsDiv.innerHTML = output;
-        })
-        .catch((error) => {
-          console.error("Error fetching buses:", error);
-          resultsDiv.innerHTML = "<p>Error loading buses. Please try again later.</p>";
-        });
+      buses.forEach(bus => {
+        resultsDiv.innerHTML += `
+          <div class="bus-card">
+            <strong>${bus.busnumber}</strong> | ${bus.bustype} | ₹${bus.fare}<br>
+            ${bus.from} ➝ ${bus.to}<br>
+            ${bus.departuretime} → ${bus.arrivaltime}
+          </div>
+        `;
+      });
     }
   </script>
 </body>
