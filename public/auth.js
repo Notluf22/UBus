@@ -1,4 +1,3 @@
-// auth.js
 import { auth, db } from "./signup.js";
 import {
   doc,
