@@ -2,21 +2,19 @@
  body {
      height: 100%;
  }
-
  body {
      font-family: Arial, sans-serif;
-     background: rgb(0, 9, 10);
+     background: rgb(222, 133, 153);
      margin: 0;
      padding: 0;
      display: flex;
      flex-direction: column;
      align-items: center;
  }
-
  .container {
      width: 80%;
      max-width: 600px;
-     background: rgb(228, 211, 211);
+     background: rgb(225, 204, 204);
      margin-top: 50px;
      padding: 30px;
      border-radius: 10px;
@@ -26,39 +24,31 @@
      top: 20%;
      left:0%
  }
-
- .swap-button {
+.swap-button {
      position: absolute;
-     background: rgb(40, 143, 40);
+     background: rgb(64, 188, 64) ;
      color: white;
      border: none;
      padding: 8px 12px;
      border-radius: 5px;
      cursor: pointer;
-     bottom: 26px;
-     right: 180px;
-
+     top:65px;
+     margin-right:120px;
  }
-
  .button-container {
      position: relative;
  }
-
-
  table {
      margin: auto;
  }
-
  td {
      padding: 10px;
  }
-
  #useremail {
      font-size: 0.9em;
      color: gray;
      margin-top: 10px;
  }
-
  .bus-card {
      border: 1px solid #ccc;
      padding: 12px;
@@ -67,15 +57,13 @@
      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
      text-align: left;
  }
-
  .fromicon {
      width: 24px;
      height: 30px;
      margin-right: 20px;
-     
-
+     position: relative;
+     bottom: 20px;
  }
-
  .toicon {
      width: 24px;
      height: 30px;
@@ -83,32 +71,22 @@
      position: relative;
      bottom: 50px;
      color: red;
-    
-
  }
-
  .swapicon {
      width: 24px;
      height: 20px;
      margin-right: 20px;
      position: relative;
-     bottom: 25px;
-
-
+     bottom: 32px;
  }
-
  #from {
      position: relative;
      right: 10px;
      height: 30px;
      width: 250px;
+     bottom: 20px;
        border: 2px solid #1a1a1a;
-
-
-
-
  }
-
  #to {
      position: relative;
      right: 10px;
@@ -116,29 +94,30 @@
      width: 250px;
      bottom: 50px;
        border: 2px solid #1a1a1a;
-
  }
-
  #swapBtn {
      position: relative;
      left: 250px;
  }
-
  .sub-button {
-
-     background-color: rgb(20, 118, 20);
+     background-color: rgb(64, 188, 64);
      color: aliceblue;
      height: 30px;
      width: 90px;
      font-weight: bold;
      position: relative;
      top: 65px;
-     right: 210px;
+     right: 20px;
      border-radius: 10px;
      margin: 1;
      border: none;
  }
-
  button:active {
-     background-color: red;
+     background-color: rgb(23, 100, 37);
+ }
+ h1{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+ }
+ h2{
+    font-family: Georgia, 'Times New Roman', Times, serif;
  }
