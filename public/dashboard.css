@@ -27,16 +27,17 @@
      left:0%
  }
 
- .swap-button {
+.swap-button {
      position: absolute;
-     background: rgb(40, 143, 40);
+     background: rgb(64, 188, 64) ;
      color: white;
      border: none;
      padding: 8px 12px;
      border-radius: 5px;
      cursor: pointer;
-     bottom: 26px;
-     right: 180px;
+     top:65px;
+     margin-right:120px;
+    
 
  }
 
@@ -72,8 +73,8 @@
      width: 24px;
      height: 30px;
      margin-right: 20px;
-     
-
+     position: relative;
+     bottom: 20px;
  }
 
  .toicon {
@@ -83,8 +84,6 @@
      position: relative;
      bottom: 50px;
      color: red;
-    
-
  }
 
  .swapicon {
@@ -92,9 +91,7 @@
      height: 20px;
      margin-right: 20px;
      position: relative;
-     bottom: 25px;
-
-
+     bottom: 32px;
  }
 
  #from {
@@ -102,11 +99,8 @@
      right: 10px;
      height: 30px;
      width: 250px;
+     bottom: 20px;
        border: 2px solid #1a1a1a;
-
-
-
-
  }
 
  #to {
@@ -116,8 +110,8 @@
      width: 250px;
      bottom: 50px;
        border: 2px solid #1a1a1a;
-
  }
+ 
 
  #swapBtn {
      position: relative;
@@ -126,19 +120,25 @@
 
  .sub-button {
 
-     background-color: rgb(20, 118, 20);
+     background-color: rgb(64, 188, 64);
      color: aliceblue;
      height: 30px;
      width: 90px;
      font-weight: bold;
      position: relative;
      top: 65px;
-     right: 210px;
+     right: 20px;
      border-radius: 10px;
      margin: 1;
      border: none;
  }
 
  button:active {
-     background-color: red;
+     background-color: rgb(23, 100, 37);
+ }
+ h1{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+ }
+ h2{
+    font-family: Georgia, 'Times New Roman', Times, serif;
  }
