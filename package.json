@@ -1,5 +1,26 @@
 {
   "dependencies": {
-    "@supabase/supabase-js": "^2.49.8"
-  }
+    "@supabase/supabase-js": "^2.49.8",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  },
+  "name": "ubus",
+  "version": "1.0.0",
+  "description": "UBus is a smart, real-time ticket booking and tracking system for **short-distance government buses**. Inspired by the simplicity of apps like *Where is My Train*, UBus brings seamless digital ticketing and live GPS tracking to local bus commuters.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Notluf22/ubus.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Notluf22/ubus/issues"
+  },
+  "homepage": "https://github.com/Notluf22/ubus#readme"
 }
