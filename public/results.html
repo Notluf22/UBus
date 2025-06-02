@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bus Search Results</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f2f2f2;
+      padding: 20px;
+    }
+    .bus-card {
+      background: white;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    select, button, input {
+      padding: 8px;
+      margin: 5px 0;
+    }
+    .results {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Available Buses</h2>
+
+<div>
+  <label>Sort By:
+    <select id="sortBy">
+      <option value="fare">Fare (Low to High)</option>
+      <option value="duration">Duration (Short to Long)</option>
+    </select>
+  </label>
+  <button onclick="searchBuses()">Re-sort</button>
+</div>
+
+<div class="results" id="results"></div>
+
+<script>
+const buses = [
+  {
+    bus_id: "1507TVMBNG",
+    source: "Trivandrum",
+    destination: "Bangalore",
+    departure_time: "15:07",
+    arrival_time: "07:02",
+    duration: "15:55",
+    fare: 1580,
+    seats_available: 32,
+    bus_type: "AC MULTI AXLE",
+    boarding_point: "TRIVANDRUM DEPOT",
+    dropping_point: "BANGALORE",
+    route: ["Trivandrum", "Kollam", "Alappuzha", "Kottayam", "Ernakulam", "Thrissur", "Palakkad", "Coimbatore", "Salem", "Hosur", "Bangalore"]
+  },
+  {
+    bus_id: "1602TVMBNG",
+    source: "Trivandrum",
+    destination: "Bangalore",
+    departure_time: "16:02",
+    arrival_time: "10:11",
+    duration: "18:09",
+    fare: 1811,
+    seats_available: 29,
+    bus_type: "AC MULTI AXLE",
+    boarding_point: "TRIVANDRUM DEPOT",
+    dropping_point: "BANGALORE",
+    route: ["Trivandrum", "Kollam", "Alappuzha", "Ernakulam", "Thrissur", "Palakkad", "Coimbatore", "Salem", "Hosur", "Bangalore"]
+  },
+  {
+    bus_id: "1800KNPMBNG",
+    source: "Trivandrum",
+    destination: "Bangalore",
+    departure_time: "19:00",
+    arrival_time: "08:30",
+    duration: "13:30",
+    fare: 1540,
+    seats_available: 8,
+    bus_type: "VOLVO SLEEPER",
+    boarding_point: "KANIYAPURAM DEPOT",
+    dropping_point: "BANGALORE",
+    route: ["Trivandrum", "Kollam", "Kayamkulam", "Ernakulam", "Thrissur", "Coimbatore", "Salem", "Hosur", "Bangalore"]
+  }
+];
+
+// Retrieve values from sessionStorage
+const source = (sessionStorage.getItem('source') || "").trim().toLowerCase();
+const destination = (sessionStorage.getItem('destination') || "").trim().toLowerCase();
+
+if (!source || !destination) {
+  alert("Missing search data. Redirecting...");
+  window.location.href = "dashboard.html";
+}
+
+function searchBuses() {
+  const sortBy = document.getElementById('sortBy').value;
+  let matchingBuses = buses.filter(bus => {
+    const route = bus.route.map(city => city.toLowerCase());
+    const sourceIndex = route.indexOf(source);
+    const destIndex = route.indexOf(destination);
+    return sourceIndex !== -1 && destIndex !== -1 && destIndex > sourceIndex;
+  });
+
+  if (sortBy === "fare") {
+    matchingBuses.sort((a, b) => a.fare - b.fare);
+  } else {
+    matchingBuses.sort((a, b) => {
+      const [ah, am] = a.duration.split(":").map(Number);
+      const [bh, bm] = b.duration.split(":").map(Number);
+      return (ah * 60 + am) - (bh * 60 + bm);
+    });
+  }
+
+  renderResults(matchingBuses);
+}
+
+function renderResults(matchingBuses) {
+  const resultsDiv = document.getElementById('results');
+  resultsDiv.innerHTML = '';
+
+  if (matchingBuses.length === 0) {
+    resultsDiv.innerHTML = "<p>No buses found for your search.</p>";
+    return;
+  }
+
+  const displayDest = sessionStorage.getItem('destination');
+
+  matchingBuses.forEach(bus => {
+    resultsDiv.innerHTML += `
+      <div class="bus-card">
+        <strong>🚌 ${bus.bus_type}</strong><br>
+        Bus ID: ${bus.bus_id}<br>
+        Departure: ${bus.departure_time}, ${bus.boarding_point}<br>
+        Arrival: ${bus.arrival_time}, Final Stop: ${bus.destination}<br>
+        <small>(Your stop: ${displayDest})</small><br>
+        Duration: ${bus.duration}<br>
+        Fare: ₹${bus.fare} | Seats Left: ${bus.seats_available}
+      </div>
+    `;
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  searchBuses(); // Auto-load results
+});
+</script>
+
+</body>
+</html>
