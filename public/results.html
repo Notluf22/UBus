@@ -52,46 +52,63 @@
 <script>
 const buses = [
   {
-    bus_id: "1507TVMBNG",
-    source: "Trivandrum",
-    destination: "Bangalore",
-    departure_time: "15:07",
-    arrival_time: "07:02",
-    duration: "15:55",
-    fare: 1580,
+    bus_id: "RET11",
+    source: "Kottarakara",
+    destination: "TechnoPark",
+    departure_time: "6.00",
+    arrival_time: "8.10",
+    duration: "2.10",
+    fare: 105,
  
-    bus_type: "AC MULTI AXLE",
-    boarding_point: "TRIVANDRUM DEPOT",
-    dropping_point: "BANGALORE",
-    route: ["Trivandrum", "Kollam", "Alappuzha", "Kottayam", "Ernakulam", "Thrissur", "Palakkad", "Coimbatore", "Salem", "Hosur", "Bangalore"]
+    bus_type: "Super Fast",
+    boarding_point: "Kottarakara",
+    dropping_point: "TechnoPark",
+    route: ["Kottarakara","Valakam","Ayoor","Chadayamangalam","Nilamel","Kilimanoor","Venjaramoodu","Pothencode","Kazhakootam","Technopark"] 
+  },
+  
+  {
+    bus_id: "RET12",
+    source: "Technopark",
+    destination: "Kottarakara",
+    departure_time: "19.00",
+    arrival_time: "21.00",
+    duration: "3.00",
+    fare: 105,
+ 
+    bus_type: "Super Fast",
+    boarding_point: "Technopark",
+    dropping_point: "Kottarakara",
+    route: ["Technopark", "Kazhakootam", "Pothencode", "Venjaramoodu", "Kilimanoor", "Nilamel", "Chadayamangalam", "Ayoor", "Valakam", "Kottarakara"]
+  },
+   {
+    bus_id: "RET13",
+    source: "Technopark",
+    destination: "Kottarakara",
+    departure_time: ".12.00",
+    arrival_time: "15.00",
+    duration: "3.00",
+    fare: 97,
+ 
+    bus_type: "Fast",
+    boarding_point: "Technopark",
+    dropping_point: "Kottarakara",
+    route: ["Technopark", "Kazhakootam", "Pothencode", "Venjaramoodu", "Kilimanoor", "Nilamel", "Chadayamangalam", "Ayoor", "Valakam", "Kottarakara"]
   },
   {
-    bus_id: "1602TVMBNG",
-    source: "Trivandrum",
-    destination: "Bangalore",
-    departure_time: "16:02",
-    arrival_time: "10:11",
-    duration: "18:09",
-    fare: 1811,
-    
-    bus_type: "AC MULTI AXLE",
-    boarding_point: "TRIVANDRUM DEPOT",
-    dropping_point: "BANGALORE",
-    route: ["Trivandrum", "Kollam", "Alappuzha", "Ernakulam", "Thrissur", "Palakkad", "Coimbatore", "Salem", "Hosur", "Bangalore"]
+    bus_id: "RET14",
+    source: "Kottarakara",
+    destination: "TechnoPark",
+    departure_time: "10.00",
+    arrival_time: "1.00",
+    duration: "3.00",
+    fare: 97,
+ 
+    bus_type: "Fast",
+    boarding_point: "Kottarakara",
+    dropping_point: "TechnoPark",
+    route: ["Kottarakara","Valakam","Ayoor","Chadayamangalam","Nilamel","Kilimanoor","Venjaramoodu","Pothencode","Kazhakootam","Technopark"] 
   },
-  {
-    bus_id: "1800KNPMBNG",
-    source: "Trivandrum",
-    destination: "Bangalore",
-    departure_time: "19:00",
-    arrival_time: "08:30",
-    duration: "13:30",
-    fare: 1540,
-    bus_type: "VOLVO SLEEPER",
-    boarding_point: "KANIYAPURAM DEPOT",
-    dropping_point: "BANGALORE",
-    route: ["Trivandrum", "Kollam", "Kayamkulam", "Ernakulam", "Thrissur", "Coimbatore", "Salem", "Hosur", "Bangalore"]
-  }
+   
 ];
 
 // Get user input from sessionStorage
