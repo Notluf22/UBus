@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Selected Bus Details</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f2f2f2;
+      padding: 20px;
+    }
+    .bus-details {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: auto;
+    }
+    .bus-details h2 {
+      margin-top: 0;
+    }
+    .button {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    .button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+
+<div class="bus-details" id="busDetails">
+  <h2>Selected Bus</h2>
+  <p>Loading bus information...</p>
+</div>
+
+<script>
+const buses = [
+  {
+    bus_id: "1507TVMBNG",
+    source: "Trivandrum",
+    destination: "Bangalore",
+    departure_time: "15:07",
+    arrival_time: "07:02",
+    duration: "15:55",
+    fare: 1580,
+ 
+    bus_type: "AC MULTI AXLE",
+    boarding_point: "TRIVANDRUM DEPOT",
+    dropping_point: "BANGALORE"
+  },
+  {
+    bus_id: "1602TVMBNG",
+    source: "Trivandrum",
+    destination: "Bangalore",
+    departure_time: "16:02",
+    arrival_time: "10:11",
+    duration: "18:09",
+    fare: 1811,
+   
+    bus_type: "AC MULTI AXLE",
+    boarding_point: "TRIVANDRUM DEPOT",
+    dropping_point: "BANGALORE"
+  },
+  {
+    bus_id: "1800KNPMBNG",
+    source: "Trivandrum",
+    destination: "Bangalore",
+    departure_time: "19:00",
+    arrival_time: "08:30",
+    duration: "13:30",
+    fare: 1540,
+    
+    bus_type: "VOLVO SLEEPER",
+    boarding_point: "KANIYAPURAM DEPOT",
+    dropping_point: "BANGALORE"
+  }
+];
+
+const busId = sessionStorage.getItem("selectedBusId");
+const selectedBus = buses.find(bus => bus.bus_id === busId);
+
+const busDetailsDiv = document.getElementById("busDetails");
+
+if (!selectedBus) {
+  busDetailsDiv.innerHTML = "<p>Bus not found. Please go back and select a bus.</p>";
+} else {
+  busDetailsDiv.innerHTML = `
+    <h2>🚌 ${selectedBus.bus_type}</h2>
+    <p><strong>Bus ID:</strong> ${selectedBus.bus_id}</p>
+    <p><strong>Route:</strong> ${selectedBus.source} ➝ ${selectedBus.destination}</p>
+    <p><strong>Departure:</strong> ${selectedBus.departure_time} from ${selectedBus.boarding_point}</p>
+    <p><strong>Arrival:</strong> ${selectedBus.arrival_time} at ${selectedBus.dropping_point}</p>
+    <p><strong>Duration:</strong> ${selectedBus.duration}</p>
+    <p><strong>Fare:</strong> ₹${selectedBus.fare}</p>
+    
+    <button class="button" onclick="proceedToBooking()">Proceed to Booking</button>
+  `;
+}
+
+function proceedToBooking() {
+  // In a real app, redirect to a booking form or payment page
+  alert("Redirecting to booking page...");
+  window.location.href = "booking.html"; // Create this page next
+}
+</script>
+
+</body>
+</html>
