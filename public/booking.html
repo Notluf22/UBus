@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bus Booking</title>
+<script type="module">
+  import * as emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+
+  emailjs.init("ofzahJELxNKJoAohy");
+
+  // Optionally expose to global window for access from inline <script>
+  window.emailjs = emailjs;
+</script>
+
+
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+
+    .booking-container {
+      background: white;
+      padding: 25px;
+      max-width: 500px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .booking-container h2 {
+      margin-top: 0;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      box-sizing: border-box;
+    }
+
+    .btn {
+      margin-top: 20px;
+      padding: 10px 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+
+    .confirmation {
+      background: #e6ffe6;
+      padding: 15px;
+      margin-top: 20px;
+      border: 1px solid #a3d8a3;
+      border-radius: 6px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="booking-container">
+  <h2>Book Your Ticket</h2>
+  <div id="busInfo">
+    <!-- Bus info will be injected here -->
+  </div>
+
+  <form id="bookingForm">
+    <label for="name">Your Name:</label>
+    <input type="text" id="name" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" required>
+
+    <label for="seats">Number of Seats:</label>
+    <select id="seats">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+
+    <button type="submit" class="btn">Confirm Booking</button>
+  </form>
+
+  <div class="confirmation" id="confirmationMsg">
+    <strong>✅ Booking confirmed!</strong><br>
+    We’ve sent your ticket to your email.
+  </div>
+</div>
+
+<script>
+const buses = [
+  {
+    bus_id: "1507TVMBNG",
+    source: "Trivandrum",
+    destination: "Bangalore",
+    departure_time: "15:07",
+    arrival_time: "07:02",
+    duration: "15:55",
+    fare: 1580,
+    seats_available: 32,
+    bus_type: "AC MULTI AXLE",
+    boarding_point: "TRIVANDRUM DEPOT",
+    dropping_point: "BANGALORE"
+  },
+  {
+    bus_id: "1602TVMBNG",
+    source: "Trivandrum",
+    destination: "Bangalore",
+    departure_time: "16:02",
+    arrival_time: "10:11",
+    duration: "18:09",
+    fare: 1811,
+    seats_available: 29,
+    bus_type: "AC MULTI AXLE",
+    boarding_point: "TRIVANDRUM DEPOT",
+    dropping_point: "BANGALORE"
+  },
+  {
+    bus_id: "1800KNPMBNG",
+    source: "Trivandrum",
+    destination: "Bangalore",
+    departure_time: "19:00",
+    arrival_time: "08:30",
+    duration: "13:30",
+    fare: 1540,
+    seats_available: 8,
+    bus_type: "VOLVO SLEEPER",
+    boarding_point: "KANIYAPURAM DEPOT",
+    dropping_point: "BANGALORE"
+  }
+];
+
+const selectedBusId = sessionStorage.getItem("selectedBusId");
+const selectedBus = buses.find(bus => bus.bus_id === selectedBusId);
+
+const busInfoDiv = document.getElementById("busInfo");
+if (selectedBus) {
+  busInfoDiv.innerHTML = `
+    <p><strong>Bus:</strong> ${selectedBus.bus_type}</p>
+    <p><strong>From:</strong> ${selectedBus.source} ➝ <strong>To:</strong> ${selectedBus.destination}</p>
+    <p><strong>Departure:</strong> ${selectedBus.departure_time} | <strong>Arrival:</strong> ${selectedBus.arrival_time}</p>
+    <p><strong>Fare per seat:</strong> ₹${selectedBus.fare}</p>
+    <p><strong>Seats available:</strong> ${selectedBus.seats_available}</p>
+  `;
+}
+
+document.getElementById("bookingForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const seats = parseInt(document.getElementById("seats").value);
+
+ if (selectedBus && seats <= selectedBus.seats_available) {
+  document.getElementById("confirmationMsg").style.display = "block";
+  selectedBus.seats_available -= seats; // simulate booking
+
+  // Send email
+  sendConfirmationEmail(
+    { name, email },
+    selectedBus,
+    seats
+  );
+
+
+    console.log(`✅ ${name} booked ${seats} seat(s) on ${selectedBus.bus_id}`);
+  } else {
+    alert("Not enough seats available.");
+  }
+});
+ 
+function sendConfirmationEmail(userData, busData, seatCount) {
+  emailjs.send("service_ychbdie", "template_dl2hl8x", {
+    to_name: userData.name,            // For {{to_name}}
+    name: userData.name,               // For {{name}} (from name)
+    email: userData.email,             // For {{email}} (reply-to)
+    bus_type: busData.bus_type,
+    source: busData.source,
+    destination: busData.destination,
+    departure_time: busData.departure_time,
+    arrival_time: busData.arrival_time,
+    seats: seatCount,
+    fare: busData.fare * seatCount
+  })
+  .then(() => {
+    console.log("✅ Email sent successfully");
+    alert("Booking confirmed! A confirmation email has been sent.");
+  })
+  .catch((error) => {
+    console.error("❌ Failed to send email:", error);
+    alert("Booking confirmed, but failed to send confirmation email.");
+  });
+}
+
+
+
+
+</script>
+
+</body>
+</html>
