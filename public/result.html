@@ -15,7 +15,7 @@
 
   <script>
     function goBack() {
-      window.location.href = "login.html"; // or your dashboard filename
+      window.location.href = "dashboard.html"; // or your dashboard filename
     }
 
     const resultsDiv = document.getElementById('results');
@@ -35,5 +35,37 @@
       });
     }
   </script>
+  <script>
+  const form = document.getElementById("feedbackForm");
+  const thankYouSection = document.getElementById("thankYouSection");
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const feedback = document.getElementById("feedback").value.trim();
+    const rating = document.querySelector('input[name="rating"]:checked');
+
+    if (name && feedback && rating) {
+      // Save data to localStorage
+      localStorage.setItem("feedbackName", name);
+      localStorage.setItem("feedbackText", feedback);
+      localStorage.setItem("feedbackRating", rating.value);
+
+      // Redirect to sample.html
+      window.location.href = "sample.html";
+    }
+  });
+
+  function reenterFeedback() {
+    thankYouSection.classList.add("hidden");
+    form.classList.remove("hidden");
+  }
+
+  function goBack() {
+    window.location.href = "mainpage.html";
+  }
+</script>
+
 </body>
 </html>
