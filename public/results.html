@@ -2,53 +2,16 @@
 <html>
 <head>
   <title>Bus Search Results</title>
-  
-  <style>
-    body {
-      font-family: sans-serif;
-      background: #f2f2f2;
-      padding: 20px;
-    }
-    h2 {
-      margin-bottom: 5px;
-    }
-    .route-heading {
-      font-size: 18px;
-      font-weight: 500;
-      margin-bottom: 20px;
-      color: #444;
-    }
-    .bus-card {
-      background: white;
-      padding: 15px;
-      margin: 10px 0;
-      border-radius: 6px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .results {
-      margin-top: 10px;
-    }
-    .select-button {
-      margin-top: 10px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .select-button:hover {
-      background-color: #0056b3;
-    }
-  </style>
-</head>
+   <link rel="stylesheet" href="results.css">
+ 
+  </head>
 <body>
 
 <h2>Available Buses</h2>
 <div class="route-heading" id="routeHeading"></div>
 
-<div class="results" id="results"></div>
 
+<div class="results" id="results"></div>
 <script>
 const buses = [
   {
@@ -90,7 +53,7 @@ const buses = [
     bus_type: "VOLVO SLEEPER",
     boarding_point: "KANIYAPURAM DEPOT",
     dropping_point: "BANGALORE",
-    route: ["Trivandrum", "Kollam", "Kayamkulam", "Ernakulam", "Thrissur", "Coimbatore", "Salem", "Hosur", "Bangalore"]
+    route: ["Trivandrum", "Kollam","east fort", "Kayamkulam", "Ernakulam", "Thrissur", "Coimbatore", "Salem", "Hosur", "Bangalore"]
   }
 ];
 
@@ -129,16 +92,25 @@ function renderResults(matchingBuses) {
     return;
   }
 
+ 
+
   matchingBuses.forEach(bus => {
     const busHTML = `
       <div class="bus-card">
+       
         <strong>🚌 ${bus.bus_type}</strong><br>
-        Bus ID: ${bus.bus_id}<br>
-        Departure: ${bus.departure_time}, ${bus.boarding_point}<br>
-        Arrival: ${bus.arrival_time}, Final Stop: ${bus.destination}<br>
-        <small>(Your stop: ${destinationRaw})</small><br>
-        Duration: ${bus.duration}<br>
-        Fare: ₹${bus.fare} 
+       
+       <div class="bus-id">
+  <span style="color: black; font-weight: bold; font-size:large">Bus ID:</span>
+  <span style="color: blue; font-size:large ">${bus.bus_id}</span>
+</div>
+
+       
+        <div class="departure"> <span> Departure: <span>${bus.departure_time}</span> ---------${bus.duration}hr --------- <span>Arrival: <span>${bus.arrival_time}</span></div>
+        <div class="arrival">  <span>${bus.boarding_point} to  <span>${bus.dropping_point}</span></div>
+       
+     
+        <div class="fare"> <span> Fare: ₹<span>${bus.fare}</span></div>
         <button class="select-button" onclick="selectBus('${bus.bus_id}')">Select</button>
       </div>
     `;
