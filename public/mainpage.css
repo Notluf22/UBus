@@ -24,51 +24,7 @@ html,body {
   position: relative;
   z-index: 2;
 }
-
-    
     .home{
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-size: larger;
-        position: relative;
-        left: 160px;
-        bottom: 10px;background-color: rgb(95, 150, 198);
-        padding: 5px;
-        border-radius: 5px;
-       
-    }
-     .ticket{
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-size: larger;
-        position: relative;
-        left: 210px;
-        bottom: 10px;
-        background-color: rgb(95, 150, 198);
-        padding: 5px;
-        border-radius: 5px;
-       
-    }
-     .help{
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-size: larger;
-        position: relative;
-        left: 280px;
-        bottom: 10px;
-        background-color: rgb(95, 150, 198);
-        padding: 5px;
-        border-radius: 5px;
-        
-    }
-     .feed{
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-size: larger;
-        position: relative;
-        left: 360px;
-        bottom: 10px;background-color: rgb(95, 150, 198);
-        padding: 5px;
-        border-radius: 5px;
-       
-    }
-     .about{
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         font-size: larger;
         position: relative;
@@ -78,31 +34,39 @@ html,body {
         border-radius: 5px;
        
     }
-     .contact{
+     .feed{
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         font-size: larger;
         position: relative;
         left: 500px;
+        bottom: 10px;background-color: rgb(95, 150, 198);
+        padding: 5px;
+        border-radius: 5px;
+       
+    }
+     .about{
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: larger;
+        position: relative;
+        left: 570px;
+        bottom: 10px;background-color: rgb(95, 150, 198);
+        padding: 5px;
+        border-radius: 5px;
+       
+    }
+     .contact{
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: larger;
+        position: relative;
+        left: 640px;
         bottom: 10px;
         background-color: rgb(95, 150, 198);
         padding: 5px;
         border-radius: 5px;
      }
-     .log{
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-size: larger;
+    .accicon{
         position: relative;
         left: 750px;
-        bottom: 10px;
-        color: azure;
-        background-color: rgb(95, 150, 198);
-        padding: 5px;
-        border-radius: 5px;
-    } .accicon{
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-size: larger;
-        position: relative;
-        left: 640px;
         bottom: 5px;
     }
      .busicon{
