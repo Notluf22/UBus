@@ -37,12 +37,6 @@
 </form>
 
 <script>
-
-  if (sessionStorage.getItem("isAdmin") !== "true") {
-    alert("Unauthorized. Please login as admin.");
-    window.location.href = "admin-login.html"; // Redirect back to login
-  }
-
   // Step 1: List of admin accounts
   const adminAccounts = [
     { username: "fulton@gmail.com", password: "fulton1234" },
