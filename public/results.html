@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Bus Search Results</title>
+  <title>UBus</title>
    <link rel="stylesheet" href="results.css">
+    <link rel="icon" href="logo-transparent-png.png" />
   </head>
 <body>
 
@@ -72,7 +73,7 @@ const buses = [
     bus_type: "Fast",
     boarding_point: "Parassala",
     dropping_point: "Trivandrum",
-    route: ["Parassala","Idichikkaplamoodu","Kottamom","Amaravila","Neyyantinkara","Alummoodu", "Balaramapuram","Pravachambalam","Nemom","Karamana","Trivandrum"]
+    route: ["Parassala","Idichikkaplamoodu","Kottamom","Amaravila","Neyyattinkara","Alummoodu", "Balaramapuram","Pravachambalam","Nemom","Karamana","Trivandrum"]
   },
   {
     bus_id: "RET16",
@@ -84,7 +85,7 @@ const buses = [
     bus_type: "Ordinary",
     boarding_point: "Trivandrum",
     dropping_point: "Parassala",
-    route: ["Trivandrum","Karamana","Nemom","Pravachambalam","Balaramapuram","Alummoodu","Neyyantinkara","Amaravila","Kottamom","Idichikkaplamoodu","Parassala"]
+    route: ["Trivandrum","Karamana","Nemom","Pravachambalam","Balaramapuram","Alummoodu","Neyyattinkara","Amaravila","Kottamom","Idichikkaplamoodu","Parassala"]
   },
   {
     bus_id: "RET17",
@@ -177,12 +178,12 @@ if (!source || !destination) {
 
 document.getElementById("routeHeading").textContent = `From ${toTitleCase(source)} to ${toTitleCase(destination)}`;
 
-// 🧠 Utility
+
 function toTitleCase(str) {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
-// 🔍 Search & Display Matching Buses
+
 function searchBuses() {
   const matchingBuses = buses.filter(bus => {
     const route = bus.route.map(stop => stop.toLowerCase());
@@ -194,7 +195,7 @@ function searchBuses() {
   renderResults(matchingBuses);
 }
 
-// 💰 Dynamic Fare Logic Based on Bus Type
+
 function renderResults(matchingBuses) {
   const resultsDiv = document.getElementById('results');
   resultsDiv.innerHTML = '';
@@ -205,7 +206,7 @@ function renderResults(matchingBuses) {
     const destIndex = route.indexOf(destination);
     const stopCount = destIndex - sourceIndex;
 
-    // Rate per stop by bus type
+    
     let ratePerStop;
     const type = bus.bus_type.toLowerCase();
     if (type === "super fast") ratePerStop = 15;
@@ -251,6 +252,7 @@ function selectBus(busId) {
   sessionStorage.setItem("selectedBusId", busId);
   window.location.href = "select.html";
 }
+resultsDiv.innerHTML += `<div class="bus-card" style="animation-delay:${index * 0.1}s">${busHTML}</div>`;
 
 document.addEventListener('DOMContentLoaded', searchBuses);
 </script>

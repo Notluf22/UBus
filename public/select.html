@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Selected Bus Details</title>
-  <style>
+  <title>UBus</title>
+  <link rel="icon" href="logo-transparent-png.png" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+ 
+ 
+ <style>
     body {
       font-family: sans-serif;
       background: #f2f2f2;
@@ -16,6 +20,21 @@
       max-width: 600px;
       margin: auto;
     }
+    .bus-details {
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
     .bus-details h2 {
       margin-top: 0;
     }
@@ -43,73 +62,217 @@
 <script>
 const buses = [
   {
-    bus_id: "1507TVMBNG",
-    source: "Trivandrum",
-    destination: "Bangalore",
-    departure_time: "15:07",
-    arrival_time: "07:02",
-    duration: "15:55",
-    fare: 1580,
- 
-    bus_type: "AC MULTI AXLE",
-    boarding_point: "TRIVANDRUM DEPOT",
-    dropping_point: "BANGALORE"
+    bus_id: "RET11",
+    source: "Kottarakara",
+    destination: "Technopark",
+    departure_time: "6:00",
+    arrival_time: "8:10",
+    duration: "2:10",
+    bus_type: "Super Fast",
+    boarding_point: "Kottarakara",
+    dropping_point: "Technopark",
+    route: ["Kottarakara","Valakam","Ayoor","Chadayamangalam","Nilamel","Kilimanoor","Venjaramoodu","Pothencode","Kazhakootam","Technopark"]
   },
   {
-    bus_id: "1602TVMBNG",
-    source: "Trivandrum",
-    destination: "Bangalore",
-    departure_time: "16:02",
-    arrival_time: "10:11",
-    duration: "18:09",
-    fare: 1811,
-   
-    bus_type: "AC MULTI AXLE",
-    boarding_point: "TRIVANDRUM DEPOT",
-    dropping_point: "BANGALORE"
-  },
-  {
-    bus_id: "1800KNPMBNG",
-    source: "Trivandrum",
-    destination: "Bangalore",
+    bus_id: "RET12",
+    source: "Technopark",
+    destination: "Kottarakara",
     departure_time: "19:00",
-    arrival_time: "08:30",
-    duration: "13:30",
-    fare: 1540,
-    
-    bus_type: "VOLVO SLEEPER",
-    boarding_point: "KANIYAPURAM DEPOT",
-    dropping_point: "BANGALORE"
+    arrival_time: "21:00",
+    duration: "3:00",
+    bus_type: "Fast",
+    boarding_point: "Technopark",
+    dropping_point: "Kottarakara",
+    route: ["Technopark", "Kazhakootam", "Pothencode", "Venjaramoodu", "Kilimanoor", "Nilamel", "Chadayamangalam", "Ayoor", "Valakam", "Kottarakara"]
+  },
+  {
+    bus_id: "RET13",
+    source: "Technopark",
+    destination: "Kottarakara",
+    departure_time: "12:00",
+    arrival_time: "15:00",
+    duration: "3:00",
+    bus_type: "Fast",
+    boarding_point: "Technopark",
+    dropping_point: "Kottarakara",
+    route: ["Technopark", "Kazhakootam", "Pothencode", "Venjaramoodu", "Kilimanoor", "Nilamel", "Chadayamangalam", "Ayoor", "Valakam", "Kottarakara"]
+  },
+  {
+    bus_id: "RET14",
+    source: "Parassala",
+    destination: "Trivandrum",
+    departure_time: "8:00",
+    arrival_time: "10:00",
+    duration: "2:00",
+    bus_type: "Ordinary",
+    boarding_point: "Parassala",
+    dropping_point: "Trivandrum",
+    route: ["Parassala","Idichikkaplamoodu","Kottamom","Amaravila","Neyyantinkara","Alummoodu", "Balaramapuram","Pravachambalam","Nemom","Karamana","Trivandrum"]
+  },
+  {
+    bus_id: "RET15",
+    source: "Parassala",
+    destination: "Trivandrum",
+    departure_time: "14:00",
+    arrival_time: "15:30",
+    duration: "1:30",
+    bus_type: "Fast",
+    boarding_point: "Parassala",
+    dropping_point: "Trivandrum",
+    route: ["Parassala","Idichikkaplamoodu","Kottamom","Amaravila","Neyyattinkara","Alummoodu", "Balaramapuram","Pravachambalam","Nemom","Karamana","Trivandrum"]
+  },
+  {
+    bus_id: "RET16",
+    source: "Trivandrum",
+    destination: "Parassala",
+    departure_time: "17:30",
+    arrival_time: "19:30",
+    duration: "2:00",
+    bus_type: "Ordinary",
+    boarding_point: "Trivandrum",
+    dropping_point: "Parassala",
+    route: ["Trivandrum","Karamana","Nemom","Pravachambalam","Balaramapuram","Alummoodu","Neyyattinkara","Amaravila","Kottamom","Idichikkaplamoodu","Parassala"]
+  },
+  {
+    bus_id: "RET17",
+    source: "Kaniyapuram",
+    destination: "Thampanoor",
+    departure_time: "8:30",
+    arrival_time: "9:30",
+    duration: "1:00",
+    bus_type: "Ordinary",
+    boarding_point: "Kaniyapuram",
+    dropping_point: "Thampanoor",
+    route: ["Kaniyapuram", "Kazhakootam", "Technopark", "Karyavettam", "Sreekaryam", "Pattam", "Palayam", "Statue", "Thampanoor"]
+  },
+  {
+    bus_id: "RET18",
+    source: "Kaniyapuram",
+    destination: "Thampanoor",
+    departure_time: "12:30",
+    arrival_time: "13:30",
+    duration: "1:00",
+    bus_type: "Ordinary",
+    boarding_point: "Kaniyapuram",
+    dropping_point: "Thampanoor",
+    route: ["Kaniyapuram", "Kazhakootam", "Technopark", "Karyavettam", "Sreekaryam", "Pattam", "Palayam", "Statue", "Thampanoor"]
+  },
+  {
+    bus_id: "RET19",
+    source: "Thampanoor",
+    destination: "Kaniyapuram",
+    departure_time: "16:00",
+    arrival_time: "17:20",
+    duration: "1:20",
+    bus_type: "Ordinary",
+    boarding_point: "Thampanoor",
+    dropping_point: "Kaniyapuram",
+    route: ["Thampanoor", "Statue", "Palayam", "Pattam", "Sreekaryam", "Karyavettam", "Technopark", "Kazhakootam", "Kaniyapuram"]
+
+  },
+  {
+    bus_id: "RET21",
+    source: "Trivandrum",
+    destination: "Kollam",
+    departure_time: "11:00",
+    arrival_time: "13.30",
+    duration: "2:30",
+    bus_type: "Fast",
+    boarding_point: "Trivandrum",
+    dropping_point: "Kollam",
+    route: ["Trivandrum", "Kazhakootam", "Kaniyapuram", "Managalapuram", "Attingal", "Kallambalam", "Parippally", "Chathanoor", "Kottiyam", "Kollam"]
+
+  },
+  {
+    bus_id: "RET22",
+    source: "Trivandrum",
+    destination: "Kollam",
+    departure_time: "18:00",
+    arrival_time: "20.10",
+    duration: "2:10",
+    bus_type: "Super Fast",
+    boarding_point: "Trivandrum",
+    dropping_point: "Kollam",
+    route: ["Trivandrum", "Kazhakootam", "Kaniyapuram", "Managalapuram", "Attingal", "Kallambalam", "Parippally", "Chathanoor", "Kottiyam", "Kollam"]
+  },
+  {
+    bus_id: "RET21",
+    source: "Kollam",
+    destination: "Trivandrum",
+    departure_time: "13:00",
+    arrival_time: "15:10",
+    duration: "2:10",
+    bus_type: "Super Fast",
+    boarding_point: "Kollam",
+    dropping_point: "Trivandrum",
+    route: ["Kollam", "Kottiyam", "Chathanoor", "Parippally", "Kallambalam", "Attingal", "Managalapuram", "Kaniyapuram", "Kazhakootam", "Trivandrum"]
+
   }
 ];
 
-const busId = sessionStorage.getItem("selectedBusId");
-const selectedBus = buses.find(bus => bus.bus_id === busId);
+function toTitleCase(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+const source = (sessionStorage.getItem("source") || "").trim().toLowerCase();
+const destination = (sessionStorage.getItem("destination") || "").trim().toLowerCase();
+const selectedBusId = sessionStorage.getItem("selectedBusId");
+
+const selectedBus = buses.find(bus => bus.bus_id === selectedBusId);
 
 const busDetailsDiv = document.getElementById("busDetails");
 
-if (!selectedBus) {
+if (!selectedBus || !source || !destination) {
   busDetailsDiv.innerHTML = "<p>Bus not found. Please go back and select a bus.</p>";
 } else {
+  const route = selectedBus.route.map(stop => stop.toLowerCase());
+  const sourceIndex = route.indexOf(source);
+  const destIndex = route.indexOf(destination);
+  const stopCount = destIndex - sourceIndex;
+
+  let ratePerStop;
+  const type = selectedBus.bus_type.toLowerCase();
+  if (type === "super fast") ratePerStop = 15;
+  else if (type === "fast") ratePerStop = 12;
+  else ratePerStop = 10;
+
+  const fare = stopCount * ratePerStop;
+  sessionStorage.setItem("fare", fare);
+ 
   busDetailsDiv.innerHTML = `
-    <h2>🚌 ${selectedBus.bus_type}</h2>
-    <p><strong>Bus ID:</strong> ${selectedBus.bus_id}</p>
-    <p><strong>Route:</strong> ${selectedBus.source} ➝ ${selectedBus.destination}</p>
-    <p><strong>Departure:</strong> ${selectedBus.departure_time} from ${selectedBus.boarding_point}</p>
-    <p><strong>Arrival:</strong> ${selectedBus.arrival_time} at ${selectedBus.dropping_point}</p>
-    <p><strong>Duration:</strong> ${selectedBus.duration}</p>
-    <p><strong>Fare:</strong> ₹${selectedBus.fare}</p>
-    
-    <button class="button" onclick="proceedToBooking()">Proceed to Booking</button>
-  `;
+  <h2>🚌 ${selectedBus.bus_type}</h2>
+  <p><strong>Bus ID:</strong> ${selectedBus.bus_id}</p>
+  <p><strong>Route:</strong> ${toTitleCase(source)} ➝ ${toTitleCase(destination)}</p>
+
+  <p>
+    <span class="material-icons" style="vertical-align: middle; color: #007bff;">departure_board</span>
+    <strong>Departure:</strong> ${selectedBus.departure_time} from ${selectedBus.boarding_point}
+  </p>
+
+  <p>
+    <span class="material-icons" style="vertical-align: middle; color: #e53935;">place</span>
+    <strong>Arrival:</strong> ${selectedBus.arrival_time} at ${selectedBus.dropping_point}
+  </p>
+
+  <p>
+    <span class="material-icons" style="vertical-align: middle; color: #43a047;">schedule</span>
+    <strong>Duration:</strong> ${selectedBus.duration}
+  </p>
+
+  <p><strong>Fare:</strong> ₹${fare}</p>
+  <button class="button" onclick="proceedToBooking()">Proceed to Booking</button>
+`;
+
+
+  
 }
 
 function proceedToBooking() {
-  // In a real app, redirect to a booking form or payment page
   alert("Redirecting to booking page...");
-  window.location.href = "booking.html"; // Create this page next
+  window.location.href = "booking 1.html";
 }
 </script>
+
 
 </body>
 </html>
