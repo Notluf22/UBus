@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Account</title>
+  <link rel="stylesheet" href="account.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Your Account</h2>
+    <p><strong>Email:</strong> <span id="email">Loading...</span></p>
+    <p><strong>Username:</strong> <span id="username">Loading...</span></p>
+
+    <a href="changepassword.html" class="change-password-btn">Change Password</a>
+    <a href="dashboard.html" class="back">← Back to Dashboard</a>
+  </div>
+
+  <script type="module">
+    import { auth } from './firebase.js';
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        document.getElementById('email').textContent = user.email;
+        document.getElementById('username').textContent = user.displayName || "Not set";
+      } else {
+        alert("No user signed in.");
+        window.location.href = "login.html";
+      }
+    });
+  </script>
+</body>
+</html>
