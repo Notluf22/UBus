@@ -1,66 +1,71 @@
-    import { auth, onAuthStateChanged, signOut } from './firebase.js';
-    
-    // Protect dashboard access
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById('useremail').innerText = `Logged in as: ${user.email}`;
-      } else {
-        // Redirect if not logged in
-        window.location.href = "login.html";
-      }
-    });
+let buses = [];
+let feedbacks = [
+  "Bus was clean and punctual.",
+  "More buses needed during peak time.",
+  "Good experience overall."
+];
 
-    // Logout logic
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      signOut(auth)
-        .then(() => {
-          alert("You have been logged out.");
-          window.location.href = "login.html";
-        })
-        .catch((error) => {
-          alert("Logout failed: " + error.message);
-        });
-    });
-    
-     async function loadTimetables() {
-      const res = await fetch('http://localhost:3000/timetables');
-      const data = await res.json();
-      const list = document.getElementById('timetableList');
-      list.innerHTML = '';
-      data.forEach(item => {
-        const li = document.createElement('li');
-        li.textContent = `${item.routeId}: ${item.routeName} (${item.departureTime} to ${item.arrivalTime})`;
-        list.appendChild(li);
-      });
-    }
+fetch('buses.json')
+  .then(res => res.json())
+  .then(data => {
+    buses = data;
+    renderTable();
+  });
 
-    async function addTimetable() {
-      const body = {
-        routeId: document.getElementById('routeId').value,
-        routeName: document.getElementById('routeName').value,
-        departureTime: document.getElementById('departureTime').value,
-        arrivalTime: document.getElementById('arrivalTime').value
-      };
-      await fetch('http://localhost:3000/timetables', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(body)
-      });
-      loadTimetables();
-    }
+function renderTable() {
+  const tbody = document.getElementById('busTableBody');
+  tbody.innerHTML = '';
+  buses.forEach((bus, i) => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${bus.bus_id}</td>
+        <td>${bus.source}</td>
+        <td>${bus.destination}</td>
+        <td>${bus.departure_time}</td>
+        <td>${bus.arrival_time}</td>
+        <td>${bus.bus_type}</td>
+        <td>${bus.fare || "-"}</td>
+        <td>${bus.route.join(' → ')}</td>
+        <td><button onclick="editBus(${i})">Edit</button></td>
+      </tr>`;
+  });
+}
 
-    async function editTimetable() {
-      const routeId = document.getElementById('editRouteId').value;
-      const body = {
-        departureTime: document.getElementById('newDepartureTime').value,
-        arrivalTime: document.getElementById('newArrivalTime').value
-      };
-      await fetch(`http://localhost:3000/timetables/${routeId}`, {
-        method: 'PUT',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(body)
-      });
-      loadTimetables();
-    }
+function addBus() {
+  const bus = {
+    bus_id: document.getElementById("busId").value,
+    source: document.getElementById("source").value,
+    destination: document.getElementById("destination").value,
+    departure_time: document.getElementById("departure").value,
+    arrival_time: document.getElementById("arrival").value,
+    bus_type: document.getElementById("busType").value,
+    fare: document.getElementById("fare").value,
+    route: document.getElementById("route").value.split(",").map(p => p.trim())
+  };
+  buses.push(bus);
+  renderTable();
+  alert("New bus added (not saved permanently).");
+}
 
-    loadTimetables();
+function editBus(index) {
+  const bus = buses[index];
+  document.getElementById("busId").value = bus.bus_id;
+  document.getElementById("source").value = bus.source;
+  document.getElementById("destination").value = bus.destination;
+  document.getElementById("departure").value = bus.departure_time;
+  document.getElementById("arrival").value = bus.arrival_time;
+  document.getElementById("busType").value = bus.bus_type;
+  document.getElementById("fare").value = bus.fare;
+  document.getElementById("route").value = bus.route.join(", ");
+  buses.splice(index, 1);
+}
+
+function renderFeedbacks() {
+  const ul = document.getElementById("feedbackList");
+  ul.innerHTML = "";
+  feedbacks.forEach(f => {
+    ul.innerHTML += `<li>${f}</li>`;
+  });
+}
+
+renderFeedbacks();
