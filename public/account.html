@@ -10,8 +10,6 @@
   <div class="container">
     <h2>Your Account</h2>
     <p><strong>Email:</strong> <span id="email">Loading...</span></p>
-    <p><strong>Username:</strong> <span id="username">Loading...</span></p>
-
     <a href="changepassword.html" class="change-password-btn">Change Password</a>
     <a href="mainpage.html" class="back">← Back to Home</a>
   </div>
@@ -22,7 +20,6 @@
     auth.onAuthStateChanged(user => {
       if (user) {
         document.getElementById('email').textContent = user.email;
-        document.getElementById('username').textContent = user.displayName || "Not set";
       } else {
         alert("No user signed in.");
         window.location.href = "login.html";

@@ -86,59 +86,8 @@
       <li>Pay securely through integrated digital payments.</li>
     </ul>
 
-    <h2>🧩 Modules</h2>
-
-    <h3>1. User Interface (Web App)</h3>
-    <ul>
-      <li>Sign up/login using OTP via Firebase Authentication.</li>
-      <li>Search for routes and buses.</li>
-      <li>Book tickets and get digital passes.</li>
-      <li>Live bus tracking on map (Google Maps API).</li>
-      <li>View past ticket history.</li>
-    </ul>
-
-    <h3>2. GPS Data Uploader</h3>
-    <ul>
-      <li>Uses an external device (or app fallback) installed in buses.</li>
-      <li>Sends real-time coordinates to Firestore.</li>
-      <li>Admins can monitor active buses and routes.</li>
-    </ul>
-
-    <h3>3. Admin Interface</h3>
-    <ul>
-      <li>Dashboard for depot-level monitoring.</li>
-      <li>View bus activity, route status, and fare collection.</li>
-      <li>Basic controls for route and schedule updates.</li>
-    </ul>
-
-    <h3>4. Payment Integration</h3>
-    <ul>
-      <li>UPI/card/wallet-based ticket payments.</li>
-      <li>Built using Razorpay (or other gateways).</li>
-      <li>Auto-confirm ticket upon successful payment.</li>
-    </ul>
-
-    <h2>⚙️ Technologies Used</h2>
-    <table>
-      <tr><th>Layer</th><th>Tools / Technologies</th></tr>
-      <tr><td>Frontend</td><td>HTML, CSS, JavaScript, Firebase Hosting</td></tr>
-      <tr><td>Backend</td><td>Firebase Cloud Functions, Firestore</td></tr>
-      <tr><td>Auth</td><td>Firebase Authentication (Phone OTP)</td></tr>
-      <tr><td>Database</td><td>Firebase Firestore (NoSQL, real-time)</td></tr>
-      <tr><td>Maps/GPS</td><td>Google Maps API, GPS Device Integration</td></tr>
-      <tr><td>Payments</td><td>Razorpay / PhonePe API (for ticketing)</td></tr>
-      <tr><td>Admin Tools</td><td>Firebase Admin SDK</td></tr>
-    </table>
-
     <h2>📍 Live Tracking with GPS</h2>
     <p>UBus uses external GPS modules (or optionally the emergency GPS panic button in buses) to broadcast real-time locations to the server. This ensures accurate ETA predictions and reduces wait times at bus stops.</p>
-
-    <h2>🔐 Authentication & Security</h2>
-    <ul>
-      <li>Firebase Authentication secures access.</li>
-      <li>Admin routes protected by role-based access.</li>
-      <li>Firestore security rules prevent unauthorized access.</li>
-    </ul>
 
     <h2>📅 Future Enhancements</h2>
     <ul>
