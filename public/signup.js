@@ -1,28 +1,24 @@
-import { auth } from './firebase.js';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { auth, createUserWithEmailAndPassword, getFirestore, updateProfile} from './firebase.js';
 
 const submit = document.getElementById('submit');
 submit.addEventListener("click", function (event) {
-  event.preventDefault();
-
+  event.preventDefault()
   const username = document.getElementById('username').value.trim(); // Make sure this field exists in HTML
-  const email = document.getElementById('email').value.trim();
+  const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
 
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
+      // Signed up 
       const user = userCredential.user;
-
-      // Set displayName to username
-      return updateProfile(user, {
-        displayName: username
-      });
-    })
-    .then(() => {
-      alert("Account created successfully!");
+      alert("Creating Account...")
       window.location.href = "login.html";
+      // ...
     })
     .catch((error) => {
-      alert(error.message);
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      alert(errorMessage)
+      // ..
     });
-});
+})
