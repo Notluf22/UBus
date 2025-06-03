@@ -2,6 +2,8 @@
 <html>
 <head>
   <title>Bus Search Results</title>
+   <link rel="stylesheet" href="results.css">
+  </head>
 <body>
 
 <h2>Available Buses</h2>
@@ -43,7 +45,7 @@ const buses = [
     departure_time: "12:00",
     arrival_time: "15:00",
     duration: "3:00",
-    bus_type: "Fat",
+    bus_type: "Fast",
     boarding_point: "Technopark",
     dropping_point: "Kottarakara",
     route: ["Technopark", "Kazhakootam", "Pothencode", "Venjaramoodu", "Kilimanoor", "Nilamel", "Chadayamangalam", "Ayoor", "Valakam", "Kottarakara"]
@@ -94,7 +96,7 @@ const buses = [
     bus_type: "Ordinary",
     boarding_point: "Kaniyapuram",
     dropping_point: "Thampanoor",
-    route: ["Kaniyapuram", "Kazhakkotam", "Technopark", "Karyavettam", "Sreekaryam", "Pattam", "Palayam", "Statue", "Thampanoor"]
+    route: ["Kaniyapuram", "Kazhakootam", "Technopark", "Karyavettam", "Sreekaryam", "Pattam", "Palayam", "Statue", "Thampanoor"]
   },
   {
     bus_id: "RET18",
@@ -106,7 +108,7 @@ const buses = [
     bus_type: "Ordinary",
     boarding_point: "Kaniyapuram",
     dropping_point: "Thampanoor",
-    route: ["Kaniyapuram", "Kazhakkotam", "Technopark", "Karyavettam", "Sreekaryam", "Pattam", "Palayam", "Statue", "Thampanoor"]
+    route: ["Kaniyapuram", "Kazhakootam", "Technopark", "Karyavettam", "Sreekaryam", "Pattam", "Palayam", "Statue", "Thampanoor"]
   },
   {
     bus_id: "RET19",
@@ -118,7 +120,7 @@ const buses = [
     bus_type: "Ordinary",
     boarding_point: "Thampanoor",
     dropping_point: "Kaniyapuram",
-    route: ["Thampanoor", "Statue", "Palayam", "Pattam", "Sreekaryam", "Karyavettam", "Technopark", "Kazhakkotam", "Kaniyapuram"]
+    route: ["Thampanoor", "Statue", "Palayam", "Pattam", "Sreekaryam", "Karyavettam", "Technopark", "Kazhakootam", "Kaniyapuram"]
 
   },
   {
@@ -217,11 +219,24 @@ function renderResults(matchingBuses) {
       <div class="bus-card">
        
         <strong>🚌 ${bus.bus_type}</strong><br>
+       
+       <div class="bus-id">
+  <span style="color: black; font-weight: bold; font-size:large">Bus ID:</span>
+  <span style="color: blue; font-size:large ">${bus.bus_id}</span>
+</div>
 
-        
+       
+        <div class="departure"> <span> Departure: <span>${bus.departure_time}</span> ---------${bus.duration}hr --------- <span>Arrival: <span>${bus.arrival_time}</span></div>
+        <div class="arrival">  <span>${bus.boarding_point} to  <span>${bus.dropping_point}</span></div>
+       
+     
+        <div class="fare"> <span> Fare: ₹<span>${fare}</span></div>
+       
+       
+       <div class="stop"> <span> Stops: <span> ${stopCount}</span></div>
         <button class="select-button" onclick="selectBus('${bus.bus_id}')">Select</button>
       </div>
-      Stops: ${stopCount}<br>
+      
     `;
     resultsDiv.innerHTML += busHTML;
   });
