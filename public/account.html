@@ -22,7 +22,7 @@
     auth.onAuthStateChanged(user => {
       if (user) {
         document.getElementById('email').textContent = user.email;
-        document.getElementById('username').textContent = user.displayName || "Not set";
+        document.getElementById('username').textContent = user.displayName;
       } else {
         alert("No user signed in.");
         window.location.href = "login.html";
