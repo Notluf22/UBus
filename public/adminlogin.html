@@ -5,15 +5,22 @@
   <style>
     body {
       font-family: sans-serif;
+      background-image: url(https://c4.wallpaperflare.com/wallpaper/873/351/661/gradient-simple-background-lights-colorful-wallpaper-thumb.jpg) ;
+      background-repeat: no-repeat;
+      background-size: cover;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      background-color: rgb(80, 244, 230);
     }
     form {
       border: 1px solid #ccc;
-      padding: 2rem;
-      border-radius: 10px;
+      background-color: #fff;
+      padding: 3rem;
+      width: 250px;
+      height: 230px;
+      border-radius: 20px;
       box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
     }
     input {
@@ -21,10 +28,39 @@
       margin-bottom: 1rem;
       padding: 0.5rem;
       width: 100%;
+      background-color: #ffffff;
     }
-    button {
+    .but{
       padding: 0.5rem 1rem;
+      border-radius: 2px;
+      font-weight: bold;
+      background-color: #3fd9d6;
+      position: relative;
+      top: 20px;
+      left: 85px;
     }
+    .but:hover {
+      background-color: #178831;
+    }
+    .but:active {
+      background-color: #d11414;
+    }
+    h2{
+      position: relative;
+      bottom: 20px;
+      
+      left: 55px;
+     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    }
+    #username{
+      position: relative;
+      bottom: 5px;
+    }
+     #password{
+      position: relative;
+      top: 5px;
+    }
+
   </style>
 </head>
 <body>
@@ -33,7 +69,7 @@
   <h2>Admin Login</h2>
   <input type="text" id="username" placeholder="Username" required />
   <input type="password" id="password" placeholder="Password" required />
-  <button type="submit">Login</button>
+  <button class="but" type="submit">Login</button>
 </form>
 
 <script>
