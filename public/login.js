@@ -1,23 +1,20 @@
-import { auth,signInWithEmailAndPassword } from './firebase.js';
+import { auth, signInWithEmailAndPassword } from './firebase.js';
 
-const submit = document.getElementById('submit');
-submit.addEventListener("click", function (event) {
-  event.preventDefault()
+const loginForm = document.getElementById('loginForm');
+
+loginForm.addEventListener("submit", function (event) {
+  event.preventDefault(); // Prevent default form submission
+
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
 
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      // Signed up 
       const user = userCredential.user;
-      alert("Logging in...")
+      alert("Logging in...");
       window.location.href = "mainpage.html";
-      // ...
     })
     .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      alert(errorMessage)
-      // ..
+      alert(error.message);
     });
-})
+});

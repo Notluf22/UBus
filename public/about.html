@@ -5,17 +5,100 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>About UBus</title>
   <link rel="stylesheet" href="about.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    h1, h2, h3 {
+      color: #2c3e50;
+    }
+    p, li {
+      line-height: 1.6;
+    }
+    ul {
+      padding-left: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1em;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    .back-button {
+      display: inline-block;
+      margin-top: 30px;
+      text-decoration: none;
+      background-color: #333;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+    .back-button:hover {
+      background-color: #000;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <h1>About UBus</h1>
-    <p>
-      UBus is a smart and user-friendly bus tracking platform designed to make public transport more efficient and accessible. 
-      With real-time updates, route planning, and feedback features, UBus helps commuters travel with confidence and convenience.
-    </p>
-    <p>
-      Our mission is to bridge the gap between passengers and transport providers by offering reliable, transparent, and tech-driven solutions.
-    </p>
+    <h1>🚌 UBus – Your route Your Time</h1>
+
+    <p><strong>UBus</strong> is a smart, real-time ticket booking and tracking system for <strong>short-distance government buses</strong>. Inspired by the simplicity of apps like <em>Where is My Train</em>, UBus brings seamless digital ticketing and live GPS tracking to local bus commuters.</p>
+
+    <h2>🚀 Project Overview</h2>
+    <p>UBus aims to bridge the gap between public transport accessibility and technology by allowing users to:</p>
+    <ul>
+      <li>Book general tickets online for short-distance buses.</li>
+      <li>Track live bus locations using GPS.</li>
+      <li>View accurate Estimated Time of Arrival (ETA) for each stop.</li>
+      <li>Travel without paper tickets – just show the digital pass.</li>
+    </ul>
+
+    <h2>📌 Problem Statement</h2>
+    <p>Current public transportation systems often lack a centralized platform for ticket booking or real-time location tracking, especially in rural and semi-urban areas. Commuters face difficulties such as:</p>
+    <ul>
+      <li>No way to know when the bus will arrive.</li>
+      <li>Long queues and cash-only ticketing.</li>
+      <li>Inconsistent bus schedules.</li>
+    </ul>
+
+    <h2>✅ Our Solution</h2>
+    <p>UBus solves this by creating a web-based platform where users can:</p>
+    <ul>
+      <li>Search for buses operating on specific routes.</li>
+      <li>Book a general (non-reserved) ticket using their mobile.</li>
+      <li>Get live updates on bus position using GPS.</li>
+      <li>Pay securely through integrated digital payments.</li>
+    </ul>
+
+    <h2>📍 Live Tracking with GPS</h2>
+    <p>UBus uses external GPS modules (or optionally the emergency GPS panic button in buses) to broadcast real-time locations to the server. This ensures accurate ETA predictions and reduces wait times at bus stops.</p>
+
+    <h2>📅 Future Enhancements</h2>
+    <ul>
+      <li>Offline booking integration for rural areas.</li>
+      <li>AI-based crowd prediction.</li>
+      <li>Multi-language interface.</li>
+      <li>Native app (Android/iOS).</li>
+    </ul>
+
+    <h2>🤝 Team</h2>
+    <p>Developed as part of a 2-week internship CREUD project by a team of 4.</p>
 
     <a href="mainpage.html" class="back-button">← Back to Home</a>
   </div>
