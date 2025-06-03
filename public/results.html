@@ -2,6 +2,11 @@
 <html>
 <head>
   <title>Bus Search Results</title>
+<<<<<<< HEAD
+   <link rel="stylesheet" href="results.css">
+ 
+  </head>
+=======
   <style>
     body {
       font-family: sans-serif;
@@ -41,13 +46,14 @@
     }
   </style>
 </head>
+>>>>>>> a0ec67780afca7206bbae9976f574c7107c235d1
 <body>
 
 <h2>Available Buses</h2>
 <div class="route-heading" id="routeHeading"></div>
 
-<div class="results" id="results"></div>
 
+<div class="results" id="results"></div>
 <script>
 // 🚌 Sample Bus Data
 const buses = [
@@ -68,6 +74,15 @@ const buses = [
     source: "Technopark",
     destination: "Kottarakara",
     departure_time: "19:00",
+<<<<<<< HEAD
+    arrival_time: "08:30",
+    duration: "13:30",
+    fare: 1540,
+    bus_type: "VOLVO SLEEPER",
+    boarding_point: "KANIYAPURAM DEPOT",
+    dropping_point: "BANGALORE",
+    route: ["Trivandrum", "Kollam","east fort", "Kayamkulam", "Ernakulam", "Thrissur", "Coimbatore", "Salem", "Hosur", "Bangalore"]
+=======
     arrival_time: "21:00",
     duration: "3:00",
     bus_type: "Fast",
@@ -86,6 +101,7 @@ const buses = [
     boarding_point: "Technopark",
     dropping_point: "Kottarakara",
     route: ["Technopark", "Kazhakootam", "Pothencode", "Venjaramoodu", "Kilimanoor", "Nilamel", "Chadayamangalam", "Ayoor", "Valakam", "Kottarakara"]
+>>>>>>> a0ec67780afca7206bbae9976f574c7107c235d1
   },
   {
     bus_id: "RET14",
@@ -248,6 +264,16 @@ function renderResults(matchingBuses) {
   const resultsDiv = document.getElementById('results');
   resultsDiv.innerHTML = '';
 
+<<<<<<< HEAD
+  if (matchingBuses.length === 0) {
+    resultsDiv.innerHTML = "<p>No buses found for your search.</p>";
+    return;
+  }
+
+ 
+
+=======
+>>>>>>> a0ec67780afca7206bbae9976f574c7107c235d1
   matchingBuses.forEach(bus => {
     const route = bus.route.map(stop => stop.toLowerCase());
     const sourceIndex = route.indexOf(source);
@@ -266,13 +292,29 @@ function renderResults(matchingBuses) {
 
     const busHTML = `
       <div class="bus-card">
+       
         <strong>🚌 ${bus.bus_type}</strong><br>
+<<<<<<< HEAD
+       
+       <div class="bus-id">
+  <span style="color: black; font-weight: bold; font-size:large">Bus ID:</span>
+  <span style="color: blue; font-size:large ">${bus.bus_id}</span>
+</div>
+
+       
+        <div class="departure"> <span> Departure: <span>${bus.departure_time}</span> ---------${bus.duration}hr --------- <span>Arrival: <span>${bus.arrival_time}</span></div>
+        <div class="arrival">  <span>${bus.boarding_point} to  <span>${bus.dropping_point}</span></div>
+       
+     
+        <div class="fare"> <span> Fare: ₹<span>${bus.fare}</span></div>
+=======
         Bus ID: ${bus.bus_id}<br>
         Departure: ${bus.departure_time}, ${bus.boarding_point}<br>
         Arrival: ${bus.arrival_time}, Final Stop: ${bus.destination}<br>
         <small>(Your stop: ${toTitleCase(destination)})</small><br>
         Stops: ${stopCount}<br>
         Fare: ₹${fare}
+>>>>>>> a0ec67780afca7206bbae9976f574c7107c235d1
         <button class="select-button" onclick="selectBus('${bus.bus_id}')">Select</button>
       </div>
     `;

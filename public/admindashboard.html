@@ -1,26 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Admin Panel</title>
+  <meta charset="UTF-8">
+  <title>KSRTC Admin Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>KSRTC Admin Panel</h1>
+<style>
+  body {
+  font-family: sans-serif;
+  padding: 2rem;
+  background: #f9f9f9;
+}
+table, th, td {
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+  padding: 0.5rem;
+}
+table {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+input, textarea {
+  margin: 0.3rem 0.5rem 0.3rem 0;
+  padding: 0.4rem;
+}
+button {
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+}
+.section {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 
-  <h2>Add Timetable</h2>
-  <input id="routeId" placeholder="Route ID"><br>
-  <input id="routeName" placeholder="Route Name"><br>
-  <input id="departureTime" placeholder="Departure Time"><br>
-  <input id="arrivalTime" placeholder="Arrival Time"><br>
-  <button onclick="addTimetable()">Add</button>
+</style>
+<script>
+  if (sessionStorage.getItem("isAdmin") !== "true") {
+    alert("Unauthorized access");
+    window.location.href = "admin-login.html";
+  }
+</script>
 
-  <h2>Edit Timetable</h2>
-  <input id="editRouteId" placeholder="Route ID to Edit"><br>
-  <input id="newDepartureTime" placeholder="New Departure"><br>
-  <input id="newArrivalTime" placeholder="New Arrival"><br>
-  <button onclick="editTimetable()">Edit</button>
+<h1>KSRTC Admin Dashboard</h1>
 
-  <h2>All Timetables</h2>
-  <ul id="timetableList"></ul>
-<script type="module" src="admindashboard.js"></script>
+<div class="section">
+  <h2>Manage Timetables</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Bus ID</th><th>Source</th><th>Destination</th><th>Departure</th><th>Arrival</th>
+        <th>Type</th><th>Fare</th><th>Route</th><th>Edit</th>
+      </tr>
+    </thead>
+    <tbody id="busTableBody"></tbody>
+  </table>
+
+  <h3>Add New Bus Entry</h3>
+  <input id="busId" placeholder="Bus ID">
+  <input id="source" placeholder="Source">
+  <input id="destination" placeholder="Destination">
+  <input id="departure" placeholder="Departure Time">
+  <input id="arrival" placeholder="Arrival Time">
+  <input id="busType" placeholder="Bus Type">
+  <input id="fare" placeholder="Fare">
+  <input id="route" placeholder="Comma-separated route">
+  <button onclick="addBus()">Add</button>
+</div>
+
+<div class="section">
+  <h2>Feedback Received</h2>
+  <ul id="feedbackList"></ul>
+</div>
+
+<script src="admin.js"></script>
 </body>
 </html>

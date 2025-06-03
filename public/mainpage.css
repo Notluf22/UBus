@@ -25,6 +25,7 @@ html,body {
   z-index: 2;
 }
 
+    
     .home{
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         font-size: larger;
@@ -96,9 +97,9 @@ html,body {
         position: relative;
         left: 90px;
     }
-a.log.clicked{
-     background-color: rgb(23, 100, 37);
- }
+button:active{
+    background-color: greenyellow;
+}
 
 
    
