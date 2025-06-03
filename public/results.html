@@ -12,6 +12,119 @@
 
 
 <div class="results" id="results"></div>
+<style>
+  body {
+      font-family: sans-serif;
+      background: #91c8d9;
+      padding: 20px;
+    }
+    h2 {
+      margin-bottom: 5px;
+    }
+    .route-heading {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      color: #2e2d2d;
+    }
+    .bus-card {
+      background: white;
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      padding: 25px;
+      margin: 15px 0;
+      font-size: x-large;
+      height: 200px;
+      
+      border-radius: 6px;
+      box-shadow: 0 2px 5cap rgba(0,0,0,0.1);
+    }
+    .bus-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.bus-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bus-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+.bus-card {
+  opacity: 0;
+  animation: fadeInCard 0.4s ease forwards;
+}
+
+@keyframes fadeInCard {
+  to { opacity: 1; }
+}
+
+
+.bus-card div {
+  font-size: 14px;
+  color: #0c0c0c;
+}
+
+.bus-type {
+  font-size:16px;
+  font-weight: bold;
+  color: #007bff;
+}
+
+
+.bus-id span{
+  color: #007bff;
+} 
+.departure span{
+  font-weight:bolder;
+  font-size: 18px;
+}
+.arrival span{
+  font-weight:bold;
+  font-size: 18px;
+}
+.your-stop span,
+.duration span,
+.fare span {
+  font-weight: bolder;
+  color: #222;
+  font-size: 18px;
+  position: relative;
+    
+}
+ .stop span{
+      font-weight: bold;
+      font-size: large;
+    }
+
+    .results {
+      margin-top: 10px;
+    }
+   
+    .select-button {
+      margin-top: 10px;
+      background-color: #1f9c41;
+      color: rgb(255, 255, 255);
+      width: 10%;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+      left: 1200px;
+      bottom: 85px;
+    }
+    .select-button:hover {
+      background-color: #3fcf60;
+    }
+    .select-button:active {
+      background-color: #d11414;
+    }
+
+
+
+</style>
 <script>
 // 🚌 Sample Bus Data
 const buses = [
@@ -61,7 +174,7 @@ const buses = [
     bus_type: "Ordinary",
     boarding_point: "Parassala",
     dropping_point: "Trivandrum",
-    route: ["Parassala","Idichikkaplamoodu","Kottamom","Amaravila","Neyyantinkara","Alummoodu", "Balaramapuram","Pravachambalam","Nemom","Karamana","Trivandrum"]
+    route: ["Parassala","Idichikkaplamoodu","Kottamom","Amaravila","Neyyattinkara","Alummoodu", "Balaramapuram","Pravachambalam","Nemom","Karamana","Trivandrum"]
   },
   {
     bus_id: "RET15",
@@ -173,7 +286,7 @@ const destination = (destinationRaw || "").trim().toLowerCase();
 
 if (!source || !destination) {
   alert("Missing search data. Redirecting...");
-  window.location.href = "dashboard.html";
+  window.location.href = "dashboard 1.html";
 }
 
 document.getElementById("routeHeading").textContent = `From ${toTitleCase(source)} to ${toTitleCase(destination)}`;
@@ -206,7 +319,7 @@ function renderResults(matchingBuses) {
     const destIndex = route.indexOf(destination);
     const stopCount = destIndex - sourceIndex;
 
-    
+   
     let ratePerStop;
     const type = bus.bus_type.toLowerCase();
     if (type === "super fast") ratePerStop = 15;
@@ -250,9 +363,9 @@ function renderResults(matchingBuses) {
 // 🚍 Select Bus
 function selectBus(busId) {
   sessionStorage.setItem("selectedBusId", busId);
-  window.location.href = "select.html";
+  window.location.href = "selectgit.html";
 }
-resultsDiv.innerHTML += `<div class="bus-card" style="animation-delay:${index * 0.1}s">${busHTML}</div>`;
+
 
 document.addEventListener('DOMContentLoaded', searchBuses);
 </script>
