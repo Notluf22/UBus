@@ -2,373 +2,108 @@
 <html>
 <head>
   <title>UBus</title>
-   <link rel="stylesheet" href="results.css">
-    <link rel="icon" href="logo-transparent-png.png" />
-  </head>
+  <link rel="stylesheet" href="results.css">
+  <link rel="icon" href="logo-transparent-png.png" />
+</head>
 <body>
 
-<h2>Available Buses</h2>
-<div class="route-heading" id="routeHeading"></div>
+  <h2>Available Buses</h2>
+  <div class="route-heading" id="routeHeading"></div>
+  <div class="results" id="results"></div>
 
+  <style>
+    /* [You can keep your existing CSS here] */
+  </style>
 
-<div class="results" id="results"></div>
-<style>
-  body {
-      font-family: sans-serif;
-      background: #91c8d9;
-      padding: 20px;
-    }
-    h2 {
-      margin-bottom: 5px;
-    }
-    .route-heading {
-      font-size: 18px;
-      font-weight: 500;
-      margin-bottom: 20px;
-      color: #2e2d2d;
-    }
-    .bus-card {
-      background: white;
-      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-      padding: 25px;
-      margin: 15px 0;
-      font-size: x-large;
-      height: 200px;
-      
-      border-radius: 6px;
-      box-shadow: 0 2px 5cap rgba(0,0,0,0.1);
-    }
-    .bus-card {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.bus-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
+  <!-- ✅ JavaScript at the end of the body -->
+  <script>
+    let buses = [];
 
-.bus-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-}
-.bus-card {
-  opacity: 0;
-  animation: fadeInCard 0.4s ease forwards;
-}
+    document.addEventListener("DOMContentLoaded", () => {
+      fetch('buses.json')
+        .then(response => response.json())
+        .then(data => {
+          buses = data;
+          searchBuses();
+        });
+    });
 
-@keyframes fadeInCard {
-  to { opacity: 1; }
-}
+    const sourceRaw = sessionStorage.getItem('source');
+    const destinationRaw = sessionStorage.getItem('destination');
 
+    const source = (sourceRaw || "").trim().toLowerCase();
+    const destination = (destinationRaw || "").trim().toLowerCase();
 
-.bus-card div {
-  font-size: 14px;
-  color: #0c0c0c;
-}
-
-.bus-type {
-  font-size:16px;
-  font-weight: bold;
-  color: #007bff;
-}
-
-
-.bus-id span{
-  color: #007bff;
-} 
-.departure span{
-  font-weight:bolder;
-  font-size: 18px;
-}
-.arrival span{
-  font-weight:bold;
-  font-size: 18px;
-}
-.your-stop span,
-.duration span,
-.fare span {
-  font-weight: bolder;
-  color: #222;
-  font-size: 18px;
-  position: relative;
-    
-}
- .stop span{
-      font-weight: bold;
-      font-size: large;
+    if (!source || !destination) {
+      alert("Missing search data. Redirecting...");
+      window.location.href = "dashboard 1.html";
     }
 
-    .results {
-      margin-top: 10px;
-    }
-   
-    .select-button {
-      margin-top: 10px;
-      background-color: #1f9c41;
-      color: rgb(255, 255, 255);
-      width: 10%;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      position: relative;
-      left: 1200px;
-      bottom: 85px;
-    }
-    .select-button:hover {
-      background-color: #3fcf60;
-    }
-    .select-button:active {
-      background-color: #d11414;
+    function toTitleCase(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
     }
 
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById("routeHeading").textContent =
+        `From ${toTitleCase(source)} to ${toTitleCase(destination)}`;
+    });
 
+    function searchBuses() {
+      const matchingBuses = buses.filter(bus => {
+        const route = bus.route.map(stop => stop.toLowerCase());
+        const sourceIndex = route.indexOf(source);
+        const destIndex = route.indexOf(destination);
+        return sourceIndex !== -1 && destIndex !== -1 && destIndex > sourceIndex;
+      });
 
-</style>
-<script>
-// 🚌 Sample Bus Data
-const buses = [
-  {
-    bus_id: "RET11",
-    source: "Kottarakara",
-    destination: "Technopark",
-    departure_time: "6:00",
-    arrival_time: "8:10",
-    duration: "2:10",
-    bus_type: "Super Fast",
-    boarding_point: "Kottarakara",
-    dropping_point: "Technopark",
-    route: ["Kottarakara","Valakam","Ayoor","Chadayamangalam","Nilamel","Kilimanoor","Venjaramoodu","Pothencode","Kazhakootam","Technopark"]
-  },
-  {
-    bus_id: "RET12",
-    source: "Technopark",
-    destination: "Kottarakara",
-    departure_time: "19:00",
-    arrival_time: "21:00",
-    duration: "3:00",
-    bus_type: "Fast",
-    boarding_point: "Technopark",
-    dropping_point: "Kottarakara",
-    route: ["Technopark", "Kazhakootam", "Pothencode", "Venjaramoodu", "Kilimanoor", "Nilamel", "Chadayamangalam", "Ayoor", "Valakam", "Kottarakara"]
-  },
-  {
-    bus_id: "RET13",
-    source: "Technopark",
-    destination: "Kottarakara",
-    departure_time: "12:00",
-    arrival_time: "15:00",
-    duration: "3:00",
-    bus_type: "Fast",
-    boarding_point: "Technopark",
-    dropping_point: "Kottarakara",
-    route: ["Technopark", "Kazhakootam", "Pothencode", "Venjaramoodu", "Kilimanoor", "Nilamel", "Chadayamangalam", "Ayoor", "Valakam", "Kottarakara"]
-  },
-  {
-    bus_id: "RET14",
-    source: "Parassala",
-    destination: "Trivandrum",
-    departure_time: "8:00",
-    arrival_time: "10:00",
-    duration: "2:00",
-    bus_type: "Ordinary",
-    boarding_point: "Parassala",
-    dropping_point: "Trivandrum",
-    route: ["Parassala","Idichikkaplamoodu","Kottamom","Amaravila","Neyyattinkara","Alummoodu", "Balaramapuram","Pravachambalam","Nemom","Karamana","Trivandrum"]
-  },
-  {
-    bus_id: "RET15",
-    source: "Parassala",
-    destination: "Trivandrum",
-    departure_time: "14:00",
-    arrival_time: "15:30",
-    duration: "1:30",
-    bus_type: "Fast",
-    boarding_point: "Parassala",
-    dropping_point: "Trivandrum",
-    route: ["Parassala","Idichikkaplamoodu","Kottamom","Amaravila","Neyyattinkara","Alummoodu", "Balaramapuram","Pravachambalam","Nemom","Karamana","Trivandrum"]
-  },
-  {
-    bus_id: "RET16",
-    source: "Trivandrum",
-    destination: "Parassala",
-    departure_time: "17:30",
-    arrival_time: "19:30",
-    duration: "2:00",
-    bus_type: "Ordinary",
-    boarding_point: "Trivandrum",
-    dropping_point: "Parassala",
-    route: ["Trivandrum","Karamana","Nemom","Pravachambalam","Balaramapuram","Alummoodu","Neyyattinkara","Amaravila","Kottamom","Idichikkaplamoodu","Parassala"]
-  },
-  {
-    bus_id: "RET17",
-    source: "Kaniyapuram",
-    destination: "Thampanoor",
-    departure_time: "8:30",
-    arrival_time: "9:30",
-    duration: "1:00",
-    bus_type: "Ordinary",
-    boarding_point: "Kaniyapuram",
-    dropping_point: "Thampanoor",
-    route: ["Kaniyapuram", "Kazhakootam", "Technopark", "Karyavettam", "Sreekaryam", "Pattam", "Palayam", "Statue", "Thampanoor"]
-  },
-  {
-    bus_id: "RET18",
-    source: "Kaniyapuram",
-    destination: "Thampanoor",
-    departure_time: "12:30",
-    arrival_time: "13:30",
-    duration: "1:00",
-    bus_type: "Ordinary",
-    boarding_point: "Kaniyapuram",
-    dropping_point: "Thampanoor",
-    route: ["Kaniyapuram", "Kazhakootam", "Technopark", "Karyavettam", "Sreekaryam", "Pattam", "Palayam", "Statue", "Thampanoor"]
-  },
-  {
-    bus_id: "RET19",
-    source: "Thampanoor",
-    destination: "Kaniyapuram",
-    departure_time: "16:00",
-    arrival_time: "17:20",
-    duration: "1:20",
-    bus_type: "Ordinary",
-    boarding_point: "Thampanoor",
-    dropping_point: "Kaniyapuram",
-    route: ["Thampanoor", "Statue", "Palayam", "Pattam", "Sreekaryam", "Karyavettam", "Technopark", "Kazhakootam", "Kaniyapuram"]
+      renderResults(matchingBuses);
+    }
 
-  },
-  {
-    bus_id: "RET21",
-    source: "Trivandrum",
-    destination: "Kollam",
-    departure_time: "11:00",
-    arrival_time: "13.30",
-    duration: "2:30",
-    bus_type: "Fast",
-    boarding_point: "Trivandrum",
-    dropping_point: "Kollam",
-    route: ["Trivandrum", "Kazhakootam", "Kaniyapuram", "Managalapuram", "Attingal", "Kallambalam", "Parippally", "Chathanoor", "Kottiyam", "Kollam"]
+    function renderResults(matchingBuses) {
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
 
-  },
-  {
-    bus_id: "RET22",
-    source: "Trivandrum",
-    destination: "Kollam",
-    departure_time: "18:00",
-    arrival_time: "20.10",
-    duration: "2:10",
-    bus_type: "Super Fast",
-    boarding_point: "Trivandrum",
-    dropping_point: "Kollam",
-    route: ["Trivandrum", "Kazhakootam", "Kaniyapuram", "Managalapuram", "Attingal", "Kallambalam", "Parippally", "Chathanoor", "Kottiyam", "Kollam"]
-  },
-  {
-    bus_id: "RET21",
-    source: "Kollam",
-    destination: "Trivandrum",
-    departure_time: "13:00",
-    arrival_time: "15:10",
-    duration: "2:10",
-    bus_type: "Super Fast",
-    boarding_point: "Kollam",
-    dropping_point: "Trivandrum",
-    route: ["Kollam", "Kottiyam", "Chathanoor", "Parippally", "Kallambalam", "Attingal", "Managalapuram", "Kaniyapuram", "Kazhakootam", "Trivandrum"]
+      matchingBuses.forEach(bus => {
+        const route = bus.route.map(stop => stop.toLowerCase());
+        const sourceIndex = route.indexOf(source);
+        const destIndex = route.indexOf(destination);
+        const stopCount = destIndex - sourceIndex;
 
-  }
-];
+        let ratePerStop = bus.bus_type.toLowerCase() === "super fast" ? 15 :
+                          bus.bus_type.toLowerCase() === "fast" ? 12 : 10;
 
-// 🎯 Get Source & Destination from sessionStorage
-const sourceRaw = sessionStorage.getItem('source');
-const destinationRaw = sessionStorage.getItem('destination');
+        const fare = stopCount * ratePerStop;
 
-const source = (sourceRaw || "").trim().toLowerCase();
-const destination = (destinationRaw || "").trim().toLowerCase();
+        const busHTML = `
+          <div class="bus-card">
+            <strong>🚌 ${bus.bus_type}</strong><br>
+            <div class="bus-id">
+              <span style="color: black; font-weight: bold; font-size:large">Bus ID:</span>
+              <span style="color: blue; font-size:large ">${bus.bus_id}</span>
+            </div>
+            <div class="departure">
+              <span>Departure: <span>${bus.departure_time}</span> ---------${bus.duration}hr --------- 
+              <span>Arrival: <span>${bus.arrival_time}</span></div>
+            <div class="arrival">
+              <span>${bus.boarding_point} to <span>${bus.dropping_point}</span></div>
+            <div class="fare"><span>Fare: ₹<span>${fare}</span></div>
+            <div class="stop"><span>Stops: <span>${stopCount}</span></div>
+            <button class="select-button" onclick="selectBus('${bus.bus_id}')">Select</button>
+          </div>
+        `;
+        resultsDiv.innerHTML += busHTML;
+      });
 
-if (!source || !destination) {
-  alert("Missing search data. Redirecting...");
-  window.location.href = "dashboard 1.html";
-}
+      if (resultsDiv.innerHTML === '') {
+        resultsDiv.innerHTML = "<p>No buses found for this route.</p>";
+      }
+    }
 
-document.getElementById("routeHeading").textContent = `From ${toTitleCase(source)} to ${toTitleCase(destination)}`;
-
-
-function toTitleCase(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
-
-
-function searchBuses() {
-  const matchingBuses = buses.filter(bus => {
-    const route = bus.route.map(stop => stop.toLowerCase());
-    const sourceIndex = route.indexOf(source);
-    const destIndex = route.indexOf(destination);
-    return sourceIndex !== -1 && destIndex !== -1 && destIndex > sourceIndex;
-  });
-
-  renderResults(matchingBuses);
-}
-
-
-function renderResults(matchingBuses) {
-  const resultsDiv = document.getElementById('results');
-  resultsDiv.innerHTML = '';
-
-  matchingBuses.forEach(bus => {
-    const route = bus.route.map(stop => stop.toLowerCase());
-    const sourceIndex = route.indexOf(source);
-    const destIndex = route.indexOf(destination);
-    const stopCount = destIndex - sourceIndex;
-
-   
-    let ratePerStop;
-    const type = bus.bus_type.toLowerCase();
-    if (type === "super fast") ratePerStop = 15;
-    else if (type === "fast") ratePerStop = 12;
-    else if (type === "ordinary") ratePerStop = 10;
-    else ratePerStop = 10; // fallback
-
-    const fare = stopCount * ratePerStop;
-
-    const busHTML = `
-      <div class="bus-card">
-       
-        <strong>🚌 ${bus.bus_type}</strong><br>
-       
-       <div class="bus-id">
-  <span style="color: black; font-weight: bold; font-size:large">Bus ID:</span>
-  <span style="color: blue; font-size:large ">${bus.bus_id}</span>
-</div>
-
-       
-        <div class="departure"> <span> Departure: <span>${bus.departure_time}</span> ---------${bus.duration}hr --------- <span>Arrival: <span>${bus.arrival_time}</span></div>
-        <div class="arrival">  <span>${bus.boarding_point} to  <span>${bus.dropping_point}</span></div>
-       
-     
-        <div class="fare"> <span> Fare: ₹<span>${fare}</span></div>
-       
-       
-       <div class="stop"> <span> Stops: <span> ${stopCount}</span></div>
-        <button class="select-button" onclick="selectBus('${bus.bus_id}')">Select</button>
-      </div>
-      
-    `;
-    resultsDiv.innerHTML += busHTML;
-  });
-
-  if (resultsDiv.innerHTML === '') {
-    resultsDiv.innerHTML = "<p>No buses found for this route.</p>";
-  }
-}
-
-// 🚍 Select Bus
-function selectBus(busId) {
-  sessionStorage.setItem("selectedBusId", busId);
-  window.location.href = "select.html";
-}
-
-
-document.addEventListener('DOMContentLoaded', searchBuses);
-</script>
+    function selectBus(busId) {
+      sessionStorage.setItem("selectedBusId", busId);
+      window.location.href = "booking.html";
+    }
+  </script>
 
 </body>
 </html>
