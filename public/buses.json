@@ -1,71 +1,23 @@
 [
   {
-    "bus_id": "RET11",
-    "source": "Kottarakara",
-    "destination": "Technopark",
-    "departure_time": "6:00",
-    "arrival_time": "8:10",
-    "duration": "2:10",
-    "bus_type": "Super Fast",
-    "boarding_point": "Kottarakara",
-    "dropping_point": "Technopark",
-    "route": [
-      "Kottarakara",
-      "Valakam",
-      "Ayoor",
-      "Chadayamangalam",
-      "Nilamel",
-      "Kilimanoor",
-      "Venjaramoodu",
-      "Pothencode",
-      "Kazhakootam",
-      "Technopark"
-    ]
-  },
-  {
-    "bus_id": "RET12",
-    "source": "Technopark",
-    "destination": "Kottarakara",
-    "departure_time": "19:00",
-    "arrival_time": "21:00",
+    "bus_id": "34",
+    "source": "hy",
+    "destination": "ld",
+    "departure_time": "4:00",
+    "arrival_time": "7:00",
     "duration": "3:00",
     "bus_type": "Fast",
-    "boarding_point": "Technopark",
-    "dropping_point": "Kottarakara",
+    "boarding_point": "hy",
+    "dropping_point": "ld",
     "route": [
-      "Technopark",
-      "Kazhakootam",
-      "Pothencode",
-      "Venjaramoodu",
-      "Kilimanoor",
-      "Nilamel",
-      "Chadayamangalam",
-      "Ayoor",
-      "Valakam",
-      "Kottarakara"
-    ]
-  },
-  {
-    "bus_id": "RET13",
-    "source": "Technopark",
-    "destination": "Kottarakara",
-    "departure_time": "12:00",
-    "arrival_time": "15:00",
-    "duration": "3:00",
-    "bus_type": "Ordinary",
-    "boarding_point": "Technopark",
-    "dropping_point": "Kottarakara",
-    "route": [
-      "Technopark",
-      "Kazhakootam",
-      "Pothencode",
-      "Venjaramoodu",
-      "Kilimanoor",
-      "Nilamel",
-      "Chadayamangalam",
-      "Ayoor",
-      "Valakam",
-      "Kottarakara"
+      "hy",
+      "h",
+      "j",
+      "k",
+      "l",
+      "o",
+      "p",
+      "ld"
     ]
   }
 ]
