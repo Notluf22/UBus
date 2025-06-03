@@ -6,10 +6,10 @@
     <link rel="icon" href="logo-transparent-png.png" />
   </head>
 <body>
-
+<div class="header-container">
 <h2>Available Buses</h2>
 <div class="route-heading" id="routeHeading"></div>
-
+</div>
 
 <div class="results" id="results"></div>
 <style>
@@ -21,6 +21,15 @@
     h2 {
       margin-bottom: 5px;
     }
+    .header-container {
+  background: white;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: 70px;
+}
+
     .route-heading {
       font-size: 18px;
       font-weight: 500;
@@ -29,11 +38,12 @@
     }
     .bus-card {
       background: white;
-      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      font-family:Arial, Helvetica, sans-serif;
       padding: 25px;
       margin: 15px 0;
       font-size: x-large;
       height: 200px;
+      width: 97%;
       
       border-radius: 6px;
       box-shadow: 0 2px 5cap rgba(0,0,0,0.1);
@@ -77,24 +87,24 @@
   color: #007bff;
 } 
 .departure span{
-  font-weight:bolder;
+  font-weight:normal;
   font-size: 18px;
 }
 .arrival span{
-  font-weight:bold;
+  font-weight:normal;
   font-size: 18px;
 }
 .your-stop span,
 .duration span,
 .fare span {
-  font-weight: bolder;
+  font-weight:normal;
   color: #222;
   font-size: 18px;
   position: relative;
     
 }
  .stop span{
-      font-weight: bold;
+      font-weight: normal;
       font-size: large;
     }
 
@@ -113,7 +123,7 @@
       cursor: pointer;
       position: relative;
       left: 1200px;
-      bottom: 85px;
+      bottom: 135px;
     }
     .select-button:hover {
       background-color: #3fcf60;
@@ -335,7 +345,7 @@ function renderResults(matchingBuses) {
         <strong>🚌 ${bus.bus_type}</strong><br>
        
        <div class="bus-id">
-  <span style="color: black; font-weight: bold; font-size:large">Bus ID:</span>
+  <span style="color: black; font-weight: normal; font-size:large">Bus ID:</span>
   <span style="color: blue; font-size:large ">${bus.bus_id}</span>
 </div>
 
