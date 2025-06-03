@@ -16,6 +16,7 @@
       margin: auto;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
     }
 
     h2 {
@@ -61,6 +62,7 @@
       display: none;
       text-align: center;
     }
+
   </style>
 </head>
 <body>
@@ -68,7 +70,10 @@
 <div class="booking-container">
   <h2>Confirm Booking</h2>
   <div id="busInfo"></div>
+  <h2>Confirm Booking</h2>
+  <div id="busInfo"></div>
 
+  <button class="btn" onclick="confirmBooking()">Confirm Booking</button>
   <form id="bookingForm">
     <label for="name">Name</label>
     <input id="name" type="text" required>
