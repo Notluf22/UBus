@@ -37,7 +37,7 @@
  }
 .swap-button {
      position: absolute;
-     background: rgb(64, 188, 64) ;
+     background: green ;
      color: white;
      border: none;
      padding: 8px 12px;
@@ -111,20 +111,20 @@
      left: 250px;
  }
  .sub-button {
-     background-color: rgb(64, 188, 64);
+     background-color:green;
      color: aliceblue;
      height: 30px;
      width: 90px;
      font-weight: bold;
      position: relative;
      top: 65px;
-     right: 20px;
+     right: -50px;
      border-radius: 10px;
      margin: 1;
      border: none;
  }
  button:active {
-     background-color: rgb(23, 100, 37);
+     background-color: rgb(1, 70, 1);
  }
  h1{
     font-family: Georgia, 'Times New Roman', Times, serif;
@@ -133,18 +133,22 @@
     font-family: Georgia, 'Times New Roman', Times, serif;
  }
  .back-button {
-  display: inline-block;
+
   margin-top: 20px;
   text-decoration: none;
-  background-color:rgb(64, 188, 64);;
+  background-color:green;
   color: #fff;
   padding: 10px 16px;
   border-radius: 10px;
   transition: background-color 0.3s ease;
+  height: 2px;
+  margin: 1;
+   width: 50px;
+   right:110;
 }
 
 .back-button:hover {
-  background-color: rgb(23, 100, 37);
+  background-color: rgb(1, 70, 1);
 }
 
 </style>
@@ -152,6 +156,8 @@
   <div class="container">
     <h1>UBus</h1>
     <h2>Catch Your Bus</h2>
+     <a href="mainpage.html" class="back-button">← Back</a>
+
 
     <form id="searchForm">
       <table>
@@ -179,8 +185,7 @@
     <div id="useremail"></div>
 
     <div id="results"></div>
-    <a href="mainpage.html" class="back-button">← Back</a>
-
+   
   </div>
 <script>
     document.getElementById('searchForm').addEventListener('submit', function(e) {

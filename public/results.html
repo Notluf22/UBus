@@ -7,8 +7,10 @@
 </head>
 <body>
   <div class="header-container">
+     <button onclick="goBack()" class="back-button">← Back</button>
       <h2>Available Buses</h2>
       <div class="route-heading" id="routeHeading"></div>
+     
   </div>
 
     <div class="results" id="results"></div>
@@ -108,6 +110,10 @@ function renderResults(matchingBuses) {
     resultsDiv.innerHTML = "<p>No buses found for this route.</p>";
   }
 }
+function goBack() {
+  window.location.href = "dashboard.html"; // Change this if the back page is different
+}
+
 
 // 🚍 Select Bus
 function selectBus(busId) {
