@@ -118,7 +118,7 @@ fetch('buses.json')
     sessionStorage.setItem("fare", fare);
 
     busDetailsDiv.innerHTML = `
-    <h2>🚌 ${selectedBus.bus_type}</h2>
+    <h2>🚌 ${selectedBus.bus_type}🚌</h2>
   <p class="busid"><strong>Bus ID:</strong> ${selectedBus.bus_id}</p>
   <p class="routess"><strong>Route:</strong> ${toTitleCase(source)} ➝ ${toTitleCase(destination)}</p>
 

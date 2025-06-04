@@ -20,9 +20,11 @@
       border-radius: 15px;
       max-width: 650px;
       margin: auto;
-      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
       box-shadow: 0 4px 20px rgba(0,0,0,0.08);
       position: relative;
+      color: black;
+    
     }
      .ticket-container {
   animation: slideUp 0.5s ease-out;
@@ -41,14 +43,16 @@
 
     h2 {
       text-align: center;
-      color: #2d3748;
+      color:black;
       margin-bottom: 20px;
+      font-size:xx-large;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     }
 
     .ticket-details p {
       margin: 8px 0;
       font-size: 16px;
-      color: #444;
+      color: #000000;
     }
 
     .qr-section {
@@ -106,7 +110,7 @@
 
         const detailsHTML = `
           
-          <p><strong>Bus Type:</strong> ${selectedBus.bus_type}🚌</p>
+          <p   font-size:large;><strong>Bus Type:</strong> ${selectedBus.bus_type}🚌</p>
           <p><strong>From:</strong> ${selectedBus.source}</p>
           <p><strong>To:</strong> ${selectedBus.destination}</p>
           <p><strong>Departure:</strong> ${selectedBus.departure_time}</p>

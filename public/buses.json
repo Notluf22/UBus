@@ -292,5 +292,22 @@
       "bv",
       "ld"
     ]
+  },
+  {
+    "bus_id": "ret 89",
+    "source": "Trivandrum",
+    "destination": "cccc",
+    "departure_time": "1:00",
+    "arrival_time": "3:00",
+    "duration": "2:00",
+    "bus_type": "fast",
+    "boarding_point": "Trivandrum",
+    "dropping_point": "cccc",
+    "route": [
+      "Trivandrum",
+      "dddd",
+      "hhhh",
+      "cccc"
+    ]
   }
 ]
