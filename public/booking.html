@@ -62,7 +62,6 @@
       display: none;
       text-align: center;
     }
-
   </style>
 </head>
 <body>
@@ -70,10 +69,7 @@
 <div class="booking-container">
   <h2>Confirm Booking</h2>
   <div id="busInfo"></div>
-  <h2>Confirm Booking</h2>
-  <div id="busInfo"></div>
 
-  <button class="btn" onclick="confirmBooking()">Confirm Booking</button>
   <form id="bookingForm">
     <label for="name">Name</label>
     <input id="name" type="text" required>
@@ -93,10 +89,13 @@
   </div>
 </div>
 
+<!-- EmailJS (optional) -->
 <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
 <script>
-  emailjs.init("YOUR_EMAILJS_USER_ID"); // Replace with your actual EmailJS user ID
+  emailjs.init("YOUR_EMAILJS_USER_ID"); // 🔁 Replace this with your actual EmailJS User ID
+</script>
 
+<script>
   let buses = [];
 
   fetch('buses.json')
@@ -108,6 +107,10 @@
 
   function initBooking() {
     const selectedBusId = sessionStorage.getItem("selectedBusId");
+    const source = (sessionStorage.getItem("source") || "").trim().toLowerCase();
+    const destination = (sessionStorage.getItem("destination") || "").trim().toLowerCase();
+    const farePerSeat = parseInt(sessionStorage.getItem("fare") || "0");
+
     const selectedBus = buses.find(bus => bus.bus_id === selectedBusId);
     const busInfoDiv = document.getElementById("busInfo");
 
@@ -117,8 +120,7 @@
         <p><strong>From:</strong> ${selectedBus.source} ➝ <strong>To:</strong> ${selectedBus.destination}</p>
         <p><strong>Departure:</strong> ${selectedBus.departure_time}</p>
         <p><strong>Arrival:</strong> ${selectedBus.arrival_time}</p>
-        <p><strong>Fare per seat:</strong> ₹${selectedBus.fare}</p>
-        <p><strong>Seats available:</strong> ${selectedBus.seats_available}</p>
+        <p><strong>Fare per seat:</strong> ₹${farePerSeat}</p>
       `;
 
       document.getElementById("bookingForm").addEventListener("submit", function (e) {
@@ -127,20 +129,23 @@
         const email = document.getElementById("email").value.trim();
         const seats = parseInt(document.getElementById("seats").value);
 
-        if (selectedBus && seats <= selectedBus.seats_available) {
-          selectedBus.seats_available -= seats;
+        if (seats > 0) {
           document.getElementById("confirmationMsg").style.display = "block";
 
-          sendConfirmationEmail({ name, email }, selectedBus, seats);
+          // Save booking details
+          sessionStorage.setItem("passengerName", name);
+          sessionStorage.setItem("passengerEmail", email);
+          sessionStorage.setItem("seatsBooked", seats);
 
+          // Optional: Send confirmation email
+          sendConfirmationEmail({ name, email }, selectedBus, seats, farePerSeat);
+
+          // Redirect to ticket
           setTimeout(() => {
-            sessionStorage.setItem("passengerName", name);
-            sessionStorage.setItem("passengerEmail", email);
-            sessionStorage.setItem("seatsBooked", seats);
             window.location.href = "ticket.html";
           }, 1500);
         } else {
-          alert("Not enough seats available.");
+          alert("Please enter a valid number of seats.");
         }
       });
     } else {
@@ -149,7 +154,7 @@
     }
   }
 
-  function sendConfirmationEmail(userData, busData, seatCount) {
+  function sendConfirmationEmail(userData, busData, seatCount, farePerSeat) {
     emailjs.send("service_ychbdie", "template_dl2hl8x", {
       to_name: userData.name,
       email: userData.email,
@@ -159,7 +164,7 @@
       departure_time: busData.departure_time,
       arrival_time: busData.arrival_time,
       seats: seatCount,
-      fare: busData.fare * seatCount
+      fare: farePerSeat * seatCount
     })
     .then(() => {
       console.log("✅ Email sent successfully");

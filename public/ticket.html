@@ -51,210 +51,67 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
-
   </style>
 </head>
 <body>
 
-
 <div class="ticket-container" id="ticket">
   <h2>🎫 UBus Ticket</h2>
   <div class="ticket-details" id="ticketDetails">
-    <!-- Filled by JavaScript -->
+    <!-- Ticket info populated by JavaScript -->
   </div>
 
   <button class="download-btn" onclick="downloadTicket()">Download Ticket as PDF</button>
 </div>
 
 <script>
-const buses = [
-  {
-    bus_id: "RET11",
-    source: "Kottarakara",
-    destination: "Technopark",
-    departure_time: "6:00",
-    arrival_time: "8:10",
-    duration: "2:10",
-    bus_type: "Super Fast",
-    boarding_point: "Kottarakara",
-    dropping_point: "Technopark",
-    route: ["Kottarakara","Valakam","Ayoor","Chadayamangalam","Nilamel","Kilimanoor","Venjaramoodu","Pothencode","Kazhakootam","Technopark"]
-  },
-  {
-    bus_id: "RET12",
-    source: "Technopark",
-    destination: "Kottarakara",
-    departure_time: "19:00",
-    arrival_time: "21:00",
-    duration: "3:00",
-    bus_type: "Fast",
-    boarding_point: "Technopark",
-    dropping_point: "Kottarakara",
-    route: ["Technopark", "Kazhakootam", "Pothencode", "Venjaramoodu", "Kilimanoor", "Nilamel", "Chadayamangalam", "Ayoor", "Valakam", "Kottarakara"]
-  },
-  {
-    bus_id: "RET13",
-    source: "Technopark",
-    destination: "Kottarakara",
-    departure_time: "12:00",
-    arrival_time: "15:00",
-    duration: "3:00",
-    bus_type: "Fast",
-    boarding_point: "Technopark",
-    dropping_point: "Kottarakara",
-    route: ["Technopark", "Kazhakootam", "Pothencode", "Venjaramoodu", "Kilimanoor", "Nilamel", "Chadayamangalam", "Ayoor", "Valakam", "Kottarakara"]
-  },
-  {
-    bus_id: "RET14",
-    source: "Parassala",
-    destination: "Trivandrum",
-    departure_time: "8:00",
-    arrival_time: "10:00",
-    duration: "2:00",
-    bus_type: "Ordinary",
-    boarding_point: "Parassala",
-    dropping_point: "Trivandrum",
-    route: ["Parassala","Idichikkaplamoodu","Kottamom","Amaravila","Neyyattinkara","Alummoodu", "Balaramapuram","Pravachambalam","Nemom","Karamana","Trivandrum"]
-  },
-  {
-    bus_id: "RET15",
-    source: "Parassala",
-    destination: "Trivandrum",
-    departure_time: "14:00",
-    arrival_time: "15:30",
-    duration: "1:30",
-    bus_type: "Fast",
-    boarding_point: "Parassala",
-    dropping_point: "Trivandrum",
-    route: ["Parassala","Idichikkaplamoodu","Kottamom","Amaravila","Neyyattinkara","Alummoodu", "Balaramapuram","Pravachambalam","Nemom","Karamana","Trivandrum"]
-  },
-  {
-    bus_id: "RET16",
-    source: "Trivandrum",
-    destination: "Parassala",
-    departure_time: "17:30",
-    arrival_time: "19:30",
-    duration: "2:00",
-    bus_type: "Ordinary",
-    boarding_point: "Trivandrum",
-    dropping_point: "Parassala",
-    route: ["Trivandrum","Karamana","Nemom","Pravachambalam","Balaramapuram","Alummoodu","Neyyattinkara","Amaravila","Kottamom","Idichikkaplamoodu","Parassala"]
-  },
-  {
-    bus_id: "RET17",
-    source: "Kaniyapuram",
-    destination: "Thampanoor",
-    departure_time: "8:30",
-    arrival_time: "9:30",
-    duration: "1:00",
-    bus_type: "Ordinary",
-    boarding_point: "Kaniyapuram",
-    dropping_point: "Thampanoor",
-    route: ["Kaniyapuram", "Kazhakootam", "Technopark", "Karyavettam", "Sreekaryam", "Pattam", "Palayam", "Statue", "Thampanoor"]
-  },
-  {
-    bus_id: "RET18",
-    source: "Kaniyapuram",
-    destination: "Thampanoor",
-    departure_time: "12:30",
-    arrival_time: "13:30",
-    duration: "1:00",
-    bus_type: "Ordinary",
-    boarding_point: "Kaniyapuram",
-    dropping_point: "Thampanoor",
-    route: ["Kaniyapuram", "Kazhakootam", "Technopark", "Karyavettam", "Sreekaryam", "Pattam", "Palayam", "Statue", "Thampanoor"]
-  },
-  {
-    bus_id: "RET19",
-    source: "Thampanoor",
-    destination: "Kaniyapuram",
-    departure_time: "16:00",
-    arrival_time: "17:20",
-    duration: "1:20",
-    bus_type: "Ordinary",
-    boarding_point: "Thampanoor",
-    dropping_point: "Kaniyapuram",
-    route: ["Thampanoor", "Statue", "Palayam", "Pattam", "Sreekaryam", "Karyavettam", "Technopark", "Kazhakootam", "Kaniyapuram"]
+  // Load data from sessionStorage
+  const selectedBusId = sessionStorage.getItem("selectedBusId");
+  const source = sessionStorage.getItem("source");
+  const destination = sessionStorage.getItem("destination");
+  const fare = parseInt(sessionStorage.getItem("fare"));
+  const seats = parseInt(sessionStorage.getItem("seatsBooked"));
+  const name = sessionStorage.getItem("passengerName");
+  const email = sessionStorage.getItem("passengerEmail");
 
-  },
-  {
-    bus_id: "RET21",
-    source: "Trivandrum",
-    destination: "Kollam",
-    departure_time: "11:00",
-    arrival_time: "13.30",
-    duration: "2:30",
-    bus_type: "Fast",
-    boarding_point: "Trivandrum",
-    dropping_point: "Kollam",
-    route: ["Trivandrum", "Kazhakootam", "Kaniyapuram", "Managalapuram", "Attingal", "Kallambalam", "Parippally", "Chathanoor", "Kottiyam", "Kollam"]
+  // Load bus data from JSON
+  fetch('buses.json')
+    .then(response => response.json())
+    .then(buses => {
+      const bus = buses.find(b => b.bus_id === selectedBusId);
+      const detailsDiv = document.getElementById("ticketDetails");
 
-  },
-  {
-    bus_id: "RET22",
-    source: "Trivandrum",
-    destination: "Kollam",
-    departure_time: "18:00",
-    arrival_time: "20.10",
-    duration: "2:10",
-    bus_type: "Super Fast",
-    boarding_point: "Trivandrum",
-    dropping_point: "Kollam",
-    route: ["Trivandrum", "Kazhakootam", "Kaniyapuram", "Managalapuram", "Attingal", "Kallambalam", "Parippally", "Chathanoor", "Kottiyam", "Kollam"]
-  },
-  {
-    bus_id: "RET21",
-    source: "Kollam",
-    destination: "Trivandrum",
-    departure_time: "13:00",
-    arrival_time: "15:10",
-    duration: "2:10",
-    bus_type: "Super Fast",
-    boarding_point: "Kollam",
-    dropping_point: "Trivandrum",
-    route: ["Kollam", "Kottiyam", "Chathanoor", "Parippally", "Kallambalam", "Attingal", "Managalapuram", "Kaniyapuram", "Kazhakootam", "Trivandrum"]
+      if (bus && source && destination && fare && seats) {
+        const totalFare = fare * seats;
+        detailsDiv.innerHTML = `
+          <p><strong>Passenger:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Bus Type:</strong> ${bus.bus_type}</p>
+          <p><strong>Bus ID:</strong> ${bus.bus_id}</p>
+          <p><strong>Route:</strong> ${source} ➝ ${destination}</p>
+          <p><strong>Departure:</strong> ${bus.departure_time}</p>
+          <p><strong>Arrival:</strong> ${bus.arrival_time}</p>
+          <p><strong>Seats Booked:</strong> ${seats}</p>
+          <p><strong>Total Fare:</strong> ₹${totalFare}</p>
+        `;
+      } else {
+        detailsDiv.innerHTML = "<p>❌ Ticket details not found. Please go back and book again.</p>";
+        document.querySelector(".download-btn").style.display = "none";
+      }
+    });
 
+  function downloadTicket() {
+    const element = document.getElementById("ticket");
+    const opt = {
+      margin: 0.5,
+      filename: `UBus_Ticket_${selectedBusId}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save();
   }
-];
-
-const selectedBusId = sessionStorage.getItem("selectedBusId");
-const source = sessionStorage.getItem("source");
-const destination = sessionStorage.getItem("destination");
-const fare = parseInt(sessionStorage.getItem("fare"));
-const seats = parseInt(sessionStorage.getItem("seatsBooked"));
-
-const bus = buses.find(b => b.bus_id === selectedBusId);
-const detailsDiv = document.getElementById("ticketDetails");
-
-if (bus && source && destination && fare && seats) {
-  const totalFare = fare * seats;
-  detailsDiv.innerHTML = `
-    <p><strong>Bus Type:</strong> ${bus.bus_type}</p>
-    <p><strong>Bus ID:</strong> ${bus.bus_id}</p>
-    <p><strong>Route:</strong> ${source} ➝ ${destination}</p>
-    <p><strong>Departure:</strong> ${bus.departure_time}</p>
-    <p><strong>Arrival:</strong> ${bus.arrival_time}</p>
-    <p><strong>Seats Booked:</strong> ${seats}</p>
-    <p><strong>Total Fare:</strong> ₹${totalFare}</p>
-  `;
-} else {
-  detailsDiv.innerHTML = "<p>❌ Ticket details not found. Please go back and book again.</p>";
-  document.querySelector(".download-btn").style.display = "none";
-}
-
-function downloadTicket() {
-  const element = document.getElementById("ticket");
-  const opt = {
-    margin: 0.5,
-    filename: `UBus_Ticket_${selectedBusId}.pdf`,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-  };
-
-  html2pdf().set(opt).from(element).save();
-}
 </script>
 
 </body>
