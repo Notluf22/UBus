@@ -274,23 +274,6 @@
       "Kazhakootam",
       "Trivandrum"
     ]
-  },
-  {
-    "bus_id": "kih3",
-    "source": "hy",
-    "destination": "ld",
-    "departure_time": "4:00",
-    "arrival_time": "7:00",
-    "duration": "3:00",
-    "bus_type": "Fast",
-    "boarding_point": "hy",
-    "dropping_point": "ld",
-    "route": [
-      "hy",
-      "m",
-      "n",
-      "bv",
-      "ld"
-    ]
   }
 ]
+ 
