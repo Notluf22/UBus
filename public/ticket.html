@@ -1,118 +1,124 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Your Ticket - UBus</title>
+  <title>Your Ticket</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
+      font-family: 'Poppins', sans-serif;
+      background: #f3f7f9;
       padding: 30px;
-      text-align: center;
     }
 
     .ticket-container {
       background: #fff;
       padding: 30px;
-      border-radius: 10px;
-      max-width: 600px;
+      border-radius: 15px;
+      max-width: 650px;
       margin: auto;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      animation: fadeIn 0.5s ease;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      position: relative;
     }
 
-    .ticket-container h2 {
-      margin-top: 0;
-      color: #007bff;
+    h2 {
+      text-align: center;
+      color: #2d3748;
+      margin-bottom: 20px;
     }
 
-    .ticket-details {
-      text-align: left;
-      margin-top: 20px;
+    .ticket-details p {
+      margin: 8px 0;
       font-size: 16px;
+      color: #444;
+    }
+
+    .qr-section {
+      margin-top: 25px;
+      text-align: center;
     }
 
     .download-btn {
-      background: #007bff;
+      margin-top: 30px;
+      display: block;
+      padding: 12px;
+      background: green;
       color: white;
-      padding: 10px 20px;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
-      margin-top: 25px;
       font-size: 16px;
+      width: 100%;
+      transition: background 0.3s;
     }
 
     .download-btn:hover {
-      background: #0056b3;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      background:rgb(2, 70, 2);
     }
   </style>
 </head>
 <body>
 
-<div class="ticket-container" id="ticket">
-  <h2>🎫 UBus Ticket</h2>
+<div id="ticket" class="ticket-container">
+  <h2>🎫 UBus E-Ticket</h2>
   <div class="ticket-details" id="ticketDetails">
-    <!-- Ticket info populated by JavaScript -->
+    <p>Loading ticket...</p>
   </div>
 
-  <button class="download-btn" onclick="downloadTicket()">Download Ticket as PDF</button>
+  <div class="qr-section">
+    <canvas id="qrCode"></canvas>
+  </div>
+
+  <button class="download-btn" onclick="downloadPDF()">Download Ticket as PDF</button>
 </div>
 
 <script>
-  // Load data from sessionStorage
-  const selectedBusId = sessionStorage.getItem("selectedBusId");
-  const source = sessionStorage.getItem("source");
-  const destination = sessionStorage.getItem("destination");
-  const fare = parseInt(sessionStorage.getItem("fare"));
-  const seats = parseInt(sessionStorage.getItem("seatsBooked"));
-  const name = sessionStorage.getItem("passengerName");
-  const email = sessionStorage.getItem("passengerEmail");
-
-  // Load bus data from JSON
   fetch('buses.json')
     .then(response => response.json())
     .then(buses => {
-      const bus = buses.find(b => b.bus_id === selectedBusId);
-      const detailsDiv = document.getElementById("ticketDetails");
+      const selectedBusId = sessionStorage.getItem("selectedBusId");
+      const seats = parseInt(sessionStorage.getItem("seatsBooked") || 1);
+      const name = sessionStorage.getItem("passengerName") || "Passenger";
+      const email = sessionStorage.getItem("passengerEmail") || "N/A";
+      const fare = parseInt(sessionStorage.getItem("fare") || 0);
+      const selectedBus = buses.find(bus => bus.bus_id === selectedBusId);
 
-      if (bus && source && destination && fare && seats) {
+      if (selectedBus) {
         const totalFare = fare * seats;
-        detailsDiv.innerHTML = `
-          <p><strong>Passenger:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Bus Type:</strong> ${bus.bus_type}</p>
-          <p><strong>Bus ID:</strong> ${bus.bus_id}</p>
-          <p><strong>Route:</strong> ${source} ➝ ${destination}</p>
-          <p><strong>Departure:</strong> ${bus.departure_time}</p>
-          <p><strong>Arrival:</strong> ${bus.arrival_time}</p>
-          <p><strong>Seats Booked:</strong> ${seats}</p>
+
+        const detailsHTML = `
+          
+          <p><strong>Bus Type:</strong> ${selectedBus.bus_type}🚌</p>
+          <p><strong>From:</strong> ${selectedBus.source}</p>
+          <p><strong>To:</strong> ${selectedBus.destination}</p>
+          <p><strong>Departure:</strong> ${selectedBus.departure_time}</p>
+          <p><strong>Arrival:</strong> ${selectedBus.arrival_time}</p>
+       
           <p><strong>Total Fare:</strong> ₹${totalFare}</p>
         `;
+
+        document.getElementById("ticketDetails").innerHTML = detailsHTML;
+
+        const qrData = `UBus Ticket\nName: ${name}\nFrom: ${selectedBus.source} ➝ To: ${selectedBus.destination}\nSeats: ${seats}\nFare: ₹${totalFare}`;
+        QRCode.toCanvas(document.getElementById('qrCode'), qrData, { width: 150 }, function (error) {
+          if (error) console.error(error);
+        });
+
       } else {
-        detailsDiv.innerHTML = "<p>❌ Ticket details not found. Please go back and book again.</p>";
-        document.querySelector(".download-btn").style.display = "none";
+        document.getElementById("ticketDetails").innerHTML = `
+          <p>❌ Ticket not found. Please try booking again.</p>
+        `;
       }
     });
 
-  function downloadTicket() {
-    const element = document.getElementById("ticket");
-    const opt = {
-      margin: 0.5,
-      filename: `UBus_Ticket_${selectedBusId}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-    };
-
-    html2pdf().set(opt).from(element).save();
+  function downloadPDF() {
+    const element = document.getElementById('ticket');
+    html2pdf().from(element).save('UBus_Ticket.pdf');
   }
 </script>
 
 </body>
 </html>
+

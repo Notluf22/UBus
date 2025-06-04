@@ -7,6 +7,8 @@
       font-family: sans-serif;
       background: #f9f9f9;
       padding: 20px;
+      margin: 0;
+      overflow-x: hidden;
     }
 
     .booking-container {
@@ -17,26 +19,12 @@
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       text-align: center;
+      position: relative;
+      z-index: 1;
     }
 
     h2 {
-      text-align: center;
       color: #333;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-    }
-
-    label {
-      margin-top: 10px;
-      text-align: left;
-    }
-
-    input {
-      padding: 8px;
-      margin-top: 5px;
     }
 
     .btn {
@@ -47,6 +35,7 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      font-size: 16px;
     }
 
     .btn:hover {
@@ -54,12 +43,65 @@
     }
 
     .confirmation {
-      background: #e6ffe6;
-      padding: 15px;
-      margin-top: 20px;
-      border: 1px solid #a3d8a3;
-      border-radius: 6px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.2);
       display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      animation: pop 0.6s ease-out forwards;
+    }
+
+    @keyframes pop {
+      0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.05);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    .glow-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, #4caf50, #2e7d32);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+
+    .checkmark {
+      color: white;
+      font-size: 50px;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.6);
+      }
+      50% {
+        box-shadow: 0 0 0 20px rgba(76, 175, 80, 0);
+      }
+    }
+
+    #successText {
+      font-size: 20px;
+      color: #2e7d32;
+      margin-top: 20px;
       text-align: center;
     }
   </style>
@@ -67,30 +109,22 @@
 <body>
 
 <div class="booking-container">
-  <h2>Confirm Booking</h2>
+  <h2>Confirm Booking 🚌</h2>
   <div id="busInfo"></div>
 
   <form id="bookingForm">
-    <label for="name">Name</label>
-    <input id="name" type="text" required>
-
-    <label for="email">Email</label>
-    <input id="email" type="email" required>
-
-    <label for="seats">Number of Seats</label>
-    <input id="seats" type="number" min="1" required>
-
     <button class="btn" type="submit">Confirm Booking</button>
   </form>
+</div>
 
-  <div class="confirmation" id="confirmationMsg">
-    <strong>✅ Booking confirmed!</strong><br>
-    Redirecting to your ticket...
+<div class="confirmation" id="confirmationMsg">
+  <div class="glow-circle">
+    <div class="checkmark">✔</div>
   </div>
+  <div id="successText">Booking Confirmed!<br>Redirecting to your ticket...</div>
 </div>
 
 <script>
-  
   let buses = [];
 
   fetch('buses.json')
@@ -102,10 +136,7 @@
 
   function initBooking() {
     const selectedBusId = sessionStorage.getItem("selectedBusId");
-    const source = (sessionStorage.getItem("source") || "").trim().toLowerCase();
-    const destination = (sessionStorage.getItem("destination") || "").trim().toLowerCase();
     const farePerSeat = parseInt(sessionStorage.getItem("fare") || "0");
-
     const selectedBus = buses.find(bus => bus.bus_id === selectedBusId);
     const busInfoDiv = document.getElementById("busInfo");
 
@@ -120,36 +151,19 @@
 
       document.getElementById("bookingForm").addEventListener("submit", function (e) {
         e.preventDefault();
-        const name = document.getElementById("name").value.trim();
-        const email = document.getElementById("email").value.trim();
-        const seats = parseInt(document.getElementById("seats").value);
 
-        if (seats > 0) {
-          document.getElementById("confirmationMsg").style.display = "block";
+        const confirmBox = document.getElementById("confirmationMsg");
+        confirmBox.style.display = "flex";
 
-          // Save booking details
-          sessionStorage.setItem("passengerName", name);
-          sessionStorage.setItem("passengerEmail", email);
-          sessionStorage.setItem("seatsBooked", seats);
-
-          // Optional: Send confirmation email
-          sendConfirmationEmail({ name, email }, selectedBus, seats, farePerSeat);
-
-          // Redirect to ticket
-          setTimeout(() => {
-            window.location.href = "ticket.html";
-          }, 1500);
-        } else {
-          alert("Please enter a valid number of seats.");
-        }
+        setTimeout(() => {
+          window.location.href = "ticket.html";
+        }, 1800);
       });
     } else {
       busInfoDiv.innerHTML = "<p>❌ Missing bus details. Please go back and try again.</p>";
       document.getElementById("bookingForm").style.display = "none";
     }
   }
-
- 
 </script>
 
 </body>
