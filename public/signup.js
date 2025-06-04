@@ -1,4 +1,4 @@
-import { auth, createUserWithEmailAndPassword, updateProfile } from './firebase.js';
+import { auth, createUserWithEmailAndPassword } from './firebase.js';
 
 const signupForm = document.getElementById('signupForm');
 
@@ -10,14 +10,6 @@ signupForm.addEventListener("submit", function (event) {
 
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      const user = userCredential.user;
-
-      // Set display name (username)
-      return updateProfile(user, {
-        displayName: username
-      });
-    })
-    .then(() => {
       alert("Account created!");
       window.location.href = "login.html";
     })
