@@ -108,11 +108,11 @@
 
     .action-buttons button {
       width: 120px;
-      background-color: #007BFF;
+      background-color: #4CAF50;
     }
 
     .action-buttons button:hover {
-      background-color: #0056b3;
+      background-color: #4CAF50;
     }
 
     .action-buttons .back-button {
@@ -173,9 +173,20 @@
 
       const name = document.getElementById("name").value.trim();
       const feedback = document.getElementById("feedback").value.trim();
-      const rating = document.querySelector('input[name="rating"]:checked');
+      const rating = document.querySelector('input[name="rating"]:checked')?.value;
 
       if (name && feedback && rating) {
+        const newFeedback = {
+          name,
+          feedback,
+          rating,
+          timestamp: new Date().toISOString()
+        };
+
+        const existing = JSON.parse(localStorage.getItem("feedbacks") || "[]");
+        existing.push(newFeedback);
+        localStorage.setItem("feedbacks", JSON.stringify(existing));
+
         form.classList.add("hidden");
         thankYouSection.classList.remove("hidden");
       }
@@ -184,6 +195,7 @@
     function reenterFeedback() {
       thankYouSection.classList.add("hidden");
       form.classList.remove("hidden");
+      form.reset();
     }
 
     function goBack() {
