@@ -4,13 +4,17 @@
       padding: 20px;
     }
     h2 {
-      margin-bottom: 5px;
+      margin-bottom: 5px; 
+      position: relative;
+      left: 20px;
     }
     .route-heading {
       font-size: 18px;
       font-weight: 500;
       margin-bottom: 20px;
-      color: #2e2d2d;
+      color: #2e2d2d; 
+      position: relative;
+      left: 20px;
     }
     .bus-card {
       background: white;
@@ -19,7 +23,7 @@
       margin: 15px 0;
       font-size: x-large;
       height: 200px;
-      width: 650px;
+      
       border-radius: 6px;
       box-shadow: 0 2px 5cap rgba(0,0,0,0.1);
     }
@@ -28,6 +32,23 @@
   flex-direction: column;
   gap: 8px;
 }
+.bus-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bus-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+.bus-card {
+  opacity: 0;
+  animation: fadeInCard 0.4s ease forwards;
+}
+
+@keyframes fadeInCard {
+  to { opacity: 1; }
+}
+
 
 .bus-card div {
   font-size: 14px;
@@ -89,5 +110,10 @@
     .select-button:active {
       background-color: #d11414;
     }
-
+.header-container{
+  background-color: aliceblue;
+  height: 90px;
+  border-radius: 5px;
+align-content:end;
+}
 

@@ -89,12 +89,6 @@
   </div>
 </div>
 
-<!-- EmailJS (optional) -->
-<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-<script>
-  emailjs.init("YOUR_EMAILJS_USER_ID"); // 🔁 Replace this with your actual EmailJS User ID
-</script>
-
 <script>
   let buses = [];
 
@@ -154,26 +148,7 @@
     }
   }
 
-  function sendConfirmationEmail(userData, busData, seatCount, farePerSeat) {
-    emailjs.send("service_ychbdie", "template_dl2hl8x", {
-      to_name: userData.name,
-      email: userData.email,
-      bus_type: busData.bus_type,
-      source: busData.source,
-      destination: busData.destination,
-      departure_time: busData.departure_time,
-      arrival_time: busData.arrival_time,
-      seats: seatCount,
-      fare: farePerSeat * seatCount
-    })
-    .then(() => {
-      console.log("✅ Email sent successfully");
-    })
-    .catch((error) => {
-      console.error("❌ Failed to send email:", error);
-      alert("Booking confirmed, but failed to send confirmation email.");
-    });
-  }
+ 
 </script>
 
 </body>
