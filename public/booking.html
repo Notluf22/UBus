@@ -5,7 +5,7 @@
   <style>
     body {
       font-family: sans-serif;
-      background: #f9f9f9;
+      background:#148d94;
       padding: 20px;
       margin: 0;
       overflow-x: hidden;
@@ -21,6 +21,9 @@
       text-align: center;
       position: relative;
       z-index: 1;
+       position: relative;
+      top: 140px;
+      left: 10px;
     }
 
     h2 {
@@ -88,6 +91,26 @@
       color: white;
       font-size: 50px;
     }
+    .bus{
+      position: relative;
+      right: 190px;
+    }
+    .from{
+       position: relative;
+      right: 115px;
+    }
+    .dep{
+       position: relative;
+      right: 191px;
+    }
+    .arr{
+       position: relative;
+      right: 205px;
+    }
+    .fare{
+       position: relative;
+      right: 183px;
+    }
 
     @keyframes pulse {
       0%, 100% {
@@ -104,6 +127,20 @@
       margin-top: 20px;
       text-align: center;
     }
+       .booking-container {
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
   </style>
 </head>
 <body>
@@ -142,11 +179,11 @@
 
     if (selectedBus) {
       busInfoDiv.innerHTML = `
-        <p><strong>Bus:</strong> ${selectedBus.bus_type}</p>
-        <p><strong>From:</strong> ${selectedBus.source} ➝ <strong>To:</strong> ${selectedBus.destination}</p>
-        <p><strong>Departure:</strong> ${selectedBus.departure_time}</p>
-        <p><strong>Arrival:</strong> ${selectedBus.arrival_time}</p>
-        <p><strong>Fare per seat:</strong> ₹${farePerSeat}</p>
+        <p class="bus"><strong>Bus:</strong> ${selectedBus.bus_type}</p>
+        <p  class="from" ><strong>From:</strong> ${selectedBus.source} ➝ <strong>To:</strong> ${selectedBus.destination}</p>
+        <p  class="dep"><strong>Departure:</strong> ${selectedBus.departure_time}</p>
+        <p  class="arr"><strong>Arrival:</strong> ${selectedBus.arrival_time}</p>
+        <p  class="fare"><strong>Fare per seat:</strong> ₹${farePerSeat}</p>
       `;
 
       document.getElementById("bookingForm").addEventListener("submit", function (e) {
