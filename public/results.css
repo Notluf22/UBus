@@ -4,13 +4,17 @@
       padding: 20px;
     }
     h2 {
-      margin-bottom: 5px;
+      margin-bottom: 5px; 
+      position: relative;
+      left: 20px;
     }
     .route-heading {
       font-size: 18px;
       font-weight: 500;
       margin-bottom: 20px;
-      color: #2e2d2d;
+      color: #2e2d2d; 
+      position: relative;
+      left: 20px;
     }
     .bus-card {
       background: white;
@@ -106,5 +110,10 @@
     .select-button:active {
       background-color: #d11414;
     }
-
+.header-container{
+  background-color: aliceblue;
+  height: 90px;
+  border-radius: 5px;
+align-content:end;
+}
 
