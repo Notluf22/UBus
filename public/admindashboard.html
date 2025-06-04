@@ -1,7 +1,8 @@
+<!-- Save as admindashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Admin Dashboard</title>
   <style>
     body {
@@ -46,10 +47,10 @@
     }
 
     .form-section {
+      display: none;
       border-top: 1px solid #ddd;
       padding-top: 1rem;
       margin-top: 1rem;
-      display: none;
     }
 
     input, textarea {
@@ -91,13 +92,11 @@
 <body>
   <div class="container">
     <h1>KSRTC Admin Dashboard</h1>
-    
+
     <div class="button-panel">
       <button onclick="showSection('addBusForm')">Add Buses</button>
       <button onclick="showFeedbacks()">Feedbacks</button>
       <button onclick="goBack()">← Go Back</button>
-</div>
-
     </div>
 
     <!-- Add Bus Form -->
@@ -124,15 +123,14 @@
     <!-- Feedback Display -->
     <div id="feedbacksSection" class="form-section">
       <h2>User Feedbacks</h2>
-      <div id="feedbackList"></div>
+      <div id="feedbackList">Loading...</div>
     </div>
   </div>
 
   <script>
-    
-  function goBack() {
-    window.location.href = "adminlogin.html"; // Or change this to your actual home/dashboard page
-  }
+    function goBack() {
+      window.location.href = "adminlogin.html";
+    }
 
     function showSection(id) {
       document.getElementById("addBusForm").style.display = "block";
@@ -144,21 +142,28 @@
       const section = document.getElementById("feedbacksSection");
       const list = document.getElementById("feedbackList");
       section.style.display = "block";
+      list.innerHTML = "Loading...";
 
-      const feedbacks = JSON.parse(localStorage.getItem("feedbacks") || "[]");
-
-      if (feedbacks.length === 0) {
-        list.innerHTML = "<p>No feedbacks submitted yet.</p>";
-      } else {
-        list.innerHTML = feedbacks.map(f => `
-          <div class="feedback-box">
-            <p><strong>Name:</strong> ${f.name}</p>
-            <p><strong>Rating:</strong> ${f.rating} ★</p>
-            <p><strong>Feedback:</strong> ${f.feedback}</p>
-            <small>${new Date(f.timestamp).toLocaleString()}</small>
-          </div>
-        `).join('');
-      }
+      fetch("/feedbacks")
+        .then(res => res.json())
+        .then(feedbacks => {
+          if (!feedbacks.length) {
+            list.innerHTML = "<p>No feedbacks submitted yet.</p>";
+            return;
+          }
+          list.innerHTML = feedbacks.map(f => `
+            <div class="feedback-box">
+              <p><strong>Name:</strong> ${f.name}</p>
+              <p><strong>Rating:</strong> ${f.rating} ★</p>
+              <p><strong>Feedback:</strong> ${f.feedback}</p>
+              <small>${new Date(f.timestamp).toLocaleString()}</small>
+            </div>
+          `).join('');
+        })
+        .catch(err => {
+          list.innerHTML = "<p>Error loading feedbacks.</p>";
+          console.error(err);
+        });
     }
 
     function submitBus() {
@@ -175,10 +180,22 @@
         route: document.getElementById("route").value.split(',').map(stop => stop.trim())
       };
 
-      console.log("Simulating POST:", newBus);
-
-      document.getElementById("successMessage").style.display = "block";
-      document.querySelectorAll("#addBusForm input, #addBusForm textarea").forEach(el => el.disabled = true);
+      fetch('/add-bus', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newBus)
+      })
+      .then(res => res.json())
+      .then(() => {
+        document.getElementById("successMessage").style.display = "block";
+        document.querySelectorAll("#addBusForm input, #addBusForm textarea").forEach(el => el.disabled = true);
+      })
+      .catch(err => {
+        alert("Error adding bus: " + err.message);
+        console.error(err);
+      });
     }
 
     function resetForm() {
