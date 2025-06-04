@@ -37,12 +37,29 @@
       background-color: #3fd9d6;
       position: relative;
       top: 20px;
-      left: 85px;
+      left: 25px;
     }
     .but:hover {
       background-color: #178831;
     }
     .but:active {
+      background-color: #d11414;
+    }
+    .back-button{
+            padding: 0.5rem 1rem;
+      border: 1.85px solid;
+      position: relative;
+      top: 22px;
+      left: 30px;
+      color: black;
+      text-decoration: none;
+      background-color: #3fd9d6;
+      border-radius: 5px;
+    }
+    .back-button:hover {
+      background-color: #178831;
+    }
+    .back-button:active {
       background-color: #d11414;
     }
     h2{
@@ -70,6 +87,8 @@
   <input type="text" id="username" placeholder="Username" required />
   <input type="password" id="password" placeholder="Password" required />
   <button class="but" type="submit">Login</button>
+  <a href="login.html" class="back-button" type="button">← Go Back</a>
+
 </form>
 
 <script>
