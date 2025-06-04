@@ -5,6 +5,7 @@
   <link rel="icon" href="logo-transparent-png.png" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
+    <style>
     body {
       font-family: sans-serif;
       background: #f2f2f2;
@@ -19,12 +20,20 @@
       margin: auto;
     }
     .bus-details {
-      animation: slideUp 0.5s ease-out;
-    }
-    @keyframes slideUp {
-      from { transform: translateY(30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
     .bus-details h2 {
       margin-top: 0;
     }
@@ -81,14 +90,28 @@ fetch('buses.json')
     sessionStorage.setItem("fare", fare);
 
     busDetailsDiv.innerHTML = `
-      <h2>🚌 ${selectedBus.bus_type}</h2>
-      <p><strong>Bus ID:</strong> ${selectedBus.bus_id}</p>
-      <p><strong>Route:</strong> ${toTitleCase(source)} ➝ ${toTitleCase(destination)}</p>
-      <p><strong>Departure:</strong> ${selectedBus.departure_time} from ${selectedBus.boarding_point}</p>
-      <p><strong>Arrival:</strong> ${selectedBus.arrival_time} at ${selectedBus.dropping_point}</p>
-      <p><strong>Duration:</strong> ${selectedBus.duration}</p>
-      <p><strong>Fare:</strong> ₹${fare}</p>
-      <button class="button" onclick="proceedToBooking()">Proceed to Booking</button>
+    <h2>🚌 ${selectedBus.bus_type}</h2>
+  <p><strong>Bus ID:</strong> ${selectedBus.bus_id}</p>
+  <p><strong>Route:</strong> ${toTitleCase(source)} ➝ ${toTitleCase(destination)}</p>
+
+  <p>
+    <span class="material-icons" style="vertical-align: middle; color: #007bff;">departure_board</span>
+    <strong>Departure:</strong> ${selectedBus.departure_time} from ${selectedBus.boarding_point}
+  </p>
+
+  <p>
+    <span class="material-icons" style="vertical-align: middle; color: #e53935;">place</span>
+    <strong>Arrival:</strong> ${selectedBus.arrival_time} at ${selectedBus.dropping_point}
+  </p>
+
+  <p>
+    <span class="material-icons" style="vertical-align: middle; color: #43a047;">schedule</span>
+    <strong>Duration:</strong> ${selectedBus.duration}
+  </p>
+
+  <p><strong>Fare:</strong> ₹${fare}</p>
+  <button class="button" onclick="proceedToBooking()">Proceed to Booking</button>
+      
     `;
   });
 
