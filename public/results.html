@@ -23,74 +23,97 @@
         searchBuses();
       });
 
-    const sourceRaw = sessionStorage.getItem('source');
-    const destinationRaw = sessionStorage.getItem('destination');
-    const source = (sourceRaw || "").trim().toLowerCase();
-    const destination = (destinationRaw || "").trim().toLowerCase();
+   // 🎯 Get Source & Destination from sessionStorage
+const sourceRaw = sessionStorage.getItem('source');
+const destinationRaw = sessionStorage.getItem('destination');
 
-    if (!source || !destination) {
-      alert("Missing search data. Redirecting...");
-      window.location.href = "dashboard 1.html";
-    }
+const source = (sourceRaw || "").trim().toLowerCase();
+const destination = (destinationRaw || "").trim().toLowerCase();
 
-    function toTitleCase(str) {
-      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-    }
+if (!source || !destination) {
+  alert("Missing search data. Redirecting...");
+  window.location.href = "dashboard.html";
+}
 
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById("routeHeading").textContent =
-        `From ${toTitleCase(source)} to ${toTitleCase(destination)}`;
-    });
+document.getElementById("routeHeading").textContent = `From ${toTitleCase(source)} to ${toTitleCase(destination)}`;
 
-    function searchBuses() {
-      const matchingBuses = buses.filter(bus => {
-        const route = bus.route.map(stop => stop.toLowerCase());
-        const sourceIndex = route.indexOf(source);
-        const destIndex = route.indexOf(destination);
-        return sourceIndex !== -1 && destIndex !== -1 && destIndex > sourceIndex;
-      });
 
-      renderResults(matchingBuses);
-    }
+function toTitleCase(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
 
-    function renderResults(matchingBuses) {
-      const resultsDiv = document.getElementById('results');
-      resultsDiv.innerHTML = '';
 
-      matchingBuses.forEach(bus => {
-        const route = bus.route.map(stop => stop.toLowerCase());
-        const sourceIndex = route.indexOf(source);
-        const destIndex = route.indexOf(destination);
-        const stopCount = destIndex - sourceIndex;
+function searchBuses() {
+  const matchingBuses = buses.filter(bus => {
+    const route = bus.route.map(stop => stop.toLowerCase());
+    const sourceIndex = route.indexOf(source);
+    const destIndex = route.indexOf(destination);
+    return sourceIndex !== -1 && destIndex !== -1 && destIndex > sourceIndex;
+  });
 
-        let ratePerStop = bus.bus_type.toLowerCase() === "super fast" ? 15 :
-                          bus.bus_type.toLowerCase() === "fast" ? 12 : 10;
+  renderResults(matchingBuses);
+}
 
-        const fare = stopCount * ratePerStop;
 
-        const busHTML = `
-          <div class="bus-card">
-            <strong>🚌 ${bus.bus_type}</strong><br>
-            <div class="bus-id">Bus ID: <span>${bus.bus_id}</span></div>
-            <div class="departure">Departure: <span>${bus.departure_time}</span> ---------${bus.duration}hr --------- Arrival: <span>${bus.arrival_time}</span></div>
-            <div class="arrival">${bus.boarding_point} to <span>${bus.dropping_point}</span></div>
-            <div class="fare"><span>Fare: ₹<span>${fare}</span></div>
-            <div class="stop"><span>Stops: <span>${stopCount}</span></div>
-            <button class="select-button" onclick="selectBus('${bus.bus_id}')">Select</button>
-          </div>
-        `;
-        resultsDiv.innerHTML += busHTML;
-      });
+function renderResults(matchingBuses) {
+  const resultsDiv = document.getElementById('results');
+  resultsDiv.innerHTML = '';
 
-      if (resultsDiv.innerHTML === '') {
-        resultsDiv.innerHTML = "<p>No buses found for this route.</p>";
-      }
-    }
+  matchingBuses.forEach(bus => {
+    const route = bus.route.map(stop => stop.toLowerCase());
+    const sourceIndex = route.indexOf(source);
+    const destIndex = route.indexOf(destination);
+    const stopCount = destIndex - sourceIndex;
 
-    function selectBus(busId) {
-      sessionStorage.setItem("selectedBusId", busId);
-      window.location.href = "booking.html";
-    }
+   
+    let ratePerStop;
+    const type = bus.bus_type.toLowerCase();
+    if (type === "super fast") ratePerStop = 15;
+    else if (type === "fast") ratePerStop = 12;
+    else if (type === "ordinary") ratePerStop = 10;
+    else ratePerStop = 10; // fallback
+
+    const fare = stopCount * ratePerStop;
+
+    const busHTML = `
+      <div class="bus-card">
+       
+        <strong>🚌 ${bus.bus_type}</strong><br>
+       
+       <div class="bus-id">
+  <span style="color: black; font-weight: bold; font-size:large">Bus ID:</span>
+  <span style="color: blue; font-size:large ">${bus.bus_id}</span>
+</div>
+
+       
+        <div class="departure"> <span> Departure: <span>${bus.departure_time}</span> ---------${bus.duration}hr --------- <span>Arrival: <span>${bus.arrival_time}</span></div>
+        <div class="arrival">  <span>${bus.boarding_point} to  <span>${bus.dropping_point}</span></div>
+       
+     
+        <div class="fare"> <span> Fare: ₹<span>${fare}</span></div>
+       
+       
+       <div class="stop"> <span> Stops: <span> ${stopCount}</span></div>
+        <button class="select-button" onclick="selectBus('${bus.bus_id}')">Select</button>
+      </div>
+      
+    `;
+    resultsDiv.innerHTML += busHTML;
+  });
+
+  if (resultsDiv.innerHTML === '') {
+    resultsDiv.innerHTML = "<p>No buses found for this route.</p>";
+  }
+}
+
+// 🚍 Select Bus
+function selectBus(busId) {
+  sessionStorage.setItem("selectedBusId", busId);
+  window.location.href = "select.html";
+}
+
+
+document.addEventListener('DOMContentLoaded', searchBuses);
   </script>
 </body>
 </html>
