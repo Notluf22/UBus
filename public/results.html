@@ -7,11 +7,11 @@
 </head>
 <body>
   <div class="header-container">
-    <h2>Available Buses</h2>
-    <div class="route-heading" id="routeHeading"></div>
+      <h2>Available Buses</h2>
+      <div class="route-heading" id="routeHeading"></div>
   </div>
 
-  <div class="results" id="results"></div>
+    <div class="results" id="results"></div>
 
   <script>
     let buses = [];
@@ -40,6 +40,9 @@ document.getElementById("routeHeading").textContent = `From ${toTitleCase(source
 
 function toTitleCase(str) {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+function goBack() {
+  window.location.href = "dashboard.html"; // Change this if the back page is different
 }
 
 
@@ -78,7 +81,7 @@ function renderResults(matchingBuses) {
     const busHTML = `
       <div class="bus-card">
        
-        <strong>🚌 ${bus.bus_type}🚌 </strong><br>
+        <strong>${bus.bus_type}🚌 </strong><br>
        
        <div class="bus-id">
   <span style="color: black; font-weight: bold; font-size:large">Bus ID:</span>
