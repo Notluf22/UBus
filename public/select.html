@@ -8,7 +8,7 @@
  
     body {
       font-family: sans-serif;
-      background: #50898c;
+      background: rgb(152, 166, 139);
       padding: 20px;
     }
     .bus-details {
@@ -17,10 +17,10 @@
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       position: relative;
-      top: 140px;
+      top: 120px;
        max-width: 500px;
        position: relative;
-      left: 650px;
+      left:500px;
       
     }
     .bus-details {
@@ -57,15 +57,14 @@
     .button:hover {
       background-color:  rgb(1, 70, 1);
     }
-     .button:active {
-      background-color: #d11414;
+    
       h2{
        position: relative;
          right: -25px;
          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
          font-size:45px;
     }
-    }
+    
     .busid{
       position: relative;
       left: 28px;
@@ -107,22 +106,8 @@
          font-size: large;
 
 }
-.back-button {
-  background-color: green;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-right: 10px;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-  margin-top: 2px
-}
 
-.back-button:hover {
-  background-color: rgb(1, 70, 1);
-}
+
     
   </style>
 </head>
@@ -131,7 +116,7 @@
 <div class="bus-details" id="busDetails">
   <h2>Selected Bus</h2>
   <p>Loading bus information...</p>
-<button onclick="goBack()" class="back-button">← Back</button>
+
 </div>
 
   
@@ -199,9 +184,7 @@ function proceedToBooking() {
   alert("Redirecting to booking page...");
   window.location.href = "booking.html";
 }
-function goBack() {
-  window.location.href = "dashboard.html"; // Change this if the back page is different
-}
+
 </script>
 
 </body>

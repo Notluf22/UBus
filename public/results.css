@@ -1,6 +1,6 @@
   body {
       font-family: sans-serif;
-      background: #91c8d9;
+      background: rgb(152, 166, 139);
       padding: 20px;
     }
     h2 {
@@ -107,9 +107,7 @@
     .select-button:hover {
       background-color: rgb(1, 70, 1);
     }
-    .select-button:active {
-      background-color: #d11414;
-    }
+    
 .header-container{
   background-color: aliceblue;
   height: 150px;
