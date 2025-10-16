@@ -9,11 +9,11 @@
 <style>
   body { height: 100%; font-family: Arial,bold, sans-serif; background: rgb(152, 166, 139); margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
   .container { width: 80%; max-width: 600px; background: rgb(238, 234, 234); margin-top: 50px; padding: 30px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); text-align: center; position: relative; top: 20%; }
-  .swap-button { position: relative; background: green; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 10px 0; }
+  .swap-button { display:block; background: green; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 10px auto; }
   table { margin: auto; }
   td { padding: 10px; }
   #from, #to { height: 30px; width: 250px; border: 2px solid #1a1a1a; }
-  .sub-button { background-color:green; color: aliceblue; height: 30px; width: 90px; font-weight: bold; border-radius: 10px; border: none; margin-top: 15px; cursor: pointer; }
+  .sub-button { background-color:green; color: aliceblue; height: 30px; width: 90px; font-weight: bold; border-radius: 10px; border: none; margin-top: 15px; cursor: pointer; display:block; margin-left:auto; margin-right:auto; }
   button:active { background-color: rgb(1, 70, 1); }
   h1,h2 { font-family: Georgia, 'Times New Roman', Times, serif; }
 </style>
@@ -42,21 +42,24 @@
   <div id="results"></div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js'
+
 const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Swap button functionality
-document.getElementById('swapBtn').addEventListener('click', () => {
+const swapBtn = document.getElementById('swapBtn');
+swapBtn.addEventListener('click', () => {
   const fromInput = document.getElementById('from');
   const toInput = document.getElementById('to');
   [fromInput.value, toInput.value] = [toInput.value, fromInput.value];
 });
 
 // Search form submission
-document.getElementById('searchForm').addEventListener('submit', async (e) => {
+const form = document.getElementById('searchForm');
+form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const from = document.getElementById('from').value.trim();
   const to = document.getElementById('to').value.trim();
@@ -78,10 +81,11 @@ document.getElementById('searchForm').addEventListener('submit', async (e) => {
       return;
     }
 
-    // Pass search results via sessionStorage
+    // Store data in sessionStorage and redirect
     sessionStorage.setItem('source', from);
     sessionStorage.setItem('destination', to);
     window.location.href = 'results.html';
+
   } catch (err) {
     console.error(err);
     alert("Error fetching buses. Try again.");
