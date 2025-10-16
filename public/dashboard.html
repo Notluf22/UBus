@@ -1,114 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>UBus</title>
-  <link rel="stylesheet" href="results.css">
   <link rel="icon" href="logo-transparent-png.png" />
+  <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
-  <div class="header-container">
-    <button onclick="goBack()" class="back-button" aria-label="Go back to previous page">← Back</button>
-    <h2>Available Buses</h2>
-    <div class="route-heading" id="routeHeading"></div>
+  <div class="container">
+    <h1>UBus</h1>
+    <h2>Catch Your Bus</h2>
+
+    <form id="searchForm">
+      <table>
+        <tr>
+          <td>From:</td>
+          <td><input type="text" id="from" placeholder="Enter Starting Location" required /></td>
+        </tr>
+        <tr>
+          <td>To:</td>
+          <td><input type="text" id="to" placeholder="Enter Your Destination" required /></td>
+        </tr>
+        <tr>
+          <td colspan="2" style="text-align:center;">
+            <button type="submit" class="sub-button">Search</button>
+          </td>
+        </tr>
+      </table>
+    </form>
   </div>
 
-  <div class="results" id="results">
-    <!-- Loading indicator will be added dynamically -->
-  </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    (function() {
-      const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
-      const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";  // Replace with your actual key and use secure methods (e.g., environment variables)
-      
-      const supabase = window.supabase;  // Ensure the global Supabase client is used
-      const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  // Form submit
+  document.getElementById('searchForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const from = document.getElementById('from').value.trim();
+    const to = document.getElementById('to').value.trim();
 
-      const resultsDiv = document.getElementById("results");
-      const routeHeading = document.getElementById("routeHeading");
-      const sourceRaw = sessionStorage.getItem('source');
-      const destinationRaw = sessionStorage.getItem('destination');
-      const source = (sourceRaw || "").trim();
-      const destination = (destinationRaw || "").trim();
+    if (!from || !to) {
+      alert("Please enter both From and To locations.");
+      return;
+    }
+    if (from.toLowerCase() === to.toLowerCase()) {
+      alert("'From' and 'To' must be different!");
+      return;
+    }
 
-      if (!source || !destination) {
-        alert("Missing search data. Redirecting to dashboard...");
-        window.location.href = "dashboard.html";
-        return;  // Exit early
-      }
+    // Save source and destination
+    sessionStorage.setItem('source', from);
+    sessionStorage.setItem('destination', to);
 
-      routeHeading.textContent = `From ${source} to ${destination}`;
-
-      async function loadBuses() {
-        resultsDiv.innerHTML = '<p>Loading buses... ⏳</p>';  // Show loading indicator
-        try {
-          const { data: buses, error } = await supabaseClient
-            .from('buses')
-            .select('*')
-            .eq('source', source)
-            .eq('destination', destination);
-
-          if (error) {
-            throw new Error(`Error fetching buses: ${error.message}`);
-          }
-
-          if (!buses || buses.length === 0) {
-            resultsDiv.innerHTML = "<p>No buses found for this route. Please try another search.</p>";
-            return;
-          }
-
-          renderResults(buses);
-        } catch (err) {
-          console.error("Error loading buses:", err);
-          resultsDiv.innerHTML = `<p>⚠️ Failed to load bus data. Error: ${err.message}. Please try again later.</p>`;
-        }
-      }
-
-      function renderResults(buses) {
-        resultsDiv.innerHTML = '';  // Clear previous content
-        buses.forEach(bus => {
-          const busHTML = `
-            <div class="bus-card">
-              <strong>${escapeHTML(bus.bus_type)} 🚌</strong><br>
-              <div class="bus-id">
-                <span class="bus-id-label">Bus ID:</span>
-                <span class="bus-id-value">${escapeHTML(bus.bus_id)}</span>
-              </div>
-              <div class="departure">
-                <span class="departure-label">Departure:</span> ${escapeHTML(bus.departure_time)} 
-                — ${escapeHTML(bus.duration)}hr — 
-                <span class="arrival-label">Arrival:</span> ${escapeHTML(bus.arrival_time)}
-              </div>
-              <div class="route">${escapeHTML(bus.boarding_point)} to ${escapeHTML(bus.dropping_point)}</div>
-              <div class="fare"><span class="fare-label">Fare:</span> ₹${escapeHTML(bus.fare)}</div>
-              <button class="select-button" onclick="selectBus('${escapeHTML(bus.bus_id)}')" aria-label="Select this bus">Select</button>
-            </div>
-          `;
-          resultsDiv.innerHTML += busHTML;
-        });
-      }
-
-      function selectBus(busId) {
-        sessionStorage.setItem("selectedBusId", busId);
-        window.location.href = "select.html";
-      }
-
-      function goBack() {
-        window.history.back();  // Go back to the previous page
-      }
-
-      // Helper function to escape HTML to prevent XSS
-      function escapeHTML(str) {
-        return str.replace(/&/g, "&amp;")
-                  .replace(/</g, "&lt;")
-                  .replace(/>/g, "&gt;")
-                  .replace(/"/g, "&quot;")
-                  .replace(/'/g, "&#039;");
-      }
-
-      document.addEventListener('DOMContentLoaded', loadBuses);
-    })();
-  </script>
+    // Redirect to results page
+    window.location.href = 'results.html';
+  });
+</script>
 </body>
 </html>
