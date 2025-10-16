@@ -25,22 +25,21 @@ async function searchBuses() {
   }
 
   try {
-    // Fetch all buses from Supabase
-    const { data: buses, error } = await supabase.from('buses').select('*');
+    // Fetch matching buses from Supabase
+    const { data: buses, error } = await supabase
+      .from('buses')
+      .select('*')
+      .eq('source', from)
+      .eq('destination', to);
+
     if (error) throw error;
 
-    const matchingBuses = buses.filter(bus => {
-      const busSource = bus.source.toLowerCase();
-      const busDest = bus.destination.toLowerCase();
-      return busSource === from.toLowerCase() && busDest === to.toLowerCase();
-    });
-
-    if (matchingBuses.length === 0) {
+    if (!buses || buses.length === 0) {
       resultsDiv.innerHTML = "<p>No buses found for this route.</p>";
     } else {
-      // Store results in sessionStorage for the results page
-      sessionStorage.setItem('searchResults', JSON.stringify(matchingBuses));
-      window.location.href = 'results.html';
+      // Redirect to results.html with query parameters
+      const queryParams = `?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
+      window.location.href = 'results.html' + queryParams;
     }
 
   } catch (error) {
