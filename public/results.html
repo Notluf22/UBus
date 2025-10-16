@@ -7,86 +7,78 @@
 </head>
 <body>
   <div class="header-container">
-     <button onclick="goBack()" class="back-button">← Back</button>
-      <h2>Available Buses</h2>
-      <div class="route-heading" id="routeHeading"></div>
-     
+    <button onclick="goBack()" class="back-button">← Back</button>
+    <h2>Available Buses</h2>
+    <div class="route-heading" id="routeHeading"></div>
   </div>
 
-    <div class="results" id="results"></div>
+  <div class="results" id="results"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
-  const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
+const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY"; // replace with your anon key
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  const resultsDiv = document.getElementById("results");
-  const sourceRaw = sessionStorage.getItem('source');
-  const destinationRaw = sessionStorage.getItem('destination');
-  const source = (sourceRaw || "").trim();
-  const destination = (destinationRaw || "").trim();
+const resultsDiv = document.getElementById("results");
+const source = (sessionStorage.getItem('source') || "").trim();
+const destination = (sessionStorage.getItem('destination') || "").trim();
 
-  if (!source || !destination) {
-    alert("Missing search data. Redirecting...");
-    window.location.href = "dashboard.html";
+if (!source || !destination) {
+  alert("Missing search data. Redirecting...");
+  window.location.href = "dashboard.html";
+}
+
+document.getElementById("routeHeading").textContent = `From ${source} to ${destination}`;
+
+function goBack() {
+  window.location.href = "dashboard.html";
+}
+
+// Load buses from sessionStorage (already fetched in dashboard)
+function loadBuses() {
+  const busesRaw = sessionStorage.getItem('searchResults');
+  if (!busesRaw) {
+    resultsDiv.innerHTML = "<p>No buses found. Please search again.</p>";
+    return;
   }
 
-  document.getElementById("routeHeading").textContent = `From ${source} to ${destination}`;
-
-  async function loadBuses() {
-    try {
-      const { data: buses, error } = await supabaseClient
-        .from('buses')
-        .select('*')
-        .eq('source', source)
-        .eq('destination', destination);
-
-      if (error) throw error;
-
-      if (!buses || buses.length === 0) {
-        resultsDiv.innerHTML = "<p>No buses found for this route.</p>";
-        return;
-      }
-
-      renderResults(buses);
-    } catch (err) {
-      console.error("Error fetching bus list:", err);
-      resultsDiv.innerHTML = "<p>⚠️ Failed to load bus data.</p>";
-    }
+  const buses = JSON.parse(busesRaw);
+  if (buses.length === 0) {
+    resultsDiv.innerHTML = "<p>No buses found for this route.</p>";
+    return;
   }
 
-  function renderResults(buses) {
-    resultsDiv.innerHTML = '';
-    buses.forEach(bus => {
-      const busHTML = `
-        <div class="bus-card">
-          <strong>${bus.bus_type} 🚌</strong><br>
-          <div class="bus-id">
-            <span style="color: black; font-weight: bold; font-size:large">Bus ID:</span>
-            <span style="color: blue; font-size:large">${bus.bus_id}</span>
-          </div>
-          <div class="departure">
-            <span>Departure:</span> ${bus.departure_time} ---------${bus.duration}hr ---------
-            <span>Arrival:</span> ${bus.arrival_time}
-          </div>
-          <div class="arrival">${bus.boarding_point} to ${bus.dropping_point}</div>
-          <div class="fare"><span>Fare: ₹${bus.fare}</span></div>
-          <button class="select-button" onclick="selectBus('${bus.bus_id}')">Select</button>
+  renderResults(buses);
+}
+
+function renderResults(buses) {
+  resultsDiv.innerHTML = '';
+  buses.forEach(bus => {
+    const busHTML = `
+      <div class="bus-card">
+        <strong>${bus.bus_type} 🚌</strong><br>
+        <div class="bus-id">
+          <span style="font-weight:bold">Bus ID:</span> ${bus.bus_id}
         </div>
-      `;
-      resultsDiv.innerHTML += busHTML;
-    });
-  }
+        <div class="departure">
+          Departure: ${bus.departure_time} ---------${bus.duration}hr --------- Arrival: ${bus.arrival_time}
+        </div>
+        <div class="arrival">${bus.boarding_point} to ${bus.dropping_point}</div>
+        <div class="fare">Fare: ₹${bus.fare}</div>
+        <button class="select-button" onclick="selectBus('${bus.bus_id}')">Select</button>
+      </div>
+    `;
+    resultsDiv.innerHTML += busHTML;
+  });
+}
 
-  function selectBus(busId) {
-    sessionStorage.setItem("selectedBusId", busId);
-    window.location.href = "select.html";
-  }
+function selectBus(busId) {
+  sessionStorage.setItem("selectedBusId", busId);
+  window.location.href = "select.html";
+}
 
-  document.addEventListener('DOMContentLoaded', loadBuses);
+document.addEventListener('DOMContentLoaded', loadBuses);
 </script>
-
-
 </body>
 </html>
