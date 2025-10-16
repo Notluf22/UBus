@@ -1,3 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bus Booking</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: rgb(152, 166, 139);
+      padding: 20px;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    .booking-container {
+      background: white;
+      padding: 25px;
+      max-width: 500px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      position: relative;
+      z-index: 1;
+       position: relative;
+      top: 140px;
+      left: 10px;
+    }
+
+    h2 {
+      color: #333;
+     font-size:35px;
+       font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .btn {
+      margin-top: 20px;
+      padding: 10px 16px;
+      background-color: rgb(18, 179, 18);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn:hover {
+      background-color: green;
+    }
+
+    .confirmation {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.2);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      animation: pop 0.6s ease-out forwards;
+    }
+
+    @keyframes pop {
+      0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.05);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    .glow-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, #4caf50, #2e7d32);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+
+    .checkmark {
+      color: white;
+      font-size: 50px;
+    }
+    .bus{
+      position: relative;
+      text-align: left;
+      font-size:large;
+       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .from{
+       position: relative;
+      text-align: left;
+      font-size: large;
+       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .dep{
+       position: relative;
+      text-align: left;
+      font-size: large;
+       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .arr{
+       position: relative;
+      text-align: left;
+      font-size: large;
+       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .fare{
+       position: relative;
+     text-align:left;
+      font-size: large;
+       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.6);
+      }
+      50% {
+        box-shadow: 0 0 0 20px rgba(76, 175, 80, 0);
+      }
+    }
+
+    #successText {
+      font-size: 20px;
+      color: #2e7d32;
+      margin-top: 20px;
+      text-align: center;
+    }
+       .booking-container {
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+  </style>
+</head>
+<body>
+
+<div class="booking-container">
+  <h2>Confirm Booking 🚌</h2>
+  <div id="busInfo"></div>
+
+  <form id="bookingForm">
+    <button class="btn" type="submit">Confirm Booking</button>
+  </form>
+</div>
+
+<div class="confirmation" id="confirmationMsg">
+  <div class="glow-circle">
+    <div class="checkmark">✔</div>
+  </div>
+  <div id="successText">Booking Confirmed!<br>Redirecting to your ticket...</div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   // ✅ Your Supabase project details
