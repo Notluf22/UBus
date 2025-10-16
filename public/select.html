@@ -1,11 +1,10 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
 <head>
-  <title>UBus</title>
+  <title>UBus - Selected Bus</title>
   <link rel="icon" href="logo-transparent-png.png" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
- 
     body {
       font-family: sans-serif;
       background: rgb(152, 166, 139);
@@ -16,32 +15,18 @@
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      position: relative;
-      top: 120px;
-       max-width: 500px;
-       position: relative;
-      left:500px;
-      
+      max-width: 500px;
+      margin: 120px auto 0 auto;
+      animation: slideUp 1s ease-out;
     }
-    .bus-details {
-  animation: slideUp 1s ease-out;
-}
 
-@keyframes slideUp {
-  from {
-    transform: translateY(30px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-    .bus-details h2 {
-      position: relative;
-      left: 28px;
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
+
+    .bus-details h2 { font-size: 45px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    .bus-details p { font-size: large; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 8px 0; }
     .button {
       background-color: green;
       color: white;
@@ -50,65 +35,11 @@
       border-radius: 5px;
       cursor: pointer;
       margin-top: 15px;
-      position: relative;
-      left: 38%;
-      bottom: 15px;
+      display: block;
+      width: 60%;
+      margin-left: 20%;
     }
-    .button:hover {
-      background-color:  rgb(1, 70, 1);
-    }
-    
-      h2{
-       position: relative;
-         right: -25px;
-         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-         font-size:45px;
-    }
-    
-    .busid{
-      position: relative;
-      left: 28px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-         font-size: large;
-    }
-    .routess{
-       position: relative;
-      left: 28px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-         font-size: large;
-    }
-    .fares{
-       position: relative;
-      left: 28px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-         font-size: large;
-    }
-    
-    .arrival {
-
-  position: relative;
-      left: 28px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-         font-size: large;
-
-}
-
-.duration {
-     position: relative;
-      left: 28px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-         font-size: large;
-}
-.departure{
-    position: relative;
-      left: 28px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-         font-size: large;
-
-}
-
-
-    
+    .button:hover { background-color: rgb(1, 70, 1); }
   </style>
 </head>
 <body>
@@ -116,24 +47,19 @@
 <div class="bus-details" id="busDetails">
   <h2>Selected Bus</h2>
   <p>Loading bus information...</p>
-
 </div>
-
-  
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   // ✅ Supabase setup
   const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   function toTitleCase(str) {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
 
-  const source = (sessionStorage.getItem("source") || "").trim().toLowerCase();
-  const destination = (sessionStorage.getItem("destination") || "").trim().toLowerCase();
   const selectedBusId = sessionStorage.getItem("selectedBusId");
 
   async function loadBusDetails() {
@@ -146,54 +72,33 @@
     }
 
     try {
-      // 🔍 Fetch selected bus from Supabase
-      const { data, error } = await supabaseClient
+      // Fetch the bus from Supabase
+      const { data: bus, error } = await supabase
         .from('buses')
         .select('*')
         .eq('bus_id', selectedBusId)
         .single();
 
-      if (error) throw error;
+      if (error || !bus) throw error;
 
-      const selectedBus = data;
-      if (!selectedBus || !source || !destination) {
-        busDetailsDiv.innerHTML = "<p>Bus not found. Please go back and select a bus.</p>";
-        return;
-      }
+      // Determine fare dynamically based on route stops
+      const route = (bus.route || []).map(stop => stop.toLowerCase());
+      const source = route[0]; // first stop
+      const destination = route[route.length - 1]; // last stop
+      const stopCount = route.length - 1;
 
-      const route = (selectedBus.route || []).map(stop => stop.toLowerCase());
-      const sourceIndex = route.indexOf(source);
-      const destIndex = route.indexOf(destination);
-      const stopCount = destIndex - sourceIndex;
-
-      let ratePerStop =
-        selectedBus.bus_type.toLowerCase() === "super fast" ? 15 :
-        selectedBus.bus_type.toLowerCase() === "fast" ? 12 : 10;
-
+      let ratePerStop = bus.bus_type.toLowerCase() === "super fast" ? 15 :
+                        bus.bus_type.toLowerCase() === "fast" ? 12 : 10;
       const fare = stopCount * ratePerStop;
-      sessionStorage.setItem("fare", fare);
 
       busDetailsDiv.innerHTML = `
-        <h2>${selectedBus.bus_type} 🚌</h2>
-        <p class="busid"><strong>Bus ID:</strong> ${selectedBus.bus_id}</p>
-        <p class="routess"><strong>Route:</strong> ${toTitleCase(source)} ➝ ${toTitleCase(destination)}</p>
-
-        <p class="departure">
-          <strong>Departure <span class="material-icons" style="vertical-align: middle; color: #007bff;">departure_board</span></strong>:
-          ${selectedBus.departure_time} from ${selectedBus.boarding_point}
-        </p>
-
-        <p class="arrival">
-          <strong>Arrival <span class="material-icons" style="vertical-align: middle; color: #e53935;">place</span></strong>:
-          ${selectedBus.arrival_time} at ${selectedBus.dropping_point}
-        </p>
-
-        <p class="duration">
-          <strong>Duration <span class="material-icons" style="vertical-align: middle; color: #43a047;">schedule</span></strong>:
-          ${selectedBus.duration}
-        </p>
-
-        <p class="fares"><strong>Fare:</strong> ₹${fare}</p>
+        <h2>${bus.bus_type} 🚌</h2>
+        <p><strong>Bus ID:</strong> ${bus.bus_id}</p>
+        <p><strong>Route:</strong> ${toTitleCase(source)} ➝ ${toTitleCase(destination)}</p>
+        <p><strong>Departure:</strong> ${bus.departure_time} from ${bus.boarding_point}</p>
+        <p><strong>Arrival:</strong> ${bus.arrival_time} at ${bus.dropping_point}</p>
+        <p><strong>Duration:</strong> ${bus.duration}</p>
+        <p><strong>Fare:</strong> ₹${fare}</p>
         <button class="button" onclick="proceedToBooking()">Proceed to Booking</button>
       `;
     } catch (err) {
@@ -203,13 +108,11 @@
   }
 
   function proceedToBooking() {
-    alert("Redirecting to booking page...");
     window.location.href = "booking.html";
   }
 
   document.addEventListener("DOMContentLoaded", loadBusDetails);
 </script>
-
 
 </body>
 </html>
