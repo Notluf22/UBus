@@ -1,197 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Bus Booking</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background: rgb(152, 166, 139);
-      padding: 20px;
-      margin: 0;
-      overflow-x: hidden;
-    }
-
-    .booking-container {
-      background: white;
-      padding: 25px;
-      max-width: 500px;
-      margin: auto;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      text-align: center;
-      position: relative;
-      z-index: 1;
-       position: relative;
-      top: 140px;
-      left: 10px;
-    }
-
-    h2 {
-      color: #333;
-     font-size:35px;
-       font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    .btn {
-      margin-top: 20px;
-      padding: 10px 16px;
-      background-color: rgb(18, 179, 18);
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    .btn:hover {
-      background-color: green;
-    }
-
-    .confirmation {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.8);
-      background: white;
-      border-radius: 12px;
-      padding: 40px;
-      box-shadow: 0 0 40px rgba(0, 0, 0, 0.2);
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-      animation: pop 0.6s ease-out forwards;
-    }
-
-    @keyframes pop {
-      0% {
-        transform: translate(-50%, -50%) scale(0.5);
-        opacity: 0;
-      }
-      50% {
-        transform: translate(-50%, -50%) scale(1.05);
-        opacity: 1;
-      }
-      100% {
-        transform: translate(-50%, -50%) scale(1);
-      }
-    }
-
-    .glow-circle {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      background: radial-gradient(circle at center, #4caf50, #2e7d32);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: pulse 1.2s ease-in-out infinite;
-    }
-
-    .checkmark {
-      color: white;
-      font-size: 50px;
-    }
-    .bus{
-      position: relative;
-      text-align: left;
-      font-size:large;
-       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .from{
-       position: relative;
-      text-align: left;
-      font-size: large;
-       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .dep{
-       position: relative;
-      text-align: left;
-      font-size: large;
-       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .arr{
-       position: relative;
-      text-align: left;
-      font-size: large;
-       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .fare{
-       position: relative;
-     text-align:left;
-      font-size: large;
-       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    @keyframes pulse {
-      0%, 100% {
-        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.6);
-      }
-      50% {
-        box-shadow: 0 0 0 20px rgba(76, 175, 80, 0);
-      }
-    }
-
-    #successText {
-      font-size: 20px;
-      color: #2e7d32;
-      margin-top: 20px;
-      text-align: center;
-    }
-       .booking-container {
-  animation: slideUp 0.5s ease-out;
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(30px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-  </style>
-</head>
-<body>
-
-<div class="booking-container">
-  <h2>Confirm Booking 🚌</h2>
-  <div id="busInfo"></div>
-
-  <form id="bookingForm">
-    <button class="btn" type="submit">Confirm Booking</button>
-  </form>
-</div>
-
-<div class="confirmation" id="confirmationMsg">
-  <div class="glow-circle">
-    <div class="checkmark">✔</div>
-  </div>
-  <div id="successText">Booking Confirmed!<br>Redirecting to your ticket...</div>
-</div>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-  // ✅ Your Firebase configuration (replace with your own)
-const firebaseConfig = {
-  apiKey: "AIzaSyClyvd-D1Xm414aUsCv7tWvpsxd84r0zos",
-  authDomain: "ubus-f8a96.firebaseapp.com",
-  databaseURL: "https://ubus-f8a96-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "ubus-f8a96",
-  storageBucket: "ubus-f8a96.firebasestorage.app",
-  messagingSenderId: "569987513554",
-  appId: "1:569987513554:web:b8d50b0830bc0462abc10b",
-  measurementId: "G-F988S73L4V"
-};
-
-  // ✅ Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // ✅ Your Supabase project details
+  const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   async function initBooking() {
     const selectedBusId = sessionStorage.getItem("selectedBusId");
@@ -199,27 +11,23 @@ const firebaseConfig = {
     const busInfoDiv = document.getElementById("busInfo");
 
     try {
-      // ✅ Fetch all buses from Firestore
-      const querySnapshot = await getDocs(collection(db, "buses"));
-      const buses = [];
-      querySnapshot.forEach((doc) => {
-        buses.push({ id: doc.id, ...doc.data() });
-      });
+      // ✅ Fetch all buses from Supabase
+      const { data: buses, error } = await supabase.from("buses").select("*");
+      if (error) throw error;
 
-      const selectedBus = buses.find(bus => bus.bus_id == selectedBusId);
+      const selectedBus = buses.find(bus => bus.id == selectedBusId);
 
       if (selectedBus) {
         busInfoDiv.innerHTML = `
-          <p class="bus"><strong>Bus:</strong> ${selectedBus.bus_type}</p>
-          <p class="from"><strong>From:</strong> ${selectedBus.source} ➝ <strong>To:</strong> ${selectedBus.destination}</p>
-          <p class="dep"><strong>Departure:</strong> ${selectedBus.departure_time}</p>
-          <p class="arr"><strong>Arrival:</strong> ${selectedBus.arrival_time}</p>
-          <p class="fare"><strong>Fare per seat:</strong> ₹${farePerSeat}</p>
+          <p class="bus"><strong>Bus:</strong> ${selectedBus.busType}</p>
+          <p class="from"><strong>From:</strong> ${selectedBus.from} ➝ <strong>To:</strong> ${selectedBus.to}</p>
+          <p class="dep"><strong>Departure:</strong> ${selectedBus.departure_time || "N/A"}</p>
+          <p class="arr"><strong>Arrival:</strong> ${selectedBus.arrival_time || "N/A"}</p>
+          <p class="fare"><strong>Fare per seat:</strong> ₹${selectedBus.fare || farePerSeat}</p>
         `;
 
         document.getElementById("bookingForm").addEventListener("submit", (e) => {
           e.preventDefault();
-
           const confirmBox = document.getElementById("confirmationMsg");
           confirmBox.style.display = "flex";
 
@@ -239,7 +47,3 @@ const firebaseConfig = {
 
   window.addEventListener("DOMContentLoaded", initBooking);
 </script>
-
-
-</body>
-</html>
