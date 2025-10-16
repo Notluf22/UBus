@@ -171,22 +171,62 @@
     <div id="results"></div>
    
   </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-    document.getElementById('searchForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const from = document.getElementById('from').value.trim();
-      const to = document.getElementById('to').value.trim();
-      sessionStorage.setItem('source', from);
-      sessionStorage.setItem('destination', to);
-      window.location.href = 'results.html';
-    });
+  // ✅ Supabase setup
+  const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
+  const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    document.getElementById('swapBtn').addEventListener('click', () => {
-      const fromInput = document.getElementById('from');
-      const toInput = document.getElementById('to');
-      [fromInput.value, toInput.value] = [toInput.value, fromInput.value];
-    });
+  // Swap button functionality
+  document.getElementById('swapBtn').addEventListener('click', () => {
+    const fromInput = document.getElementById('from');
+    const toInput = document.getElementById('to');
+    [fromInput.value, toInput.value] = [toInput.value, fromInput.value];
+  });
+
+  // Search form submission
+  document.getElementById('searchForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const from = document.getElementById('from').value.trim();
+    const to = document.getElementById('to').value.trim();
+
+    if (!from || !to) {
+      alert("Please enter both From and To locations.");
+      return;
+    }
+    if (from.toLowerCase() === to.toLowerCase()) {
+      alert("'From' and 'To' must be different!");
+      return;
+    }
+
+    try {
+      // Fetch buses from Supabase table "buses"
+      const { data: buses, error } = await supabase
+        .from('buses')
+        .select('*')
+        .ilike('source', from)   // case-insensitive match
+        .ilike('destination', to);
+
+      if (error) throw error;
+
+      if (buses.length === 0) {
+        alert("No buses found for this route.");
+      } else {
+        // Store results and redirect
+        sessionStorage.setItem('searchResults', JSON.stringify(buses));
+        sessionStorage.setItem('source', from);
+        sessionStorage.setItem('destination', to);
+        window.location.href = 'results.html';
+      }
+
+    } catch (err) {
+      console.error("Error fetching buses:", err);
+      alert("Error fetching buses. Please try again.");
+    }
+  });
 </script>
+
 
 </body>
 </html>
