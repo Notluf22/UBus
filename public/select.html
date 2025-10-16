@@ -121,71 +121,95 @@
 
   
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-function toTitleCase(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
+  // ✅ Supabase setup
+  const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const source = (sessionStorage.getItem("source") || "").trim().toLowerCase();
-const destination = (sessionStorage.getItem("destination") || "").trim().toLowerCase();
-const selectedBusId = sessionStorage.getItem("selectedBusId");
+  function toTitleCase(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
 
-fetch('buses.json')
-  .then(res => res.json())
-  .then(buses => {
-    const selectedBus = buses.find(bus => bus.bus_id === selectedBusId);
+  const source = (sessionStorage.getItem("source") || "").trim().toLowerCase();
+  const destination = (sessionStorage.getItem("destination") || "").trim().toLowerCase();
+  const selectedBusId = sessionStorage.getItem("selectedBusId");
+
+  async function loadBusDetails() {
     const busDetailsDiv = document.getElementById("busDetails");
+    busDetailsDiv.innerHTML = "<p>Loading bus information...</p>";
 
-    if (!selectedBus || !source || !destination) {
-      busDetailsDiv.innerHTML = "<p>Bus not found. Please go back and select a bus.</p>";
+    if (!selectedBusId) {
+      busDetailsDiv.innerHTML = "<p>No bus selected. Please go back and select a bus.</p>";
       return;
     }
 
-    const route = selectedBus.route.map(stop => stop.toLowerCase());
-    const sourceIndex = route.indexOf(source);
-    const destIndex = route.indexOf(destination);
-    const stopCount = destIndex - sourceIndex;
+    try {
+      // 🔍 Fetch selected bus from Supabase
+      const { data, error } = await supabaseClient
+        .from('buses')
+        .select('*')
+        .eq('bus_id', selectedBusId)
+        .single();
 
-    let ratePerStop = selectedBus.bus_type.toLowerCase() === "super fast" ? 15 :
-                      selectedBus.bus_type.toLowerCase() === "fast" ? 12 : 10;
+      if (error) throw error;
 
-    const fare = stopCount * ratePerStop;
-    sessionStorage.setItem("fare", fare);
+      const selectedBus = data;
+      if (!selectedBus || !source || !destination) {
+        busDetailsDiv.innerHTML = "<p>Bus not found. Please go back and select a bus.</p>";
+        return;
+      }
 
-    busDetailsDiv.innerHTML = `
-    <h2> ${selectedBus.bus_type}🚌</h2>
-  <p class="busid"><strong>Bus ID:</strong> ${selectedBus.bus_id}</p>
-  <p class="routess"><strong>Route:</strong> ${toTitleCase(source)} ➝ ${toTitleCase(destination)}</p>
+      const route = (selectedBus.route || []).map(stop => stop.toLowerCase());
+      const sourceIndex = route.indexOf(source);
+      const destIndex = route.indexOf(destination);
+      const stopCount = destIndex - sourceIndex;
 
-    <p class="departure">
-  <strong>Departure <span class="material-icons" style="vertical-align: middle; color: #007bff;">departure_board</span></strong>: ${selectedBus.departure_time} from ${selectedBus.boarding_point}
-  
-    </p>
+      let ratePerStop =
+        selectedBus.bus_type.toLowerCase() === "super fast" ? 15 :
+        selectedBus.bus_type.toLowerCase() === "fast" ? 12 : 10;
 
+      const fare = stopCount * ratePerStop;
+      sessionStorage.setItem("fare", fare);
 
-     <p class="arrival">
-  <strong>Arrival <span class="material-icons" style="vertical-align: middle; color: #e53935;">place</span></strong>: ${selectedBus.arrival_time} at ${selectedBus.dropping_point}
- 
-    </p>
+      busDetailsDiv.innerHTML = `
+        <h2>${selectedBus.bus_type} 🚌</h2>
+        <p class="busid"><strong>Bus ID:</strong> ${selectedBus.bus_id}</p>
+        <p class="routess"><strong>Route:</strong> ${toTitleCase(source)} ➝ ${toTitleCase(destination)}</p>
 
-   <p class="duration" >
-  <strong>Duration <span class="material-icons" style="vertical-align: middle; color: #43a047;">schedule</span></strong>: ${selectedBus.duration}
-  
-   </p>
+        <p class="departure">
+          <strong>Departure <span class="material-icons" style="vertical-align: middle; color: #007bff;">departure_board</span></strong>:
+          ${selectedBus.departure_time} from ${selectedBus.boarding_point}
+        </p>
 
-  
-  <p class="fares"><strong>Fare:</strong> ₹${fare}</p>
-  <button class="button" onclick="proceedToBooking()">Proceed to Booking</button>
-      
-    `;
-  });
+        <p class="arrival">
+          <strong>Arrival <span class="material-icons" style="vertical-align: middle; color: #e53935;">place</span></strong>:
+          ${selectedBus.arrival_time} at ${selectedBus.dropping_point}
+        </p>
 
-function proceedToBooking() {
-  alert("Redirecting to booking page...");
-  window.location.href = "booking.html";
-}
+        <p class="duration">
+          <strong>Duration <span class="material-icons" style="vertical-align: middle; color: #43a047;">schedule</span></strong>:
+          ${selectedBus.duration}
+        </p>
 
+        <p class="fares"><strong>Fare:</strong> ₹${fare}</p>
+        <button class="button" onclick="proceedToBooking()">Proceed to Booking</button>
+      `;
+    } catch (err) {
+      console.error("Error loading bus:", err);
+      busDetailsDiv.innerHTML = "<p>⚠️ Failed to load bus details.</p>";
+    }
+  }
+
+  function proceedToBooking() {
+    alert("Redirecting to booking page...");
+    window.location.href = "booking.html";
+  }
+
+  document.addEventListener("DOMContentLoaded", loadBusDetails);
 </script>
+
 
 </body>
 </html>

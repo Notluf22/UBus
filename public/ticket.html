@@ -128,50 +128,77 @@
 </div>
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
 
 <script>
-  fetch('buses.json')
-    .then(response => response.json())
-    .then(buses => {
-      const selectedBusId = sessionStorage.getItem("selectedBusId");
-      const seats = parseInt(sessionStorage.getItem("seatsBooked") || 1);
-      const name = sessionStorage.getItem("passengerName") || "Passenger";
-      const email = sessionStorage.getItem("passengerEmail") || "N/A";
-      const fare = parseInt(sessionStorage.getItem("fare") || 0);
-      const selectedBus = buses.find(bus => bus.bus_id === selectedBusId);
+  // ✅ Supabase setup
+  const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-      if (selectedBus) {
-        const totalFare = fare * seats;
+  async function loadTicket() {
+    const selectedBusId = sessionStorage.getItem("selectedBusId");
+    const seats = parseInt(sessionStorage.getItem("seatsBooked") || 1);
+    const name = sessionStorage.getItem("passengerName") || "Passenger";
+    const email = sessionStorage.getItem("passengerEmail") || "N/A";
+    const fare = parseInt(sessionStorage.getItem("fare") || 0);
+    const ticketDetailsDiv = document.getElementById("ticketDetails");
 
-        const detailsHTML = `
-          
-          <p   font-size:large;><strong>Bus Type:</strong> ${selectedBus.bus_type}🚌</p>
-          <p><strong>From:</strong> ${selectedBus.source}</p>
-          <p><strong>To:</strong> ${selectedBus.destination}</p>
-          <p><strong>Departure:</strong> ${selectedBus.departure_time}</p>
-          <p><strong>Arrival:</strong> ${selectedBus.arrival_time}</p>
-       
-          <p><strong>Total Fare:</strong> ₹${totalFare}</p>
-        `;
+    if (!selectedBusId) {
+      ticketDetailsDiv.innerHTML = "<p>❌ Missing bus data. Please go back.</p>";
+      return;
+    }
 
-        document.getElementById("ticketDetails").innerHTML = detailsHTML;
+    try {
+      // 🎫 Fetch the selected bus from Supabase
+      const { data: selectedBus, error } = await supabaseClient
+        .from('buses')
+        .select('*')
+        .eq('bus_id', selectedBusId)
+        .single();
 
-        const qrData = `UBus Ticket\nName: ${name}\nFrom: ${selectedBus.source} ➝ To: ${selectedBus.destination}\nSeats: ${seats}\nFare: ₹${totalFare}`;
-        QRCode.toCanvas(document.getElementById('qrCode'), qrData, { width: 150 }, function (error) {
-          if (error) console.error(error);
-        });
-
-      } else {
-        document.getElementById("ticketDetails").innerHTML = `
-          <p>❌ Ticket not found. Please try booking again.</p>
-        `;
+      if (error || !selectedBus) {
+        console.error(error);
+        ticketDetailsDiv.innerHTML = "<p>⚠️ Unable to load bus details.</p>";
+        return;
       }
-    });
+
+      const totalFare = fare * seats;
+
+      const detailsHTML = `
+        <p><strong>Bus Type:</strong> ${selectedBus.bus_type} 🚌</p>
+        <p><strong>From:</strong> ${selectedBus.source}</p>
+        <p><strong>To:</strong> ${selectedBus.destination}</p>
+        <p><strong>Departure:</strong> ${selectedBus.departure_time}</p>
+        <p><strong>Arrival:</strong> ${selectedBus.arrival_time}</p>
+        <p><strong>Seats Booked:</strong> ${seats}</p>
+        <p><strong>Total Fare:</strong> ₹${totalFare}</p>
+        <p><strong>Passenger:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+      `;
+
+      ticketDetailsDiv.innerHTML = detailsHTML;
+
+      // 🔳 Generate QR Code
+      const qrData = `UBus Ticket\nPassenger: ${name}\nFrom: ${selectedBus.source} ➝ ${selectedBus.destination}\nSeats: ${seats}\nFare: ₹${totalFare}`;
+      QRCode.toCanvas(document.getElementById('qrCode'), qrData, { width: 150 }, (err) => {
+        if (err) console.error(err);
+      });
+
+    } catch (err) {
+      console.error("Error loading ticket:", err);
+      ticketDetailsDiv.innerHTML = "<p>⚠️ Error fetching ticket details.</p>";
+    }
+  }
 
   function downloadPDF() {
     const element = document.getElementById('ticket');
     html2pdf().from(element).save('UBus_Ticket.pdf');
   }
+
+  document.addEventListener("DOMContentLoaded", loadTicket);
 </script>
 
 </body>
