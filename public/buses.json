@@ -274,6 +274,20 @@
       "Kazhakootam",
       "Trivandrum"
     ]
+  },
+  {
+    "bus_id": "ret23",
+    "source": "elvicto",
+    "destination": "kazhakootam",
+    "departure_time": "2.00",
+    "arrival_time": "3.000",
+    "duration": "2:00",
+    "bus_type": "Fast",
+    "boarding_point": "elvicto",
+    "dropping_point": "kazhakootam",
+    "route": [
+      "elvicto",
+      "kazhakootam"
+    ]
   }
 ]
- 
