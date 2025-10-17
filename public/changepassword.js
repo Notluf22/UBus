@@ -23,8 +23,7 @@ form.addEventListener('submit', async function (e) {
     } catch (error) {
       if (error.code === 'auth/requires-recent-login') {
         alert("You need to log in again to change your password.");
-        window.location.href = "login.html"; // or show re-auth modal
-      } else {
+        window.location.href = "login.html"; 
         alert(error.message);
       }
     }

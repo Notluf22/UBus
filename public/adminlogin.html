@@ -92,13 +92,11 @@
 </form>
 
 <script>
-  // Step 1: List of admin accounts
   const adminAccounts = [
     { username: "fulton@gmail.com", password: "fulton1234" },
     { username: "ksrtc@gmail.com", password: "ksrtc1234" }
   ];
 
-  // Step 2: Login validation
   document.getElementById("loginForm").addEventListener("submit", function (e) {
     e.preventDefault();
     const inputUsername = document.getElementById("username").value;
@@ -111,7 +109,7 @@
     if (matchedAdmin) {
       alert("Login successful!");
       sessionStorage.setItem("isAdmin", "true");
-      window.location.href = "admindashboard.html"; // Replace with your actual admin dashboard page
+      window.location.href = "admindashboard.html"; 
     } else {
       alert("Invalid credentials. Please try again.");
     }

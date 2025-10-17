@@ -41,25 +41,18 @@
     <div id="results"></div>
   </div>
 
-  <!--Modern Supabase v2 Setup -->
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-    // Supabase project keys
     const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
-
-    // Initialize Supabase client
     const client = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Swap button
     document.getElementById('swapBtn').addEventListener('click', () => {
       const from = document.getElementById('from');
       const to = document.getElementById('to');
       [from.value, to.value] = [to.value, from.value];
     });
 
-    // Search form
     document.getElementById('searchForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const from = document.getElementById('from').value.trim();

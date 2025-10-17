@@ -1,4 +1,3 @@
-// Save as server.js
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -11,7 +10,6 @@ const feedbackPath = path.join(__dirname, 'feed.json');
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// ------------------- ADD BUS (unchanged) -------------------
 app.post('/add-bus', (req, res) => {
   const newBus = req.body;
   fs.readFile(busesPath, (err, data) => {
@@ -32,7 +30,6 @@ app.post('/add-bus', (req, res) => {
   });
 });
 
-// ------------------- SUBMIT FEEDBACK (added) -------------------
 app.post('/submit-feedback', (req, res) => {
   const newFeedback = req.body;
   fs.readFile(feedbackPath, (err, data) => {
@@ -53,7 +50,6 @@ app.post('/submit-feedback', (req, res) => {
   });
 });
 
-// ------------------- GET FEEDBACK (already present) -------------------
 app.get('/feedbacks', (req, res) => {
   fs.readFile(feedbackPath, (err, data) => {
     if (err) return res.status(500).send("Failed to read feedbacks");

@@ -58,14 +58,12 @@
         return;
       }
 
-      // Safely handle route
       const source = bus.source || "N/A";
       const destination = bus.destination || "N/A";
 
-      // Fare calculation (example: per stop or per bus type)
       const rate = (bus.bus_type || "").toLowerCase() === "super fast" ? 15 :
                    (bus.bus_type || "").toLowerCase() === "fast" ? 12 : 10;
-      const fare = bus.fare || rate; // fallback to rate if fare not present
+      const fare = bus.fare || rate; 
 
       busDetailsDiv.innerHTML = `
         <h2>${bus.bus_type || "Bus"} 🚌</h2>

@@ -2,7 +2,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.0/firebas
 import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/11.8.0/firebase-auth.js";
 import { getFirestore, collection, doc, getDocs, setDoc, addDoc } from "https://www.gstatic.com/firebasejs/11.8.0/firebase-firestore.js";
 
-// Your Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyClyvd-D1Xm414aUsCv7tWvpsxd84r0zos",
   authDomain: "ubus-a445a.firebaseapp.com",
@@ -13,7 +12,6 @@ const firebaseConfig = {
   measurementId: "G-NX9Y9J793J"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);

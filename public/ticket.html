@@ -56,21 +56,19 @@
     }
 
     try {
-      // Fetch bus dynamically
       const { data: bus, error } = await supabase
         .from('buses')
         .select('*')
         .eq('bus_id', selectedBusId)
         .single();
 
-      console.log("Fetched bus:", bus, error); // ✅ Debug
+      console.log("Fetched bus:", bus, error); 
 
       if (error || !bus) {
         ticketDiv.innerHTML = "<p>⚠️ Unable to load bus details. Check console for errors.</p>";
         return;
       }
 
-      // Handle multiple possible column names
       const busType = bus.bus_type || bus.busType || "Unknown";
       const source = bus.source || bus.from || "Unknown";
       const destination = bus.destination || bus.to || "Unknown";
