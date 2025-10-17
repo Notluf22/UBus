@@ -1,44 +1,16 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <title>UBus - Selected Bus</title>
   <link rel="icon" href="logo-transparent-png.png" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
-    body {
-      font-family: sans-serif;
-      background: rgb(152, 166, 139);
-      padding: 20px;
-    }
-    .bus-details {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      max-width: 500px;
-      margin: 120px auto 0 auto;
-      animation: slideUp 1s ease-out;
-    }
-
-    @keyframes slideUp {
-      from { transform: translateY(30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
+    body { font-family: sans-serif; background: rgb(152, 166, 139); padding: 20px; }
+    .bus-details { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 500px; margin: 120px auto 0 auto; animation: slideUp 1s ease-out; }
+    @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     .bus-details h2 { font-size: 45px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     .bus-details p { font-size: large; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 8px 0; }
-    .button {
-      background-color: green;
-      color: white;
-      padding: 10px 16px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 15px;
-      display: block;
-      width: 60%;
-      margin-left: 20%;
-    }
+    .button { background-color: green; color: white; padding: 10px 16px; border: none; border-radius: 5px; cursor: pointer; margin-top: 15px; display: block; width: 60%; margin-left: 20%; }
     .button:hover { background-color: rgb(1, 70, 1); }
   </style>
 </head>
@@ -49,18 +21,19 @@
   <p>Loading bus information...</p>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  // ✅ Supabase setup
-  const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
-  const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+<script type="module">
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-  function toTitleCase(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-  }
+  const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE"; // replace with your anon key
+  const client = createClient(SUPABASE_URL, SUPABASE_KEY);
 
   const selectedBusId = sessionStorage.getItem("selectedBusId");
+  console.log("Selected Bus ID:", selectedBusId);
+
+  function toTitleCase(str) {
+    return str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : "N/A";
+  }
 
   async function loadBusDetails() {
     const busDetailsDiv = document.getElementById("busDetails");
@@ -72,43 +45,47 @@
     }
 
     try {
-      // Fetch the bus from Supabase
-      const { data: bus, error } = await supabase
+      const { data: bus, error } = await client
         .from('buses')
         .select('*')
         .eq('bus_id', selectedBusId)
         .single();
 
-      if (error || !bus) throw error;
+      console.log("Fetched bus from Supabase:", bus, error);
 
-      // Determine fare dynamically based on route stops
-      const route = (bus.route || []).map(stop => stop.toLowerCase());
-      const source = route[0]; // first stop
-      const destination = route[route.length - 1]; // last stop
-      const stopCount = route.length - 1;
+      if (error || !bus) {
+        busDetailsDiv.innerHTML = "<p>⚠️ Failed to load bus details. Check console for errors.</p>";
+        return;
+      }
 
-      let ratePerStop = bus.bus_type.toLowerCase() === "super fast" ? 15 :
-                        bus.bus_type.toLowerCase() === "fast" ? 12 : 10;
-      const fare = stopCount * ratePerStop;
+      // Safely handle route
+      const source = bus.source || "N/A";
+      const destination = bus.destination || "N/A";
+
+      // Fare calculation (example: per stop or per bus type)
+      const rate = (bus.bus_type || "").toLowerCase() === "super fast" ? 15 :
+                   (bus.bus_type || "").toLowerCase() === "fast" ? 12 : 10;
+      const fare = bus.fare || rate; // fallback to rate if fare not present
 
       busDetailsDiv.innerHTML = `
-        <h2>${bus.bus_type} 🚌</h2>
+        <h2>${bus.bus_type || "Bus"} 🚌</h2>
         <p><strong>Bus ID:</strong> ${bus.bus_id}</p>
         <p><strong>Route:</strong> ${toTitleCase(source)} ➝ ${toTitleCase(destination)}</p>
-        <p><strong>Departure:</strong> ${bus.departure_time} from ${bus.boarding_point}</p>
-        <p><strong>Arrival:</strong> ${bus.arrival_time} at ${bus.dropping_point}</p>
-        <p><strong>Duration:</strong> ${bus.duration}</p>
+        <p><strong>Departure:</strong> ${bus.departure_time || "N/A"} from ${bus.boarding_point || "N/A"}</p>
+        <p><strong>Arrival:</strong> ${bus.arrival_time || "N/A"} at ${bus.dropping_point || "N/A"}</p>
+        <p><strong>Duration:</strong> ${bus.duration || "N/A"}</p>
         <p><strong>Fare:</strong> ₹${fare}</p>
-        <button class="button" onclick="proceedToBooking()">Proceed to Booking</button>
+        <button class="button" id="proceedBtn">Proceed to Booking</button>
       `;
+
+      document.getElementById("proceedBtn").addEventListener("click", () => {
+        window.location.href = "booking.html";
+      });
+
     } catch (err) {
       console.error("Error loading bus:", err);
       busDetailsDiv.innerHTML = "<p>⚠️ Failed to load bus details.</p>";
     }
-  }
-
-  function proceedToBooking() {
-    window.location.href = "booking.html";
   }
 
   document.addEventListener("DOMContentLoaded", loadBusDetails);

@@ -1,168 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Bus Booking</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background: rgb(152, 166, 139);
-      padding: 20px;
-      margin: 0;
-      overflow-x: hidden;
-    }
-
-    .booking-container {
-      background: white;
-      padding: 25px;
-      max-width: 500px;
-      margin: auto;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      text-align: center;
-      position: relative;
-      z-index: 1;
-       position: relative;
-      top: 140px;
-      left: 10px;
-    }
-
-    h2 {
-      color: #333;
-     font-size:35px;
-       font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    .btn {
-      margin-top: 20px;
-      padding: 10px 16px;
-      background-color: rgb(18, 179, 18);
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    .btn:hover {
-      background-color: green;
-    }
-
-    .confirmation {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.8);
-      background: white;
-      border-radius: 12px;
-      padding: 40px;
-      box-shadow: 0 0 40px rgba(0, 0, 0, 0.2);
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-      animation: pop 0.6s ease-out forwards;
-    }
-
-    @keyframes pop {
-      0% {
-        transform: translate(-50%, -50%) scale(0.5);
-        opacity: 0;
-      }
-      50% {
-        transform: translate(-50%, -50%) scale(1.05);
-        opacity: 1;
-      }
-      100% {
-        transform: translate(-50%, -50%) scale(1);
-      }
-    }
-
-    .glow-circle {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      background: radial-gradient(circle at center, #4caf50, #2e7d32);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: pulse 1.2s ease-in-out infinite;
-    }
-
-    .checkmark {
-      color: white;
-      font-size: 50px;
-    }
-    .bus{
-      position: relative;
-      text-align: left;
-      font-size:large;
-       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .from{
-       position: relative;
-      text-align: left;
-      font-size: large;
-       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .dep{
-       position: relative;
-      text-align: left;
-      font-size: large;
-       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .arr{
-       position: relative;
-      text-align: left;
-      font-size: large;
-       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .fare{
-       position: relative;
-     text-align:left;
-      font-size: large;
-       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    @keyframes pulse {
-      0%, 100% {
-        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.6);
-      }
-      50% {
-        box-shadow: 0 0 0 20px rgba(76, 175, 80, 0);
-      }
-    }
-
-    #successText {
-      font-size: 20px;
-      color: #2e7d32;
-      margin-top: 20px;
-      text-align: center;
-    }
-       .booking-container {
-  animation: slideUp 0.5s ease-out;
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(30px);
-    opacity: 0;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UBus - Confirm Booking</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: rgb(152, 166, 139);
+    margin: 0;
+    padding: 20px;
   }
-  to {
-    transform: translateY(0);
-    opacity: 1;
+
+  .booking-container {
+    background: white;
+    padding: 25px;
+    max-width: 500px;
+    margin: 140px auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    text-align: center;
+    animation: slideUp 0.5s ease-out;
   }
-}
-  </style>
+
+  h2 { font-size: 35px; margin-bottom: 20px; }
+
+  .btn {
+    margin-top: 20px;
+    padding: 10px 16px;
+    background-color: rgb(18, 179, 18);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .btn:hover { background-color: green; }
+
+  .confirmation {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    box-shadow: 0 0 40px rgba(0,0,0,0.2);
+    animation: pop 0.6s ease-out forwards;
+  }
+
+  .glow-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, #4caf50, #2e7d32);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+
+  .checkmark { color: white; font-size: 50px; }
+
+  .bus-info p {
+    text-align: left;
+    font-size: large;
+    margin: 5px 0;
+  }
+
+  @keyframes pop {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+    50% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1); }
+  }
+
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(76,175,80,0.6); }
+    50% { box-shadow: 0 0 0 20px rgba(76,175,80,0); }
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+</style>
 </head>
 <body>
 
 <div class="booking-container">
   <h2>Confirm Booking 🚌</h2>
-  <div id="busInfo"></div>
-
+  <div class="bus-info" id="busInfo">Loading bus details...</div>
   <form id="bookingForm">
-    <button class="btn" type="submit">Confirm Booking</button>
+    <button type="submit" class="btn">Confirm Booking</button>
   </form>
 </div>
 
@@ -173,52 +108,59 @@
   <div id="successText">Booking Confirmed!<br>Redirecting to your ticket...</div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  // ✅ Your Supabase project details
+<script type="module">
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
   const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const client = createClient(SUPABASE_URL, SUPABASE_KEY);
 
   async function initBooking() {
     const selectedBusId = sessionStorage.getItem("selectedBusId");
     const farePerSeat = parseInt(sessionStorage.getItem("fare") || "0");
     const busInfoDiv = document.getElementById("busInfo");
 
+    if (!selectedBusId) {
+      busInfoDiv.innerHTML = "<p>❌ No bus selected. Please go back and select a bus.</p>";
+      document.getElementById("bookingForm").style.display = "none";
+      return;
+    }
+
     try {
-      // ✅ Fetch all buses from Supabase
-      const { data: buses, error } = await supabase.from("buses").select("*");
-      if (error) throw error;
+      const { data: bus, error } = await client
+        .from("buses")
+        .select("*")
+        .eq("bus_id", selectedBusId)
+        .single();
 
-      const selectedBus = buses.find(bus => bus.id == selectedBusId);
+      if (error || !bus) throw error;
 
-      if (selectedBus) {
-        busInfoDiv.innerHTML = `
-          <p class="bus"><strong>Bus:</strong> ${selectedBus.busType}</p>
-          <p class="from"><strong>From:</strong> ${selectedBus.from} ➝ <strong>To:</strong> ${selectedBus.to}</p>
-          <p class="dep"><strong>Departure:</strong> ${selectedBus.departure_time || "N/A"}</p>
-          <p class="arr"><strong>Arrival:</strong> ${selectedBus.arrival_time || "N/A"}</p>
-          <p class="fare"><strong>Fare per seat:</strong> ₹${selectedBus.fare || farePerSeat}</p>
-        `;
+      busInfoDiv.innerHTML = `
+        <p><strong>Bus:</strong> ${bus.bus_type}</p>
+        <p><strong>From:</strong> ${bus.source} ➝ <strong>To:</strong> ${bus.destination}</p>
+        <p><strong>Departure:</strong> ${bus.departure_time || "N/A"}</p>
+        <p><strong>Arrival:</strong> ${bus.arrival_time || "N/A"}</p>
+        <p><strong>Fare per seat:</strong> ₹${bus.fare || farePerSeat}</p>
+      `;
 
-        document.getElementById("bookingForm").addEventListener("submit", (e) => {
-          e.preventDefault();
-          const confirmBox = document.getElementById("confirmationMsg");
-          confirmBox.style.display = "flex";
+      document.getElementById("bookingForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        document.getElementById("confirmationMsg").style.display = "flex";
 
-          setTimeout(() => {
-            window.location.href = "ticket.html";
-          }, 1800);
-        });
-      } else {
-        busInfoDiv.innerHTML = "<p>❌ Missing bus details. Please go back and try again.</p>";
-        document.getElementById("bookingForm").style.display = "none";
-      }
-    } catch (error) {
-      console.error("Error loading bus data:", error);
-      busInfoDiv.innerHTML = "<p>⚠️ Unable to load bus data.</p>";
+        setTimeout(() => {
+          window.location.href = "ticket.html";
+        }, 1800);
+      });
+
+    } catch (err) {
+      console.error("Error loading bus:", err);
+      busInfoDiv.innerHTML = "<p>⚠️ Unable to load bus details.</p>";
+      document.getElementById("bookingForm").style.display = "none";
     }
   }
 
   window.addEventListener("DOMContentLoaded", initBooking);
 </script>
+
+</body>
+</html>

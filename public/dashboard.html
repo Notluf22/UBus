@@ -1,96 +1,97 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>UBus</title>
-<link rel="icon" href="logo-transparent-png.png" />
-<link rel="stylesheet" href="dashboard.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UBus</title>
+  <link rel="icon" href="logo-transparent-png.png" />
+</head>
+<body>
+  <div class="container">
+    <h1>UBus</h1>
+    <h2>Catch Your Bus</h2>
 <style>
   body { height: 100%; font-family: Arial,bold, sans-serif; background: rgb(152, 166, 139); margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
   .container { width: 80%; max-width: 600px; background: rgb(238, 234, 234); margin-top: 50px; padding: 30px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); text-align: center; position: relative; top: 20%; }
-  .swap-button { display:block; background: green; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 10px auto; }
+  .swap-button { position: relative; background: green; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 10px 0; }
   table { margin: auto; }
   td { padding: 10px; }
   #from, #to { height: 30px; width: 250px; border: 2px solid #1a1a1a; }
-  .sub-button { background-color:green; color: aliceblue; height: 30px; width: 90px; font-weight: bold; border-radius: 10px; border: none; margin-top: 15px; cursor: pointer; display:block; margin-left:auto; margin-right:auto; }
+  .sub-button { background-color:green; color: aliceblue; height: 30px; width: 90px; font-weight: bold; border-radius: 10px; border: none; margin-top: 15px; cursor: pointer; }
   button:active { background-color: rgb(1, 70, 1); }
   h1,h2 { font-family: Georgia, 'Times New Roman', Times, serif; }
 </style>
-</head>
-<body>
-<div class="container">
-  <h1>UBus</h1>
-  <h2>Catch Your Bus</h2>
+    <form id="searchForm">
+      <table>
+        <tr>
+          <td><img src="trip_origin_30dp_000000_FILL0_wght400_GRAD0_opsz24 (1).png" class="fromicon" /></td>
+          <td><input type="text" id="from" placeholder="Enter Starting Location" required /></td>
+        </tr>
+        <tr>
+          <td><img src="location_on_30dp_000000_FILL0_wght400_GRAD0_opsz24.png" class="toicon" /></td>
+          <td><input type="text" id="to" placeholder="Enter Your Destination" required /></td>
+        </tr>
+      </table>
+      <button type="button" class="swap-button" id="swapBtn">⇅ Swap</button>
+      <button type="submit" class="sub-button">Search</button>
+    </form>
 
-  <form id="searchForm">
-    <table>
-      <tr>
-        <td><img src="trip_origin_30dp_000000_FILL0_wght400_GRAD0_opsz24 (1).png" class="fromicon" /></td>
-        <td><input type="text" id="from" placeholder="Enter Starting Location" required /></td>
-      </tr>
-      <tr>
-        <td><img src="location_on_30dp_000000_FILL0_wght400_GRAD0_opsz24.png" class="toicon" /></td>
-        <td><input type="text" id="to" placeholder="Enter Your Destination" required /></td>
-      </tr>
-    </table>
-    <button type="button" class="swap-button" id="swapBtn">⇅ Swap</button>
-    <button type="submit" class="sub-button">Search</button>
-  </form>
+    <div id="useremail"></div>
+    <div id="results"></div>
+  </div>
 
-  <div id="useremail"></div>
-  <div id="results"></div>
-</div>
+  <!--Modern Supabase v2 Setup -->
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-<script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js'
+    // Supabase project keys
+    const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
 
-const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    // Initialize Supabase client
+    const client = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Swap button functionality
-const swapBtn = document.getElementById('swapBtn');
-swapBtn.addEventListener('click', () => {
-  const fromInput = document.getElementById('from');
-  const toInput = document.getElementById('to');
-  [fromInput.value, toInput.value] = [toInput.value, fromInput.value];
-});
+    // Swap button
+    document.getElementById('swapBtn').addEventListener('click', () => {
+      const from = document.getElementById('from');
+      const to = document.getElementById('to');
+      [from.value, to.value] = [to.value, from.value];
+    });
 
-// Search form submission
-const form = document.getElementById('searchForm');
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const from = document.getElementById('from').value.trim();
-  const to = document.getElementById('to').value.trim();
+    // Search form
+    document.getElementById('searchForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const from = document.getElementById('from').value.trim();
+      const to = document.getElementById('to').value.trim();
 
-  if (!from || !to) return alert("Enter both From and To locations");
-  if (from.toLowerCase() === to.toLowerCase()) return alert("'From' and 'To' must be different!");
+      if (!from || !to) return alert("Enter both From and To locations");
+      if (from.toLowerCase() === to.toLowerCase()) return alert("'From' and 'To' must be different!");
 
-  try {
-    const { data: buses, error } = await supabase
-      .from('buses')
-      .select('*')
-      .ilike('source', from)
-      .ilike('destination', to);
+      try {
 
-    if (error) throw error;
+      sessionStorage.setItem('source', from);
+      sessionStorage.setItem('destination', to);
+        const { data: buses, error } = await client
+          .from('buses')
+          .select('*')
+          .ilike('source', from)
+          .ilike('destination', to);
 
-    if (!buses || buses.length === 0) {
-      alert("No buses found for this route.");
-      return;
-    }
+        if (error) throw error;
+        if (!buses || buses.length === 0) {
+          alert("No buses found for this route.");
+          return;
+        }
 
-    // Store data in sessionStorage and redirect
-    sessionStorage.setItem('source', from);
-    sessionStorage.setItem('destination', to);
-    window.location.href = 'results.html';
-
-  } catch (err) {
-    console.error(err);
-    alert("Error fetching buses. Try again.");
-  }
-});
-</script>
+        sessionStorage.setItem('source', from);
+        sessionStorage.setItem('destination', to);
+        window.location.href = 'results.html';
+      } catch (err) {
+        console.error(err);
+        alert("Error fetching buses. Try again.");
+      }
+    });
+  </script>
 </body>
 </html>

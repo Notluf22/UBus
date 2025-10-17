@@ -1,91 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>UBus - Available Buses</title>
-  <link rel="stylesheet" href="results.css">
-  <link rel="icon" href="logo-transparent-png.png" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UBus Results</title>
+<link rel="stylesheet" href="results.css">
 </head>
 <body>
-  <div class="header-container">
-    <button onclick="goBack()" class="back-button">← Back</button>
-    <h2>Available Buses</h2>
-    <div class="route-heading" id="routeHeading"></div>
-  </div>
+<div class="header-container">
+  <button id="backBtn" class="back-button">← Back</button>
+  <h2>Available Buses</h2>
+  <div class="route-heading" id="routeHeading"></div>
+</div>
 
-  <div class="results" id="results"></div>
+<div class="results" id="results"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+<script type="module">
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const resultsDiv = document.getElementById("results");
-const urlParams = new URLSearchParams(window.location.search);
-const source = urlParams.get('from');
-const destination = urlParams.get('to');
+  // Supabase setup
+  const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
 
-if (!source || !destination) {
-  alert("Missing search data. Redirecting...");
-  window.location.href = "dashboard.html";
-}
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-document.getElementById("routeHeading").textContent = `From ${source} to ${destination}`;
+  const source = sessionStorage.getItem('source');
+  const destination = sessionStorage.getItem('destination');
 
-async function loadBuses() {
-  try {
-    const { data: buses, error } = await supabaseClient
-      .from('buses')
-      .select('*')
-      .ilike('source', source)
-      .ilike('destination', destination);
-
-    if (error) throw error;
-
-    if (!buses || buses.length === 0) {
-      resultsDiv.innerHTML = "<p>No buses found for this route.</p>";
-      return;
-    }
-
-    renderResults(buses);
-  } catch (err) {
-    console.error("Error fetching buses:", err);
-    resultsDiv.innerHTML = "<p>⚠️ Failed to load bus data.</p>";
+  if (!source || !destination) {
+    alert("Missing search data. Redirecting...");
+    window.location.href = "dashboard.html";
   }
-}
 
-function renderResults(buses) {
-  resultsDiv.innerHTML = '';
-  buses.forEach(bus => {
-    const busHTML = `
-      <div class="bus-card">
-        <strong>${bus.bus_type} 🚌</strong><br>
-        <div class="bus-id">
-          <span style="color: black; font-weight: bold; font-size:large">Bus ID:</span>
-          <span style="color: blue; font-size:large">${bus.bus_id}</span>
-        </div>
-        <div class="departure">
-          <span>Departure:</span> ${bus.departure_time} ---------${bus.duration}hr ---------
-          <span>Arrival:</span> ${bus.arrival_time}
-        </div>
-        <div class="arrival">${bus.boarding_point} to ${bus.dropping_point}</div>
-        <div class="fare"><span>Fare: ₹${bus.fare}</span></div>
-        <button class="select-button" onclick="selectBus('${bus.bus_id}')">Select</button>
-      </div>
-    `;
-    resultsDiv.innerHTML += busHTML;
-  });
-}
+  document.getElementById("routeHeading").textContent = `From ${source} to ${destination}`;
+  document.getElementById("backBtn").addEventListener("click", () => history.back());
 
-function selectBus(busId) {
-  // Pass selected bus id via query param
-  const params = new URLSearchParams();
-  params.set('bus_id', busId);
-  window.location.href = `select.html?${params.toString()}`;
-}
+  async function loadBuses() {
+    try {
+      const { data: buses, error } = await supabase
+        .from('buses')
+        .select('*')
+        .ilike('source', source)
+        .ilike('destination', destination);
 
-document.addEventListener('DOMContentLoaded', loadBuses);
+      if (error) throw error;
+
+      const resultsDiv = document.getElementById("results");
+      resultsDiv.innerHTML = '';
+
+      if (!buses || buses.length === 0) {
+        resultsDiv.innerHTML = "<p>No buses found for this route.</p>";
+        return;
+      }
+
+      buses.forEach(bus => {
+        const busCard = document.createElement('div');
+        busCard.classList.add('bus-card');
+        busCard.innerHTML = `
+          <strong>${bus.bus_type} 🚌</strong><br>
+          <div class="bus-id"><span>Bus ID:</span> ${bus.bus_id}</div>
+          <div class="departure">Departure: ${bus.departure_time} → Arrival: ${bus.arrival_time}</div>
+          <div class="route">${bus.boarding_point} to ${bus.dropping_point}</div>
+          <div class="fare">Fare: ₹${bus.fare}</div>
+        `;
+        const selectBtn = document.createElement('button');
+        selectBtn.textContent = "Select";
+        selectBtn.classList.add('select-btn');
+        selectBtn.addEventListener('click', () => {
+          sessionStorage.setItem('selectedBusId', bus.bus_id);
+          window.location.href = 'select.html';
+        });
+        busCard.appendChild(selectBtn);
+        resultsDiv.appendChild(busCard);
+      });
+    } catch (err) {
+      console.error(err);
+      document.getElementById("results").innerHTML = "<p>Failed to load buses.</p>";
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', loadBuses);
 </script>
-
 </body>
 </html>

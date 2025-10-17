@@ -1,114 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Your Ticket</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #f3f7f9;
-      padding: 30px;
-      background: rgb(152, 166, 139);
-    }
-
-    .ticket-container {
-      background: #fff;
-      padding: 30px;
-      border-radius: 15px;
-      max-width: 650px;
-      margin: auto;
-      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      position: relative;
-      color: black;
-    
-    }
-     .ticket-container {
-  animation: slideUp 0.5s ease-out;
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(30px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-    h2 {
-      text-align: center;
-      color:black;
-      margin-bottom: 20px;
-     font-size:45px;
-       font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    .ticket-details p {
-      margin: 8px 0;
-      font-size: 16px;
-      color: #000000;
-      font-size:large;
-       font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      
-    }
-
-    .qr-section {
-      margin-top: 25px;
-      text-align: center;
-    }
-
-    .download-btn {
-      margin-top: 30px;
-      display: block;
-      padding: 12px;
-      background: green;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      width: 100%;
-      transition: background 0.3s;
-    }
-
-    .download-btn:hover {
-      background:rgb(1,70, 1);
-    }
-    .button-group {
-  display: flex;
-  gap: 10px;
-  margin-top: 30px;
-}
-
-.download-btn, .back-btn {
-  flex: 1;
-}
-
-.back-btn {
-  background:green;
-  margin-top: 30px;
-  color: white;
-  border: none;
-  display: block;
-  border-radius: 8px;
-  cursor: pointer;
-  padding: 12px;
-  font-size: 16px;
-  transition: background 0.3s;
-  width: 100%;
-}
-
-.back-btn:hover {
-  background: rgb(1,70, 1);
-}
-
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Ticket - UBus</title>
+<style>
+  body { font-family: 'Poppins', sans-serif; background: rgb(152,166,139); padding: 30px; }
+  .ticket-container { background: #fff; padding: 30px; border-radius: 15px; max-width: 650px; margin: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.08); animation: slideUp 0.5s ease-out; }
+  @keyframes slideUp { from { transform: translateY(30px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+  h2 { text-align: center; font-size: 45px; margin-bottom: 20px; }
+  .ticket-details p { margin: 8px 0; font-size: large; color: black; }
+  .qr-section { margin-top: 25px; text-align: center; }
+  .button-group { display: flex; gap: 10px; margin-top: 30px; }
+  .download-btn, .back-btn { flex: 1; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 16px; border: none; color: white; background: green; transition: 0.3s; }
+  .download-btn:hover, .back-btn:hover { background: rgb(1,70,1); }
+</style>
 </head>
 <body>
 
@@ -117,79 +23,81 @@
   <div class="ticket-details" id="ticketDetails">
     <p>Loading ticket...</p>
   </div>
-
   <div class="qr-section">
     <canvas id="qrCode"></canvas>
   </div>
-
   <div class="button-group">
-  <button class="download-btn" onclick="downloadPDF()">Download Ticket as PDF</button>
-  <button class="back-btn" onclick="window.location.href='mainpage.html'">← Back to Home</button>
+    <button class="download-btn" id="downloadBtn">Download PDF</button>
+    <button class="back-btn" id="backBtn">← Back to Home</button>
+  </div>
 </div>
 
-</div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+<script type="module">
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+  import QRCode from "https://cdn.skypack.dev/qrcode";
+  import html2pdf from "https://cdn.skypack.dev/html2pdf.js";
 
-<script>
-  // ✅ Supabase setup
   const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE"; // Replace with your anon key
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
   async function loadTicket() {
     const selectedBusId = sessionStorage.getItem("selectedBusId");
     const seats = parseInt(sessionStorage.getItem("seatsBooked") || 1);
-    const name = sessionStorage.getItem("passengerName") || "Passenger";
-    const email = sessionStorage.getItem("passengerEmail") || "N/A";
+    const passengerName = sessionStorage.getItem("passengerName") || "Passenger";
+    const passengerEmail = sessionStorage.getItem("passengerEmail") || "N/A";
     const fare = parseInt(sessionStorage.getItem("fare") || 0);
-    const ticketDetailsDiv = document.getElementById("ticketDetails");
+
+    const ticketDiv = document.getElementById("ticketDetails");
 
     if (!selectedBusId) {
-      ticketDetailsDiv.innerHTML = "<p>❌ Missing bus data. Please go back.</p>";
+      ticketDiv.innerHTML = "<p>❌ No bus selected. Go back and select a bus.</p>";
       return;
     }
 
     try {
-      // 🎫 Fetch the selected bus from Supabase
-      const { data: selectedBus, error } = await supabaseClient
+      // Fetch bus dynamically
+      const { data: bus, error } = await supabase
         .from('buses')
         .select('*')
         .eq('bus_id', selectedBusId)
         .single();
 
-      if (error || !selectedBus) {
-        console.error(error);
-        ticketDetailsDiv.innerHTML = "<p>⚠️ Unable to load bus details.</p>";
+      console.log("Fetched bus:", bus, error); // ✅ Debug
+
+      if (error || !bus) {
+        ticketDiv.innerHTML = "<p>⚠️ Unable to load bus details. Check console for errors.</p>";
         return;
       }
 
-      const totalFare = fare * seats;
+      // Handle multiple possible column names
+      const busType = bus.bus_type || bus.busType || "Unknown";
+      const source = bus.source || bus.from || "Unknown";
+      const destination = bus.destination || bus.to || "Unknown";
+      const departure = bus.departure_time || "N/A";
+      const arrival = bus.arrival_time || "N/A";
+      const totalFare = (bus.fare || fare) * seats;
 
-      const detailsHTML = `
-        <p><strong>Bus Type:</strong> ${selectedBus.bus_type} 🚌</p>
-        <p><strong>From:</strong> ${selectedBus.source}</p>
-        <p><strong>To:</strong> ${selectedBus.destination}</p>
-        <p><strong>Departure:</strong> ${selectedBus.departure_time}</p>
-        <p><strong>Arrival:</strong> ${selectedBus.arrival_time}</p>
+      ticketDiv.innerHTML = `
+        <p><strong>Bus Type:</strong> ${busType} 🚌</p>
+        <p><strong>From:</strong> ${source}</p>
+        <p><strong>To:</strong> ${destination}</p>
+        <p><strong>Departure:</strong> ${departure}</p>
+        <p><strong>Arrival:</strong> ${arrival}</p>
         <p><strong>Seats Booked:</strong> ${seats}</p>
         <p><strong>Total Fare:</strong> ₹${totalFare}</p>
-        <p><strong>Passenger:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Passenger:</strong> ${passengerName}</p>
+        <p><strong>Email:</strong> ${passengerEmail}</p>
       `;
 
-      ticketDetailsDiv.innerHTML = detailsHTML;
+      QRCode.toCanvas(document.getElementById('qrCode'),
+        `UBus Ticket\nPassenger: ${passengerName}\nFrom: ${source} ➝ ${destination}\nSeats: ${seats}\nFare: ₹${totalFare}`,
+        { width: 150 }, err => { if(err) console.error(err); }
+      );
 
-      // 🔳 Generate QR Code
-      const qrData = `UBus Ticket\nPassenger: ${name}\nFrom: ${selectedBus.source} ➝ ${selectedBus.destination}\nSeats: ${seats}\nFare: ₹${totalFare}`;
-      QRCode.toCanvas(document.getElementById('qrCode'), qrData, { width: 150 }, (err) => {
-        if (err) console.error(err);
-      });
-
-    } catch (err) {
-      console.error("Error loading ticket:", err);
-      ticketDetailsDiv.innerHTML = "<p>⚠️ Error fetching ticket details.</p>";
+    } catch(err) {
+      console.error(err);
+      ticketDiv.innerHTML = "<p>⚠️ Error fetching ticket details. Check console.</p>";
     }
   }
 
@@ -198,9 +106,11 @@
     html2pdf().from(element).save('UBus_Ticket.pdf');
   }
 
+  document.getElementById("downloadBtn").addEventListener("click", downloadPDF);
+  document.getElementById("backBtn").addEventListener("click", () => window.location.href="mainpage.html");
+
   document.addEventListener("DOMContentLoaded", loadTicket);
 </script>
 
 </body>
 </html>
-
