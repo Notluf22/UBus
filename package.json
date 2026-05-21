@@ -10,6 +10,8 @@
   "description": "UBus is a smart, real-time ticket booking and tracking system for **short-distance government buses**. Inspired by the simplicity of apps like *Where is My Train*, UBus brings seamless digital ticketing and live GPS tracking to local bus commuters.",
   "main": "index.js",
   "scripts": {
+    "start": "node public/server.js",
+    "dev": "node public/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

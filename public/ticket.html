@@ -1,114 +1,544 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Ticket - UBus</title>
-<style>
-  body { font-family: 'Poppins', sans-serif; background: rgb(152,166,139); padding: 30px; }
-  .ticket-container { background: #fff; padding: 30px; border-radius: 15px; max-width: 650px; margin: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.08); animation: slideUp 0.5s ease-out; }
-  @keyframes slideUp { from { transform: translateY(30px); opacity:0; } to { transform: translateY(0); opacity:1; } }
-  h2 { text-align: center; font-size: 45px; margin-bottom: 20px; }
-  .ticket-details p { margin: 8px 0; font-size: large; color: black; }
-  .qr-section { margin-top: 25px; text-align: center; }
-  .button-group { display: flex; gap: 10px; margin-top: 30px; }
-  .download-btn, .back-btn { flex: 1; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 16px; border: none; color: white; background: green; transition: 0.3s; }
-  .download-btn:hover, .back-btn:hover { background: rgb(1,70,1); }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Boarding Pass - UBus</title>
+  <link rel="icon" href="UBus logo.png" />
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+    body {
+      background: radial-gradient(circle at 50% 0%, #1e293b 0%, var(--bg-primary) 70%);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .ticket-wrapper {
+      max-width: 600px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Premium Ticket Boarding Pass Design */
+    .ticket-card {
+      background: rgba(17, 24, 39, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 30px;
+      position: relative;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+      overflow: visible;
+    }
+
+    /* Side cutouts to simulate a real ticket stub */
+    .ticket-card::before, .ticket-card::after {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #111827; /* Maps to the underlying dark space */
+      top: 55%;
+      z-index: 10;
+    }
+    .ticket-card::before {
+      left: -13px;
+      transform: translateY(-50%);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .ticket-card::after {
+      right: -13px;
+      transform: translateY(-50%);
+      border-left: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .ticket-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 20px;
+      margin-bottom: 25px;
+    }
+
+    .ticket-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ticket-brand img {
+      width: 35px;
+      height: 35px;
+      object-fit: contain;
+    }
+    .ticket-brand span {
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      background: linear-gradient(135deg, #fff 30%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .status-badge {
+      padding: 6px 12px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--accent-emerald);
+      color: #34d399;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+    }
+
+    /* Core Route Segment */
+    .route-segment {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .station-node {
+      display: flex;
+      flex-direction: column;
+    }
+    .station-code {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .station-name {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .route-path-visual {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin: 0 20px;
+    }
+    .route-line {
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+      width: 100%;
+      position: relative;
+    }
+    .route-line::before, .route-line::after {
+      content: '';
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      top: -2px;
+    }
+    .route-line::before { left: 0; }
+    .route-line::after { right: 0; }
+    
+    .bus-icon-node {
+      position: absolute;
+      background: #0f172a;
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      box-shadow: 0 0 10px var(--accent-cyan-glow);
+    }
+
+    /* Key-value Ticket Info Grid */
+    .ticket-info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px 15px;
+      margin-bottom: 25px;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .info-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .info-val {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .ticket-divider {
+      border-top: 2px dashed rgba(255, 255, 255, 0.12);
+      margin: 25px 0;
+    }
+
+    /* Passenger Area */
+    .passenger-area {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .details-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+    .details-row span:first-child {
+      color: var(--text-secondary);
+    }
+    .details-row span:last-child {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    /* QR + Fare Area */
+    .fare-qr-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      background: rgba(10, 15, 29, 0.4);
+      padding: 20px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .fare-details {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .total-fare-title {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .total-fare-amount {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent-emerald);
+      text-shadow: 0 0 10px rgba(16, 185, 129, 0.1);
+    }
+    .fare-badge {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 3px 8px;
+      border-radius: 4px;
+      width: fit-content;
+      margin-top: 4px;
+    }
+
+    .qr-canvas-holder {
+      background: white;
+      padding: 8px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+    .qr-canvas-holder canvas {
+      width: 110px !important;
+      height: 110px !important;
+      display: block;
+    }
+
+    /* Action Deck */
+    .button-group {
+      display: flex;
+      gap: 15px;
+    }
+    .button-group button, .button-group a {
+      flex: 1;
+      padding: 14px;
+      font-size: 0.95rem;
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        background: white !important;
+        padding: 0;
+      }
+      .ticket-wrapper {
+        gap: 0;
+      }
+      .ticket-card {
+        background: white !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: #000 !important;
+      }
+      .ticket-card::before, .ticket-card::after {
+        display: none;
+      }
+      .button-group {
+        display: none !important;
+      }
+      .station-code, .info-val, .details-row span:last-child {
+        color: #000 !important;
+      }
+      .total-fare-amount {
+        color: #047857 !important;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div id="ticket" class="ticket-container">
-  <h2>🎫 UBus E-Ticket</h2>
-  <div class="ticket-details" id="ticketDetails">
-    <p>Loading ticket...</p>
+  <div class="ticket-wrapper">
+    <!-- Ticket Card to Print -->
+    <div id="ticketCard" class="ticket-card">
+      <div class="ticket-header">
+        <div class="ticket-brand">
+          <img src="UBus logo.png" alt="UBus Logo">
+          <span>UBus Pass</span>
+        </div>
+        <div class="status-badge" id="ticketStatus">Confirmed</div>
+      </div>
+
+      <!-- Departure & Destination -->
+      <div class="route-segment">
+        <div class="station-node">
+          <span class="station-code" id="sourceCode">SNC</span>
+          <span class="station-name" id="sourceName">Source Station</span>
+        </div>
+        
+        <div class="route-path-visual">
+          <div class="route-line"></div>
+          <div class="bus-icon-node">🚌</div>
+        </div>
+
+        <div class="station-node" style="text-align: right;">
+          <span class="station-code" id="destCode">DST</span>
+          <span class="station-name" id="destName">Destination Station</span>
+        </div>
+      </div>
+
+      <!-- Bus Schedule Info -->
+      <div class="ticket-info-grid">
+        <div class="info-item">
+          <span class="info-label">Bus Details</span>
+          <span class="info-val" id="busTypeVal">Ordinary Bus</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Bus ID</span>
+          <span class="info-val" id="busIdVal">KSRTC-MOCK</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Departure</span>
+          <span class="info-val" id="departureVal">08:00 AM</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Arrival (EST)</span>
+          <span class="info-val" id="arrivalVal">10:00 AM</span>
+        </div>
+      </div>
+
+      <div class="ticket-divider"></div>
+
+      <!-- Passenger details -->
+      <div class="passenger-area">
+        <div class="details-row">
+          <span>Passenger Name</span>
+          <span id="passengerNameVal">Loading...</span>
+        </div>
+        <div class="details-row">
+          <span>Contact Number</span>
+          <span id="passengerPhoneVal">N/A</span>
+        </div>
+        <div class="details-row">
+          <span>Email Address</span>
+          <span id="passengerEmailVal">N/A</span>
+        </div>
+        <div class="details-row">
+          <span>Allocated Seats</span>
+          <span id="allocatedSeatsVal" style="color: var(--accent-cyan) !important;">A1</span>
+        </div>
+      </div>
+
+      <!-- Invoice + QR Code Block -->
+      <div class="fare-qr-container">
+        <div class="fare-details">
+          <span class="total-fare-title">Grand Total</span>
+          <span class="total-fare-amount" id="totalFareVal">₹0</span>
+          <span class="fare-badge" id="seatRateLabel">₹0 / seat</span>
+        </div>
+
+        <div class="qr-canvas-holder">
+          <canvas id="qrCode"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions deck -->
+    <div class="button-group">
+      <button class="premium-btn" id="downloadBtn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        Download PDF Ticket
+      </button>
+      <a href="mainpage.html" class="premium-btn-secondary" id="backBtn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"></polyline><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg>
+        Return to Hub
+      </a>
+    </div>
   </div>
-  <div class="qr-section">
-    <canvas id="qrCode"></canvas>
-  </div>
-  <div class="button-group">
-    <button class="download-btn" id="downloadBtn">Download PDF</button>
-    <button class="back-btn" id="backBtn">← Back to Home</button>
-  </div>
-</div>
 
-<script type="module">
-  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-  import QRCode from "https://cdn.skypack.dev/qrcode";
-  import html2pdf from "https://cdn.skypack.dev/html2pdf.js";
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    import QRCode from "https://cdn.skypack.dev/qrcode";
+    import html2pdf from "https://cdn.skypack.dev/html2pdf.js";
 
-  const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE"; // Replace with your anon key
-  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  async function loadTicket() {
-    const selectedBusId = sessionStorage.getItem("selectedBusId");
-    const seats = parseInt(sessionStorage.getItem("seatsBooked") || 1);
-    const passengerName = sessionStorage.getItem("passengerName") || "Passenger";
-    const passengerEmail = sessionStorage.getItem("passengerEmail") || "N/A";
-    const fare = parseInt(sessionStorage.getItem("fare") || 0);
+    async function loadTicketDetails() {
+      // Gather cached booking meta parameters from sessionStorage
+      const selectedBusId = sessionStorage.getItem("selectedBusId");
+      const seatsCount = parseInt(sessionStorage.getItem("seatsBooked") || "1");
+      const seatsListText = sessionStorage.getItem("selectedSeatsList") || "A1";
+      const passengerName = sessionStorage.getItem("passengerName") || "Commuter";
+      const passengerEmail = sessionStorage.getItem("passengerEmail") || "N/A";
+      const passengerPhone = sessionStorage.getItem("passengerPhone") || "N/A";
+      const ratePerSeat = sessionStorage.getItem("fare") || "0";
+      const totalFare = sessionStorage.getItem("totalFare") || "0";
 
-    const ticketDiv = document.getElementById("ticketDetails");
+      // Render fast-path sessionStorage cached parameters to block flash
+      document.getElementById("passengerNameVal").textContent = passengerName;
+      document.getElementById("passengerEmailVal").textContent = passengerEmail;
+      document.getElementById("passengerPhoneVal").textContent = passengerPhone;
+      document.getElementById("allocatedSeatsVal").textContent = `${seatsListText} (${seatsCount} Seat${seatsCount > 1 ? 's' : ''})`;
+      document.getElementById("totalFareVal").textContent = `₹${totalFare}`;
+      document.getElementById("seatRateLabel").textContent = `₹${ratePerSeat} / seat`;
 
-    if (!selectedBusId) {
-      ticketDiv.innerHTML = "<p>❌ No bus selected. Go back and select a bus.</p>";
-      return;
-    }
-
-    try {
-      const { data: bus, error } = await supabase
-        .from('buses')
-        .select('*')
-        .eq('bus_id', selectedBusId)
-        .single();
-
-      console.log("Fetched bus:", bus, error); 
-
-      if (error || !bus) {
-        ticketDiv.innerHTML = "<p>⚠️ Unable to load bus details. Check console for errors.</p>";
+      if (!selectedBusId) {
+        alert("Session error: No active bus selection detected. Redirecting to dashboard.");
+        window.location.href = "dashboard.html";
         return;
       }
 
-      const busType = bus.bus_type || bus.busType || "Unknown";
-      const source = bus.source || bus.from || "Unknown";
-      const destination = bus.destination || bus.to || "Unknown";
-      const departure = bus.departure_time || "N/A";
-      const arrival = bus.arrival_time || "N/A";
-      const totalFare = (bus.fare || fare) * seats;
+      try {
+        // Query Supabase for complete live bus trip schedule details
+        const { data: bus, error } = await supabase
+          .from('buses')
+          .select('*')
+          .eq('bus_id', selectedBusId)
+          .single();
 
-      ticketDiv.innerHTML = `
-        <p><strong>Bus Type:</strong> ${busType} 🚌</p>
-        <p><strong>From:</strong> ${source}</p>
-        <p><strong>To:</strong> ${destination}</p>
-        <p><strong>Departure:</strong> ${departure}</p>
-        <p><strong>Arrival:</strong> ${arrival}</p>
-        <p><strong>Seats Booked:</strong> ${seats}</p>
-        <p><strong>Total Fare:</strong> ₹${totalFare}</p>
-        <p><strong>Passenger:</strong> ${passengerName}</p>
-        <p><strong>Email:</strong> ${passengerEmail}</p>
-      `;
+        if (error || !bus) {
+          console.error("Supabase record fetch error:", error);
+          // Standard mock fallback if Supabase record fails to query
+          document.getElementById("busIdVal").textContent = selectedBusId;
+          document.getElementById("busTypeVal").textContent = sessionStorage.getItem("busType") || "Express Class";
+          document.getElementById("sourceCode").textContent = (sessionStorage.getItem("source") || "KTR").substring(0, 3).toUpperCase();
+          document.getElementById("sourceName").textContent = sessionStorage.getItem("source") || "Kottarakara";
+          document.getElementById("destCode").textContent = (sessionStorage.getItem("destination") || "TVM").substring(0, 3).toUpperCase();
+          document.getElementById("destName").textContent = sessionStorage.getItem("destination") || "Technopark";
+          document.getElementById("departureVal").textContent = sessionStorage.getItem("departure") || "08:00 AM";
+          document.getElementById("arrivalVal").textContent = sessionStorage.getItem("arrival") || "10:00 AM";
+          renderQR(passengerName, sessionStorage.getItem("source") || "Kottarakara", sessionStorage.getItem("destination") || "Technopark", seatsListText, totalFare, selectedBusId);
+          return;
+        }
 
-      QRCode.toCanvas(document.getElementById('qrCode'),
-        `UBus Ticket\nPassenger: ${passengerName}\nFrom: ${source} ➝ ${destination}\nSeats: ${seats}\nFare: ₹${totalFare}`,
-        { width: 150 }, err => { if(err) console.error(err); }
-      );
+        // Parse schedules
+        const busType = bus.bus_type || bus.busType || "Super Fast";
+        const busId = bus.bus_id || selectedBusId;
+        const source = bus.source || bus.from || "Kottarakara";
+        const destination = bus.destination || bus.to || "Technopark";
+        const departure = bus.departure_time || "08:00 AM";
+        const arrival = bus.arrival_time || "10:00 AM";
 
-    } catch(err) {
-      console.error(err);
-      ticketDiv.innerHTML = "<p>⚠️ Error fetching ticket details. Check console.</p>";
+        // Assign to DOM elements
+        document.getElementById("busIdVal").textContent = busId;
+        document.getElementById("busTypeVal").textContent = busType;
+        document.getElementById("sourceCode").textContent = source.substring(0, 3).toUpperCase();
+        document.getElementById("sourceName").textContent = source;
+        document.getElementById("destCode").textContent = destination.substring(0, 3).toUpperCase();
+        document.getElementById("destName").textContent = destination;
+        document.getElementById("departureVal").textContent = departure;
+        document.getElementById("arrivalVal").textContent = arrival;
+
+        // Render high resolution dynamic QR
+        renderQR(passengerName, source, destination, seatsListText, totalFare, busId);
+
+      } catch (err) {
+        console.error("Exception loading ticket details:", err);
+      }
     }
-  }
 
-  function downloadPDF() {
-    const element = document.getElementById('ticket');
-    html2pdf().from(element).save('UBus_Ticket.pdf');
-  }
+    function renderQR(passenger, from, to, seats, fare, busId) {
+      const payload = `UBUS_VERIFIED_PASS\nBus: ${busId}\nPassenger: ${passenger}\nRoute: ${from} -> ${to}\nSeats: ${seats}\nFare: INR ${fare}\nStatus: Active`;
+      
+      QRCode.toCanvas(
+        document.getElementById('qrCode'),
+        payload,
+        {
+          width: 150,
+          margin: 1,
+          color: {
+            dark: "#0b0f19",
+            light: "#ffffff"
+          }
+        },
+        err => {
+          if (err) console.error("QR Rendering failure:", err);
+        }
+      );
+    }
 
-  document.getElementById("downloadBtn").addEventListener("click", downloadPDF);
-  document.getElementById("backBtn").addEventListener("click", () => window.location.href="mainpage.html");
+    function triggerPDFDownload() {
+      const element = document.getElementById('ticketCard');
+      const passenger = sessionStorage.getItem("passengerName") || "Commuter";
+      
+      // Fine-tuned configuration options for html2pdf
+      const opt = {
+        margin:       [10, 10, 10, 10],
+        filename:     `UBus_Ticket_${passenger.replace(/\s+/g, '_')}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { 
+          scale: 2.5, 
+          useCORS: true, 
+          backgroundColor: '#0a0f1d',
+          logging: false
+        },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
 
-  document.addEventListener("DOMContentLoaded", loadTicket);
-</script>
+      // Execute pdf compile flow
+      html2pdf().set(opt).from(element).save();
+    }
 
+    document.getElementById("downloadBtn").addEventListener("click", triggerPDFDownload);
+    document.addEventListener("DOMContentLoaded", loadTicketDetails);
+  </script>
 </body>
 </html>

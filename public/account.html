@@ -3,27 +3,150 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>User Account</title>
-  <link rel="stylesheet" href="account.css">
+  <title>Your Profile - UBus</title>
+  <link rel="icon" href="UBus logo.png">
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: radial-gradient(circle at center, #1e293b 0%, #0a0f1d 100%);
+      padding: 20px;
+    }
+    
+    .profile-card {
+      width: 100%;
+      max-width: 420px;
+      padding: 40px 30px;
+      text-align: center;
+      animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    .avatar-container {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 24px auto;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(6, 182, 212, 0.3);
+      border: 3px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .avatar-container img {
+      width: 50px;
+      height: 50px;
+      filter: invert(1);
+    }
+    
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    
+    .user-tag {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 25px;
+    }
+    
+    .info-group {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 30px;
+      text-align: left;
+    }
+    
+    .info-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    
+    .info-value {
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #fff;
+      word-break: break-all;
+    }
+    
+    .action-btn {
+      width: 100%;
+      margin-bottom: 12px;
+      padding: 14px;
+    }
+    
+    .back-btn {
+      display: inline-block;
+      margin-top: 15px;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: var(--transition-smooth);
+    }
+    
+    .back-btn:hover {
+      color: var(--accent-cyan);
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
+
+  <div class="profile-card glass-panel">
+    <div class="avatar-container">
+      <img src="account.png" alt="Avatar">
+    </div>
+    
     <h2>Your Account</h2>
-    <p><strong>Email:</strong> <span id="email">Loading...</span></p>
-    <a href="changepassword.html" class="change-password-btn">Change Password</a>
-    <a href="login.html" class="change-password-btn">Log Out</a>
-    <a href="mainpage.html" class="back">← Back to Home</a>
+    <div class="user-tag">Commuter Pass</div>
+    
+    <div class="info-group">
+      <div class="info-label">Email Address</div>
+      <div class="info-value" id="email">Loading...</div>
+    </div>
+    
+    <a href="changepassword.html" class="premium-btn action-btn">Change Password</a>
+    <a href="#" id="logoutBtn" class="premium-btn premium-btn-danger action-btn">Log Out</a>
+    
+    <a href="mainpage.html" class="back-btn">← Back to Home</a>
   </div>
 
   <script type="module">
-    import { auth } from './firebase.js';
+    import { auth, signOut } from './firebase.js';
 
     auth.onAuthStateChanged(user => {
       if (user) {
         document.getElementById('email').textContent = user.email;
       } else {
-        alert("No user signed in.");
+        alert("No user signed in. Redirecting to login...");
         window.location.href = "login.html";
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (confirm("Are you sure you want to log out?")) {
+        signOut(auth)
+          .then(() => {
+            window.location.href = "login.html";
+          })
+          .catch((err) => {
+            alert("Logout error: " + err.message);
+          });
       }
     });
   </script>

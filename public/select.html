@@ -1,93 +1,242 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>UBus - Selected Bus</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Confirm Route Details - UBus</title>
   <link rel="icon" href="logo-transparent-png.png" />
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="design-system.css">
   <style>
-    body { font-family: sans-serif; background: rgb(152, 166, 139); padding: 20px; }
-    .bus-details { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 500px; margin: 120px auto 0 auto; animation: slideUp 1s ease-out; }
-    @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    .bus-details h2 { font-size: 45px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    .bus-details p { font-size: large; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 8px 0; }
-    .button { background-color: green; color: white; padding: 10px 16px; border: none; border-radius: 5px; cursor: pointer; margin-top: 15px; display: block; width: 60%; margin-left: 20%; }
-    .button:hover { background-color: rgb(1, 70, 1); }
+    body {
+      background: radial-gradient(circle at 50% 0%, #1e293b 0%, var(--bg-primary) 70%);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    .select-section {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 20px;
+    }
+    
+    .boarding-pass-card {
+      width: 100%;
+      max-width: 500px;
+      padding: 40px 30px;
+      text-align: center;
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      border-radius: 20px;
+    }
+    
+    .boarding-pass-card h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, #ffffff 40%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    /* Ticket visual elements */
+    .ticket-stub {
+      background: rgba(17, 24, 39, 0.65);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 30px;
+      text-align: left;
+      position: relative;
+    }
+    
+    /* Boarding pass notches */
+    .ticket-stub::before, .ticket-stub::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: #0f1629; /* Blends with bg-primary */
+      border-radius: 50%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    
+    .ticket-stub::before { left: -11px; }
+    .ticket-stub::after { right: -11px; }
+    
+    .ticket-detail-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      padding-bottom: 10px;
+    }
+    
+    .ticket-detail-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    
+    .detail-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .detail-value {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    
+    .detail-value.emerald {
+      color: var(--accent-emerald);
+      font-size: 1.15rem;
+    }
+    
+    .proceed-btn {
+      width: 100%;
+      padding: 14px;
+      font-size: 1.05rem;
+    }
   </style>
 </head>
 <body>
 
-<div class="bus-details" id="busDetails">
-  <h2>Selected Bus</h2>
-  <p>Loading bus information...</p>
-</div>
+  <!-- Premium Header -->
+  <header class="premium-navbar">
+    <a href="mainpage.html" class="nav-logo">
+      <img src="UBus logo.png" alt="UBus Logo">
+      <span>UBus</span>
+    </a>
+    <div class="nav-links">
+      <a href="dashboard.html" style="color: var(--accent-cyan);">Commute Hub</a>
+      <a href="feedback.html">Feedback</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact Team</a>
+      <a href="account.html" class="nav-profile">
+        <img src="account.png" alt="Account Settings">
+      </a>
+    </div>
+  </header>
 
-<script type="module">
-  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+  <div class="select-section">
+    <div class="boarding-pass-card glass-panel" id="busDetailsContainer">
+      <h2>Bus Details</h2>
+      <div id="busDetails">
+        <p style="color: var(--text-secondary);">Retrieving bus metrics...</p>
+      </div>
+    </div>
+  </div>
 
-  const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE"; // replace with your anon key
-  const client = createClient(SUPABASE_URL, SUPABASE_KEY);
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    import { auth } from './firebase.js';
 
-  const selectedBusId = sessionStorage.getItem("selectedBusId");
-  console.log("Selected Bus ID:", selectedBusId);
+    // Route Protection
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "login.html";
+      }
+    });
 
-  function toTitleCase(str) {
-    return str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : "N/A";
-  }
+    const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
+    const client = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  async function loadBusDetails() {
-    const busDetailsDiv = document.getElementById("busDetails");
-    busDetailsDiv.innerHTML = "<p>Loading bus information...</p>";
+    const selectedBusId = sessionStorage.getItem("selectedBusId");
+    console.log("Selected Bus ID:", selectedBusId);
 
-    if (!selectedBusId) {
-      busDetailsDiv.innerHTML = "<p>No bus selected. Please go back and select a bus.</p>";
-      return;
+    function toTitleCase(str) {
+      return str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : "N/A";
     }
 
-    try {
-      const { data: bus, error } = await client
-        .from('buses')
-        .select('*')
-        .eq('bus_id', selectedBusId)
-        .single();
+    async function loadBusDetails() {
+      const busDetailsDiv = document.getElementById("busDetails");
 
-      console.log("Fetched bus from Supabase:", bus, error);
-
-      if (error || !bus) {
-        busDetailsDiv.innerHTML = "<p>⚠️ Failed to load bus details. Check console for errors.</p>";
+      if (!selectedBusId) {
+        busDetailsDiv.innerHTML = `
+          <div class="ticket-stub" style="text-align: center;">
+            <p style="color: var(--accent-rose); font-weight: 700;">⚠️ No bus selected. Go back to available buses.</p>
+          </div>
+          <a href="dashboard.html" class="premium-btn-secondary" style="width: 100%;">← Search Buses</a>
+        `;
         return;
       }
 
-      const source = bus.source || "N/A";
-      const destination = bus.destination || "N/A";
+      try {
+        const { data: bus, error } = await client
+          .from('buses')
+          .select('*')
+          .eq('bus_id', selectedBusId)
+          .single();
 
-      const rate = (bus.bus_type || "").toLowerCase() === "super fast" ? 15 :
-                   (bus.bus_type || "").toLowerCase() === "fast" ? 12 : 10;
-      const fare = bus.fare || rate; 
+        if (error || !bus) {
+          busDetailsDiv.innerHTML = `
+            <div class="ticket-stub" style="text-align: center;">
+              <p style="color: var(--accent-rose); font-weight: 700;">⚠️ Failed to load ticket criteria.</p>
+            </div>
+            <a href="results.html" class="premium-btn-secondary" style="width: 100%;">← Back to Listings</a>
+          `;
+          return;
+        }
 
-      busDetailsDiv.innerHTML = `
-        <h2>${bus.bus_type || "Bus"} 🚌</h2>
-        <p><strong>Bus ID:</strong> ${bus.bus_id}</p>
-        <p><strong>Route:</strong> ${toTitleCase(source)} ➝ ${toTitleCase(destination)}</p>
-        <p><strong>Departure:</strong> ${bus.departure_time || "N/A"} from ${bus.boarding_point || "N/A"}</p>
-        <p><strong>Arrival:</strong> ${bus.arrival_time || "N/A"} at ${bus.dropping_point || "N/A"}</p>
-        <p><strong>Duration:</strong> ${bus.duration || "N/A"}</p>
-        <p><strong>Fare:</strong> ₹${fare}</p>
-        <button class="button" id="proceedBtn">Proceed to Booking</button>
-      `;
+        const source = bus.source || "N/A";
+        const destination = bus.destination || "N/A";
+        const rate = (bus.bus_type || "").toLowerCase() === "super fast" ? 15 :
+                     (bus.bus_type || "").toLowerCase() === "fast" ? 12 : 10;
+        const fare = bus.fare || rate;
+        
+        sessionStorage.setItem('fare', fare); // Confirm cached fare is exact
 
-      document.getElementById("proceedBtn").addEventListener("click", () => {
-        window.location.href = "booking.html";
-      });
+        busDetailsDiv.innerHTML = `
+          <div class="ticket-stub">
+            <div class="ticket-detail-item">
+              <span class="detail-label">Service Type</span>
+              <span class="detail-value" style="color: var(--accent-cyan); font-weight: 800;">${bus.bus_type || "Ordinary"} 🚌</span>
+            </div>
+            <div class="ticket-detail-item">
+              <span class="detail-label">Bus Route ID</span>
+              <span class="detail-value">${bus.bus_id}</span>
+            </div>
+            <div class="ticket-detail-item">
+              <span class="detail-label">Departure</span>
+              <span class="detail-value">${bus.departure_time || "N/A"} from ${bus.boarding_point || toTitleCase(source)}</span>
+            </div>
+            <div class="ticket-detail-item">
+              <span class="detail-label">Arrival</span>
+              <span class="detail-value">${bus.arrival_time || "N/A"} at ${bus.dropping_point || toTitleCase(destination)}</span>
+            </div>
+            <div class="ticket-detail-item">
+              <span class="detail-label">Est. Duration</span>
+              <span class="detail-value">${bus.duration || "N/A"} hours</span>
+            </div>
+            <div class="ticket-detail-item" style="border: none; margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(255, 255, 255, 0.1);">
+              <span class="detail-label" style="color: #fff;">Base Ticket Fare</span>
+              <span class="detail-value emerald">₹${fare}</span>
+            </div>
+          </div>
+          
+          <button class="premium-btn proceed-btn" id="proceedBtn">Proceed to Seat Selection</button>
+          <a href="results.html" class="premium-btn-secondary" style="width: 100%; margin-top: 12px; display: inline-flex; align-items: center; justify-content: center;">← Change Bus</a>
+        `;
 
-    } catch (err) {
-      console.error("Error loading bus:", err);
-      busDetailsDiv.innerHTML = "<p>⚠️ Failed to load bus details.</p>";
+        document.getElementById("proceedBtn").addEventListener("click", () => {
+          window.location.href = "booking.html";
+        });
+
+      } catch (err) {
+        console.error("Error loading selected bus details:", err);
+        busDetailsDiv.innerHTML = '<div class="ticket-stub" style="text-align: center;"><p style="color: var(--accent-rose);">⚠️ Unexpected connection error.</p></div>';
+      }
     }
-  }
 
-  document.addEventListener("DOMContentLoaded", loadBusDetails);
-</script>
-
+    document.addEventListener("DOMContentLoaded", loadBusDetails);
+  </script>
 </body>
 </html>

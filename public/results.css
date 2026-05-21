@@ -1,134 +1,226 @@
-  body {
-      font-family: sans-serif;
-      background: rgb(152, 166, 139);
-      padding: 20px;
-    }
-    h2 {
-      margin-bottom: 5px; 
-      position: relative;
-      left: 20px;
-    }
-    .route-heading {
-      font-size: 18px;
-      font-weight: 500;
-      margin-bottom: 20px;
-      color: #2e2d2d; 
-      position: relative;
-      left: 20px;
-    }
-    .bus-card {
-      background: white;
-      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-      padding: 25px;
-      margin: 15px 0;
-      font-size: x-large;
-      height: 200px;
-      
-      border-radius: 6px;
-      box-shadow: 0 2px 5cap rgba(0,0,0,0.1);
-    }
-    .bus-card {
+@import url("design-system.css");
+
+.results-page {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+}
+
+.back-button {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition-bounce);
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateX(-3px);
+}
+
+.header-text-group {
+  flex: 1;
+}
+
+.header-text-group h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.route-heading {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--accent-cyan);
+  letter-spacing: 0.5px;
+}
+
+.results-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 20px;
 }
+
+/* Redesigned Bus Card with Responsive Flexbox */
 .bus-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  transition: var(--transition-bounce);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .bus-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-}
-.bus-card {
-  opacity: 0;
-  animation: fadeInCard 0.4s ease forwards;
+  border-color: var(--accent-cyan);
+  box-shadow: 0 8px 30px rgba(6, 182, 212, 0.15);
 }
 
-@keyframes fadeInCard {
-  to { opacity: 1; }
+.bus-card-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
-
-.bus-card div {
-  font-size: 14px;
-  color: #0c0c0c;
+.bus-info-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.bus-type {
-  font-size:16px;
-  font-weight: bold;
-  color: #007bff;
+.bus-type-badge {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  padding: 4px 10px;
+  border-radius: 20px;
+  width: fit-content;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
+.bus-id-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
 
-.bus-id span{
-  color: #007bff;
-} 
-.departure span{
-  font-weight:bolder;
-  font-size: 18px;
+.bus-id-value {
+  color: var(--text-secondary);
 }
-.arrival span{
-  font-weight:bold;
-  font-size: 18px;
+
+.bus-route-path {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 4px;
 }
-.your-stop span,
-.duration span,
-.fare span {
-  font-weight: bolder;
-  color: #222;
-  font-size: 18px;
+
+/* Modern Timeline for Bus Schedules */
+.bus-timeline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0;
+  flex-wrap: wrap;
+}
+
+.time-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.time-val {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.stop-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.timeline-line {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
   position: relative;
-    
-}
- .stop span{
-      font-weight: bold;
-      font-size: large;
-    }
-
-    .results {
-      margin-top: 10px;
-    }
-   
-    .select-button {
-      margin-top: 10px;
-      background-color: green;
-      color: rgb(255, 255, 255);
-      width: 10%;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      position: relative;
-      left: 1200px;
-      bottom: 130px;
-    }
-    .select-button:hover {
-      background-color: rgb(1, 70, 1);
-    }
-    
-.header-container{
-  background-color: aliceblue;
-  height: 150px;
-  border-radius: 5px;
-align-content:end;
-}
-.back-button {
-  background-color: green;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-right: 10px;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-  margin-top: 2px
+  min-width: 60px;
+  border-radius: 2px;
 }
 
-.back-button:hover {
-  background-color: rgb(1, 70, 1);
+.timeline-line::before, .timeline-line::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
 }
 
+.timeline-line::before { left: 0; }
+.timeline-line::after { right: 0; }
 
+.bus-card-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 16px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.fare-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.fare-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.fare-value {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--accent-emerald);
+}
+
+.select-btn {
+  padding: 10px 24px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 8px;
+}
+
+@media (max-width: 600px) {
+  .bus-card-main {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .bus-timeline {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .timeline-line {
+    min-width: 30px;
+  }
+}

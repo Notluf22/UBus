@@ -1,151 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Feedback</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Share Your Feedback - UBus</title>
+  <link rel="icon" href="UBus logo.png" />
+  <link rel="stylesheet" href="design-system.css">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
-      margin: 0;
-      padding: 0;
+      background: radial-gradient(circle at 50% 0%, #1e293b 0%, var(--bg-primary) 70%);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
-    .container {
-      background-color: white;
-      max-width: 400px;
-      margin: 100px auto;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    h1, h2 {
-      text-align: center;
-      color: #333;
-    }
-
-    label {
-      display: block;
-      margin: 10px 0 5px;
-    }
-
-    input, textarea {
+    .feedback-wrapper {
+      max-width: 480px;
+      margin: 60px auto;
+      padding: 0 20px;
       width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      flex-grow: 1;
     }
 
-    .rating {
+    .form-header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .form-header h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 40%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+    .form-header p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Rating Stars Component */
+    .rating-container {
       display: flex;
       flex-direction: row-reverse;
       justify-content: center;
-      margin-bottom: 15px;
-    }
-
-    .rating input {
-      display: none;
-    }
-
-    .rating label {
-      font-size: 30px;
-      color: #ccc;
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-
-    .rating input:checked ~ label,
-    .rating label:hover,
-    .rating label:hover ~ label {
-      color: gold;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      background-color: #4CAF50;
-      border: none;
-      color: white;
-      font-size: 16px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    #thankYouSection {
-      text-align: center;
-    }
-
-    .action-buttons {
-      display: flex;
       gap: 10px;
+      margin: 15px 0 25px 0;
+    }
+    .rating-container input {
+      display: none;
+    }
+    .rating-container label {
+      font-size: 38px;
+      color: rgba(255, 255, 255, 0.12);
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .rating-container label:hover,
+    .rating-container label:hover ~ label,
+    .rating-container input:checked ~ label {
+      color: var(--accent-amber);
+      text-shadow: 0 0 15px rgba(245, 158, 11, 0.55);
+      transform: scale(1.15);
+    }
+    .rating-container label:active {
+      transform: scale(0.9);
+    }
+
+    /* Success Overlay State */
+    .success-card {
+      text-align: center;
+      padding: 20px;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .success-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid var(--accent-emerald);
+      color: var(--accent-emerald);
+      display: flex;
+      align-items: center;
       justify-content: center;
-      margin-top: 20px;
+      font-size: 2rem;
+      margin: 0 auto 20px auto;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
+      animation: pulse 1.8s ease-in-out infinite;
     }
 
-    .action-buttons button {
-      width: 120px;
-      background-color: #4CAF50;
+    .success-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
     }
-
-    .action-buttons .back-button {
-      background-color: #6c757d;
-    }
-
-    .action-buttons .back-button:hover {
-      background-color: #5a6268;
+    .success-buttons button, .success-buttons a {
+      flex: 1;
+      padding: 12px;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Feedback</h1>
-    <h2>Feedback Form</h2>
 
-    <form id="feedbackForm">
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" required />
+  <!-- Premium Header -->
+  <header class="premium-navbar">
+    <a href="mainpage.html" class="nav-logo">
+      <img src="UBus logo.png" alt="UBus Logo">
+      <span>UBus</span>
+    </a>
+    <div class="nav-links">
+      <a href="dashboard.html">Commute Hub</a>
+      <a href="feedback.html" style="color: var(--accent-cyan);">Feedback</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact Team</a>
+      <a href="account.html" class="nav-profile">
+        <img src="account.png" alt="Account Settings">
+      </a>
+    </div>
+  </header>
 
-      <label for="feedback">Feedback:</label>
-      <textarea id="feedback" name="feedback" rows="4" required></textarea>
+  <div class="feedback-wrapper">
+    <div class="glass-panel" style="padding: 40px;">
+      
+      <!-- Feedback Form -->
+      <form id="feedbackForm">
+        <div class="form-header">
+          <h1>Share Your Journey</h1>
+          <p>Your reviews steer our upgrades! Help us shape a safer, faster commuter experience.</p>
+        </div>
 
-      <label>Rating:</label>
-      <div class="rating">
-        <input type="radio" id="star5" name="rating" value="5" required />
-        <label for="star5">&#9733;</label>
-        <input type="radio" id="star4" name="rating" value="4" />
-        <label for="star4">&#9733;</label>
-        <input type="radio" id="star3" name="rating" value="3" />
-        <label for="star3">&#9733;</label>
-        <input type="radio" id="star2" name="rating" value="2" />
-        <label for="star2">&#9733;</label>
-        <input type="radio" id="star1" name="rating" value="1" />
-        <label for="star1">&#9733;</label>
+        <div class="form-group">
+          <label for="name">Your Name</label>
+          <input type="text" id="name" placeholder="e.g. John Doe" class="premium-input" required />
+        </div>
+
+        <div class="form-group">
+          <label for="feedback">Travel Review / Suggestions</label>
+          <textarea id="feedback" rows="4" placeholder="How was your booking and transit? What features would you like to see next?" class="premium-input" style="resize: none;" required></textarea>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 10px;">
+          <label style="text-align: center;">Journey Rating</label>
+          <div class="rating-container">
+            <input type="radio" id="star5" name="rating" value="5" required />
+            <label for="star5" title="5 Stars">★</label>
+            <input type="radio" id="star4" name="rating" value="4" />
+            <label for="star4" title="4 Stars">★</label>
+            <input type="radio" id="star3" name="rating" value="3" />
+            <label for="star3" title="3 Stars">★</label>
+            <input type="radio" id="star2" name="rating" value="2" />
+            <label for="star2" title="2 Stars">★</label>
+            <input type="radio" id="star1" name="rating" value="1" />
+            <label for="star1" title="1 Star">★</label>
+          </div>
+        </div>
+
+        <button type="submit" class="premium-btn" style="width: 100%; padding: 14px; margin-top: 10px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          Send Feedback
+        </button>
+      </form>
+
+      <!-- Thank You Message -->
+      <div id="thankYouSection" class="success-card" style="display: none;">
+        <div class="success-icon">✔</div>
+        <h2 style="font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 8px;">Feedback Registered!</h2>
+        <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.4;">Thank you for writing. Your review has been submitted to the UBus fleet control dashboard.</p>
+        
+        <div class="success-buttons">
+          <button onclick="resetFeedbackForm()" class="premium-btn">Submit Another</button>
+          <a href="mainpage.html" class="premium-btn-secondary" style="display: inline-flex; align-items: center; justify-content: center;">Return to Hub</a>
+        </div>
       </div>
 
-      <button type="submit">Submit</button>
-    </form>
-
-    <div id="thankYouSection" class="hidden">
-      <p>Thank you for the feedback!</p>
-      <div class="action-buttons">
-        <button onclick="reenterFeedback()">Re-enter Feedback</button>
-        <button class="back-button" onclick="goBack()">Go Back</button>
-      </div>
     </div>
   </div>
 
-  <script>
+  <script type="module">
+    import { auth } from './firebase.js';
+
+    // Pre-fill commuter credentials if logged in
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        const username = user.email.split('@')[0];
+        document.getElementById("name").value = username.charAt(0).toUpperCase() + username.slice(1);
+      }
+    });
+
     const form = document.getElementById("feedbackForm");
     const thankYouSection = document.getElementById("thankYouSection");
 
@@ -164,6 +222,7 @@
           timestamp: new Date().toISOString()
         };
 
+        // Submit via Express API endpoints
         fetch("/submit-feedback", {
           method: "POST",
           headers: {
@@ -179,25 +238,28 @@
           return res.json();
         })
         .then(() => {
-          form.classList.add("hidden");
-          thankYouSection.classList.remove("hidden");
+          form.style.display = "none";
+          thankYouSection.style.display = "block";
         })
         .catch(err => {
-          alert("Failed to submit feedback: " + err.message);
+          alert("Failed to compile feedback: " + err.message);
           console.error(err);
         });
       }
     });
 
-    function reenterFeedback() {
-      thankYouSection.classList.add("hidden");
-      form.classList.remove("hidden");
+    window.resetFeedbackForm = function() {
+      thankYouSection.style.display = "none";
+      form.style.display = "block";
       form.reset();
-    }
-
-    function goBack() {
-      window.location.href = "mainpage.html";
-    }
+      
+      // Keep username pre-fill intact
+      const user = auth.currentUser;
+      if (user) {
+        const username = user.email.split('@')[0];
+        document.getElementById("name").value = username.charAt(0).toUpperCase() + username.slice(1);
+      }
+    };
   </script>
 </body>
 </html>

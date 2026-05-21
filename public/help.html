@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Help Center & FAQ - UBus</title>
+  <link rel="icon" href="UBus logo.png">
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+    body {
+      background: radial-gradient(circle at 50% 0%, #1e293b 0%, var(--bg-primary) 70%);
+    }
+
+    .help-section {
+      max-width: 800px;
+      margin: 60px auto;
+      padding: 0 20px;
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .search-container {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .search-container h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #ffffff 40%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .search-container p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      margin-bottom: 25px;
+    }
+
+    .faq-category-filters {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      padding: 8px 18px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-bounce);
+    }
+
+    .filter-chip.active, .filter-chip:hover {
+      background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+      color: #fff;
+      border-color: transparent;
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.2);
+    }
+
+    /* Accordion styles */
+    .accordion-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .accordion-item {
+      overflow: hidden;
+      transition: var(--transition-smooth);
+    }
+
+    .accordion-header {
+      width: 100%;
+      padding: 20px;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-family: var(--font-main);
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .accordion-header span {
+      display: inline-block;
+      transition: var(--transition-smooth);
+      font-size: 1.3rem;
+      color: var(--accent-cyan);
+    }
+
+    .accordion-item.active {
+      border-color: rgba(6, 182, 212, 0.25);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .accordion-item.active .accordion-header span {
+      transform: rotate(45deg);
+      color: var(--accent-amber);
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 0 20px;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .accordion-item.active .accordion-content {
+      padding: 0 20px 20px 20px;
+    }
+
+    .support-card {
+      margin-top: 60px;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .support-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+    }
+
+    .support-card p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Premium Header -->
+  <header class="premium-navbar">
+    <a href="home.html" class="nav-logo">
+      <img src="UBus logo.png" alt="UBus Logo">
+      <span>UBus</span>
+    </a>
+    <div class="nav-links">
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="help.html" style="color: var(--accent-cyan);">Help</a>
+      <a href="login.html" class="premium-btn" style="padding: 8px 16px; font-size: 0.9rem; box-shadow: none;">Sign In</a>
+    </div>
+  </header>
+
+  <div class="help-section">
+    <div class="search-container">
+      <h1>Help Center</h1>
+      <p>Find answers to common questions about ticket booking, GPS tracking, and boarding passes.</p>
+      
+      <div class="faq-category-filters">
+        <button class="filter-chip active" onclick="filterFAQ('all', this)">All Questions</button>
+        <button class="filter-chip" onclick="filterFAQ('booking', this)">Booking</button>
+        <button class="filter-chip" onclick="filterFAQ('tracking', this)">GPS Tracking</button>
+        <button class="filter-chip" onclick="filterFAQ('payment', this)">Payments</button>
+      </div>
+    </div>
+
+    <div class="accordion-list">
+      <!-- Item 1 -->
+      <div class="accordion-item glass-panel" data-category="booking">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          How do I book a short-distance ticket on UBus?
+          <span>+</span>
+        </button>
+        <div class="accordion-content">
+          <p>Once you are logged in, simply navigate to the Dashboard. Enter your starting location and destination to view available buses operating on that route. Choose your preferred bus, select your seat, enter your passenger details, and hit confirm. Your digital boarding pass will be created instantly!</p>
+        </div>
+      </div>
+
+      <!-- Item 2 -->
+      <div class="accordion-item glass-panel" data-category="tracking">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          Is the GPS bus tracking really real-time?
+          <span>+</span>
+        </button>
+        <div class="accordion-content">
+          <p>Yes. Government buses are integrated with active GPS hardware modules (or panic panic-button nodes). These coordinates are broadcast directly to our Firestore database in real-time, giving you accurate ETAs at each bus stop so you never miss your ride.</p>
+        </div>
+      </div>
+
+      <!-- Item 3 -->
+      <div class="accordion-item glass-panel" data-category="booking">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          Do I need a paper ticket to travel?
+          <span>+</span>
+        </button>
+        <div class="accordion-content">
+          <p>No paper ticket is needed! UBus provides a digital pass directly on your smartphone screen. Simply show the pass to the conductor. The high-contrast E-Ticket displays a QR code that contains your active booking details for verification.</p>
+        </div>
+      </div>
+
+      <!-- Item 4 -->
+      <div class="accordion-item glass-panel" data-category="payment">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          What payment methods are supported?
+          <span>+</span>
+        </button>
+        <div class="accordion-content">
+          <p>We support digital ticketing payments including secure UPI gateways, digital wallets (Paytm, PhonePe), credit cards, and debit cards. The booking is instantly confirmed once the payment is made successfully.</p>
+        </div>
+      </div>
+
+      <!-- Item 5 -->
+      <div class="accordion-item glass-panel" data-category="booking">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          Can I book multiple seats at once?
+          <span>+</span>
+        </button>
+        <div class="accordion-content">
+          <p>Yes, with our updated interactive seat map, you can click to select multiple seats at the same time. The total fare updates dynamically based on the number of seats you've selected.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="support-card glass-panel">
+      <h3>Still have questions?</h3>
+      <p>Our commuter support team is here to assist you 24/7 with schedules and ticket inquiries.</p>
+      <a href="contact.html" class="premium-btn">Contact Support</a>
+    </div>
+  </div>
+
+  <script>
+    function toggleAccordion(headerElement) {
+      const item = headerElement.parentElement;
+      const content = headerElement.nextElementSibling;
+      const isActive = item.classList.contains('active');
+      
+      // Close all accordions
+      document.querySelectorAll('.accordion-item').forEach(el => {
+        el.classList.remove('active');
+        el.querySelector('.accordion-content').style.maxHeight = null;
+      });
+
+      if (!isActive) {
+        item.classList.add('active');
+        content.style.maxHeight = content.scrollHeight + "px";
+      }
+    }
+
+    function filterFAQ(category, buttonElement) {
+      // Toggle active filter button
+      document.querySelectorAll('.filter-chip').forEach(btn => btn.classList.remove('active'));
+      buttonElement.classList.add('active');
+
+      // Filter accordions
+      document.querySelectorAll('.accordion-item').forEach(item => {
+        item.classList.remove('active');
+        item.querySelector('.accordion-content').style.maxHeight = null;
+
+        if (category === 'all' || item.getAttribute('data-category') === category) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

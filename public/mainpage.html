@@ -3,32 +3,179 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>UBus</title>
-  <link rel="icon" href="UBus/public/UBus logo.png">
-  <link rel="stylesheet" href="mainpage.css">
+  <title>Dashboard Hub - UBus</title>
+  <link rel="icon" href="UBus logo.png">
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+    body {
+      background: radial-gradient(circle at 50% 0%, #1e293b 0%, var(--bg-primary) 70%);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    .hub-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      max-width: 1000px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 60px 20px;
+      text-align: center;
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    .logo-hero {
+      width: 100px;
+      height: auto;
+      margin-bottom: 24px;
+      animation: float 4s ease-in-out infinite;
+      filter: drop-shadow(0 10px 25px rgba(6, 182, 212, 0.3));
+    }
+    
+    h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 15px;
+      background: linear-gradient(135deg, #ffffff 40%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .tagline {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin-bottom: 45px;
+      line-height: 1.6;
+    }
+    
+    .nav-grid {
+      display: grid;
+      gap: 20px;
+      width: 100%;
+      max-width: 650px;
+    }
+    
+    .nav-card {
+      padding: 24px;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 1px solid var(--card-border);
+      transition: var(--transition-bounce);
+    }
+    
+    .nav-card:hover {
+      border-color: var(--accent-cyan);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(6, 182, 212, 0.15);
+    }
+    
+    .nav-card-icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+      color: var(--accent-cyan);
+    }
+    
+    .nav-card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    
+    .nav-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin: 0;
+    }
+    
+    .welcome-banner {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+  </style>
 </head>
 <body>
 
-  <div class="container">
-    <div class="header">
+  <!-- Premium Header -->
+  <header class="premium-navbar">
+    <a href="mainpage.html" class="nav-logo">
       <img src="UBus logo.png" alt="UBus Logo">
-      <h1>UBus</h1>
-    </div>
-
-    <p class="tagline">Your route, your time – smarter travel for everyone.</p>
-
-    <div class="navbar">
-      <a href="dashboard.html">Dashboard</a>
+      <span>UBus</span>
+    </a>
+    <div class="nav-links">
+      <a href="dashboard.html" style="color: var(--accent-cyan);">Commute Hub</a>
       <a href="feedback.html">Feedback</a>
-      <a href="about.html">About UBus</a>
-      <a href="contact.html">Contact Us</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact Team</a>
+      <a href="account.html" class="nav-profile">
+        <img src="account.png" alt="Account settings">
+      </a>
+    </div>
+  </header>
+
+  <div class="hub-container">
+    <div class="welcome-banner" id="welcomeUser">Welcome, Commuter</div>
+    <img src="UBus logo.png" class="logo-hero" alt="UBus Badge">
+    <h1>UBus Portal</h1>
+    <p class="tagline">Catch your local bus. Book general tickets, track live bus coordinates, and arrive precisely on time.</p>
+    
+    <div class="nav-grid grid-container grid-container-2">
+      <a href="dashboard.html" class="nav-card glass-panel">
+        <div class="nav-card-icon">🚌</div>
+        <h3>Search & Booking</h3>
+        <p>Book unreserved seats, view live ticket rates and bus routes.</p>
+      </a>
+      
+      <a href="feedback.html" class="nav-card glass-panel">
+        <div class="nav-card-icon">💬</div>
+        <h3>Provide Feedback</h3>
+        <p>Help us improve local commuting by sharing your experience.</p>
+      </a>
+      
+      <a href="about.html" class="nav-card glass-panel">
+        <div class="nav-card-icon">ℹ️</div>
+        <h3>About UBus</h3>
+        <p>Discover our technology goals, solutions, and upcoming updates.</p>
+      </a>
+      
+      <a href="contact.html" class="nav-card glass-panel">
+        <div class="nav-card-icon">🤝</div>
+        <h3>Contact Team</h3>
+        <p>Get in touch with local depot operators and technical support.</p>
+      </a>
     </div>
   </div>
 
-  <a href="account.html">
-    <img class="accicon" src="account.png" alt="Account Icon">
-  </a>
-
+  <!-- Jotform Chat Agent Embed -->
   <script src="https://cdn.jotfor.ms/agent/embedjs/01973033f2d075818bd958b16849197ffe70/embed.js?skipWelcome=1&maximizable=1"></script>
+
+  <!-- Auth State Guard Script -->
+  <script type="module">
+    import { auth } from './firebase.js';
+    
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        // User logged in, display email part
+        const username = user.email.split('@')[0];
+        document.getElementById('welcomeUser').textContent = `Welcome, ${username}`;
+      } else {
+        // Direct unauthenticated users back to login
+        console.log("Access denied. Redirecting to login...");
+        window.location.href = "login.html";
+      }
+    });
+  </script>
 </body>
 </html>

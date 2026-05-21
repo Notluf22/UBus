@@ -1,48 +1,182 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>UBus</title>
-  <link rel="icon" href="logo-transparent-png.png" />
+  <title>Search Buses - UBus</title>
+  <link rel="icon" href="UBus logo.png" />
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+    body {
+      background: radial-gradient(circle at 50% 0%, #1e293b 0%, var(--bg-primary) 70%);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    .search-section {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 20px;
+    }
+    
+    .search-card {
+      width: 100%;
+      max-width: 480px;
+      padding: 40px 30px;
+      text-align: center;
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    .search-card h2 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #ffffff 40%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 30px;
+    }
+    
+    .form-group {
+      position: relative;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    
+    .input-icon-wrapper {
+      position: relative;
+    }
+    
+    .input-icon-wrapper img {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      filter: invert(0.85);
+      pointer-events: none;
+    }
+    
+    .premium-input-icon {
+      padding-left: 45px;
+    }
+    
+    .swap-button-container {
+      margin: -5px 0 15px 0;
+      display: flex;
+      justify-content: flex-end;
+    }
+    
+    .swap-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--accent-cyan);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-bounce);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .swap-btn:hover {
+      background: var(--accent-cyan);
+      color: #fff;
+      transform: rotate(180deg) scale(1.1);
+      box-shadow: 0 0 12px var(--accent-cyan-glow);
+    }
+    
+    .search-btn {
+      width: 100%;
+      padding: 14px;
+      font-size: 1.05rem;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>UBus</h1>
-    <h2>Catch Your Bus</h2>
-<style>
-  body { height: 100%; font-family: Arial,bold, sans-serif; background: rgb(152, 166, 139); margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
-  .container { width: 80%; max-width: 600px; background: rgb(238, 234, 234); margin-top: 50px; padding: 30px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); text-align: center; position: relative; top: 20%; }
-  .swap-button { position: relative; background: green; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 10px 0; }
-  table { margin: auto; }
-  td { padding: 10px; }
-  #from, #to { height: 30px; width: 250px; border: 2px solid #1a1a1a; }
-  .sub-button { background-color:green; color: aliceblue; height: 30px; width: 90px; font-weight: bold; border-radius: 10px; border: none; margin-top: 15px; cursor: pointer; }
-  button:active { background-color: rgb(1, 70, 1); }
-  h1,h2 { font-family: Georgia, 'Times New Roman', Times, serif; }
-</style>
-    <form id="searchForm">
-      <table>
-        <tr>
-          <td><img src="trip_origin_30dp_000000_FILL0_wght400_GRAD0_opsz24 (1).png" class="fromicon" /></td>
-          <td><input type="text" id="from" placeholder="Enter Starting Location" required /></td>
-        </tr>
-        <tr>
-          <td><img src="location_on_30dp_000000_FILL0_wght400_GRAD0_opsz24.png" class="toicon" /></td>
-          <td><input type="text" id="to" placeholder="Enter Your Destination" required /></td>
-        </tr>
-      </table>
-      <button type="button" class="swap-button" id="swapBtn">⇅ Swap</button>
-      <button type="submit" class="sub-button">Search</button>
-    </form>
 
-    <div id="useremail"></div>
-    <div id="results"></div>
+  <!-- Premium Header -->
+  <header class="premium-navbar">
+    <a href="mainpage.html" class="nav-logo">
+      <img src="UBus logo.png" alt="UBus Logo">
+      <span>UBus</span>
+    </a>
+    <div class="nav-links">
+      <a href="dashboard.html" style="color: var(--accent-cyan);">Commute Hub</a>
+      <a href="feedback.html">Feedback</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact Team</a>
+      <a href="account.html" class="nav-profile">
+        <img src="account.png" alt="Account Settings">
+      </a>
+    </div>
+  </header>
+
+  <div class="search-section">
+    <div class="search-card glass-panel">
+      <h2>Catch Your Bus</h2>
+      <p class="subtitle">Search live KSRTC routes and book general tickets</p>
+      
+      <form id="searchForm">
+        <div class="form-group">
+          <label for="from">Starting Station</label>
+          <div class="input-icon-wrapper">
+            <img src="trip_origin_30dp_000000_FILL0_wght400_GRAD0_opsz24 (1).png" alt="From point" />
+            <input type="text" id="from" placeholder="Enter Starting Location (e.g. Kottarakara)" class="premium-input premium-input-icon" required />
+          </div>
+        </div>
+        
+        <div class="swap-button-container">
+          <button type="button" class="swap-btn" id="swapBtn" title="Swap stations">⇅</button>
+        </div>
+        
+        <div class="form-group">
+          <label for="to">Destination Station</label>
+          <div class="input-icon-wrapper">
+            <img src="location_on_30dp_000000_FILL0_wght400_GRAD0_opsz24.png" alt="Destination point" />
+            <input type="text" id="to" placeholder="Enter Your Destination (e.g. Technopark)" class="premium-input premium-input-icon" required />
+          </div>
+        </div>
+        
+        <button type="submit" class="premium-btn search-btn">Search Buses</button>
+      </form>
+    </div>
   </div>
 
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    import { auth } from './firebase.js';
+
+    // Route Protection
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "login.html";
+      }
+    });
+
     const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
     const client = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -59,12 +193,13 @@
       const to = document.getElementById('to').value.trim();
 
       if (!from || !to) return alert("Enter both From and To locations");
-      if (from.toLowerCase() === to.toLowerCase()) return alert("'From' and 'To' must be different!");
+      if (from.toLowerCase() === to.toLowerCase()) return alert("'From' and 'To' stations must be different!");
 
       try {
-
-      sessionStorage.setItem('source', from);
-      sessionStorage.setItem('destination', to);
+        sessionStorage.setItem('source', from);
+        sessionStorage.setItem('destination', to);
+        
+        // Fetch to confirm buses exist before redirecting
         const { data: buses, error } = await client
           .from('buses')
           .select('*')
@@ -72,17 +207,17 @@
           .ilike('destination', to);
 
         if (error) throw error;
+        
         if (!buses || buses.length === 0) {
-          alert("No buses found for this route.");
+          alert("No buses found for this route. Try (Kottarakara, Technopark) or (Trivandrum, Kollam).");
           return;
         }
 
-        sessionStorage.setItem('source', from);
-        sessionStorage.setItem('destination', to);
         window.location.href = 'results.html';
       } catch (err) {
-        console.error(err);
-        alert("Error fetching buses. Try again.");
+        console.error("Supabase query error:", err);
+        alert("Error connecting to database. Searching cached results...");
+        window.location.href = 'results.html';
       }
     });
   </script>

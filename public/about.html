@@ -3,56 +3,115 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About UBus</title>
-  <link rel="stylesheet" href="about.css" />
+  <title>About UBus - Smarter Transport</title>
+  <link rel="icon" href="UBus logo.png">
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+    body {
+      background: radial-gradient(circle at 50% 0%, #1e293b 0%, var(--bg-primary) 70%);
+      padding: 40px 20px;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 40px;
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #ffffff 40%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+    }
+    
+    h2 {
+      color: #fff;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-top: 35px;
+      margin-bottom: 12px;
+      border-left: 3px solid var(--accent-cyan);
+      padding-left: 12px;
+    }
+    
+    p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    
+    ul {
+      margin-bottom: 25px;
+      padding-left: 20px;
+      list-style-type: none;
+    }
+    
+    li {
+      position: relative;
+      color: var(--text-secondary);
+      font-size: 1.02rem;
+      margin-bottom: 10px;
+      padding-left: 25px;
+      line-height: 1.5;
+    }
+    
+    li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--accent-cyan);
+      font-weight: bold;
+    }
+    
+    .back-button {
+      margin-top: 30px;
+      display: inline-flex;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>UBus – Your Route, Your Time</h1>
 
-    <p><strong>UBus</strong> is an innovative ticket booking and real-time tracking system designed for <strong>short-distance government buses</strong>. Inspired by solutions like <em>Where is My Train</em>, UBus digitizes the local commute experience with smart booking and live location tracking.</p>
+  <!-- Premium Header -->
+  <header class="premium-navbar" style="position: absolute; top: 0; left: 0; right: 0; background: transparent; border-bottom: none;">
+    <a href="home.html" class="nav-logo">
+      <img src="UBus logo.png" alt="UBus Logo">
+      <span>UBus</span>
+    </a>
+    <div class="nav-links">
+      <a href="about.html" style="color: var(--accent-cyan);">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="help.html">Help</a>
+    </div>
+  </header>
+
+  <div class="container glass-panel">
+    <h1>About UBus</h1>
+
+    <p><strong>UBus</strong> is a smart, real-time ticket booking and location tracking platform designed specifically for <strong>short-distance government buses</strong>. Inspired by transit helpers like <em>Where is My Train</em>, UBus digitizes the local commute experience through real-time GPS tracking and instant paperless tickets.</p>
 
     <h2>Project Overview</h2>
-    <p>UBus empowers commuters by offering:</p>
+    <p>UBus empowers local commuters by offering features previously reserved only for luxury or long-distance coaches:</p>
     <ul>
-      <li>Online booking for general, short-distance bus tickets</li>
-      <li>Live tracking of buses via GPS</li>
-      <li>Accurate Estimated Time of Arrival (ETA) at stops</li>
-      <li>Contactless travel with digital passes</li>
+      <li>General, unreserved mobile ticket booking for local routes.</li>
+      <li>Live tracking of active buses via hardware GPS integration.</li>
+      <li>Highly accurate Estimated Time of Arrival (ETA) predictions at each stop.</li>
+      <li>Seamless contactless boarding with digital passes.</li>
     </ul>
 
-    <h2>Challenges in Traditional Transport</h2>
-    <p>Rural and semi-urban transport systems often lack:</p>
-    <ul>
-      <li>Real-time bus arrival information</li>
-      <li>Online booking or payment options</li>
-      <li>Reliable schedule visibility</li>
-    </ul>
+    <h2>Bridging the Digital Divide</h2>
+    <p>Public transport networks in rural and semi-urban hubs face substantial accessibility hurdles due to a lack of live updates and rigid, paper-based cash transactions. UBus provides an accessible, high-tech, and lightweight interface designed to operate seamlessly on any device.</p>
 
-    <h2>Our Solution</h2>
-    <p>UBus addresses these gaps with a modern web-based platform that allows users to:</p>
-    <ul>
-      <li>Search and view buses by route and availability</li>
-      <li>Book general tickets using any device</li>
-      <li>Track buses in real-time through GPS</li>
-      <li>Make secure digital payments</li>
-    </ul>
+    <h2>Development Journey</h2>
+    <p>UBus was developed as a visual and functional prototype during an intensive internship program, aimed at solving real-world transit accessibility issues through modern cloud infrastructure (Firebase & Supabase).</p>
 
-    <h2>Live GPS Tracking</h2>
-    <p>Using external GPS modules or built-in emergency systems on buses, UBus provides accurate location data to minimize wait times and enhance commuter planning.</p>
-
-    <h2>Future Enhancements</h2>
-    <ul>
-      <li>Offline ticketing support in low-network zones</li>
-      <li>AI-powered passenger crowd prediction</li>
-      <li>Multi-language support for local accessibility</li>
-      <li>Dedicated mobile apps for Android and iOS</li>
-    </ul>
-
-    <h2>Development</h2>
-    <p>This project was built during a 2-week internship CRUD program by a team of 4, aimed at improving the daily commute for underserved regions.</p>
-
-    <a href="mainpage.html" class="back-button">← Back to Home</a>
+    <a href="home.html" class="premium-btn back-button">← Back to Home</a>
   </div>
+
 </body>
 </html>

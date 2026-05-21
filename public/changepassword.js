@@ -1,5 +1,4 @@
-import { auth } from './firebase.js';
-import { updatePassword } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+import { auth, updatePassword } from './firebase.js';
 
 const form = document.getElementById('changePasswordForm');
 
@@ -19,12 +18,13 @@ form.addEventListener('submit', async function (e) {
     try {
       await updatePassword(user, newPassword);
       alert("Password changed successfully!");
-      window.location.href = "dashboard.html";
+      window.location.href = "account.html";
     } catch (error) {
       if (error.code === 'auth/requires-recent-login') {
         alert("You need to log in again to change your password.");
         window.location.href = "login.html"; 
-        alert(error.message);
+      } else {
+        alert("Error changing password: " + error.message);
       }
     }
   } else {

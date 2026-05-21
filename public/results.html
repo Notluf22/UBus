@@ -1,84 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>UBus Results</title>
-<link rel="stylesheet" href="results.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Available Buses - UBus</title>
+  <link rel="icon" href="UBus logo.png" />
+  <link rel="stylesheet" href="results.css">
 </head>
 <body>
-<div class="header-container">
-  <button id="backBtn" class="back-button">← Back</button>
-  <h2>Available Buses</h2>
-  <div class="route-heading" id="routeHeading"></div>
-</div>
 
-<div class="results" id="results"></div>
+  <!-- Premium Header -->
+  <header class="premium-navbar">
+    <a href="mainpage.html" class="nav-logo">
+      <img src="UBus logo.png" alt="UBus Logo">
+      <span>UBus</span>
+    </a>
+    <div class="nav-links">
+      <a href="dashboard.html" style="color: var(--accent-cyan);">Commute Hub</a>
+      <a href="feedback.html">Feedback</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact Team</a>
+      <a href="account.html" class="nav-profile">
+        <img src="account.png" alt="Account Settings">
+      </a>
+    </div>
+  </header>
 
-<script type="module">
-  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+  <div class="results-page">
+    <div class="header-container glass-panel">
+      <button id="backBtn" class="back-button">← Back</button>
+      <div class="header-text-group">
+        <h2>Available Buses</h2>
+        <div class="route-heading" id="routeHeading">Loading route...</div>
+      </div>
+    </div>
 
-  const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
+    <div class="results-list" id="results">
+      <!-- Dynamic list loaded from Supabase -->
+    </div>
+  </div>
 
-  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    import { auth } from './firebase.js';
 
-  const source = sessionStorage.getItem('source');
-  const destination = sessionStorage.getItem('destination');
-
-  if (!source || !destination) {
-    alert("Missing search data. Redirecting...");
-    window.location.href = "dashboard.html";
-  }
-
-  document.getElementById("routeHeading").textContent = `From ${source} to ${destination}`;
-  document.getElementById("backBtn").addEventListener("click", () => history.back());
-
-  async function loadBuses() {
-    try {
-      const { data: buses, error } = await supabase
-        .from('buses')
-        .select('*')
-        .ilike('source', source)
-        .ilike('destination', destination);
-
-      if (error) throw error;
-
-      const resultsDiv = document.getElementById("results");
-      resultsDiv.innerHTML = '';
-
-      if (!buses || buses.length === 0) {
-        resultsDiv.innerHTML = "<p>No buses found for this route.</p>";
-        return;
+    // Route Protection
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "login.html";
       }
+    });
 
-      buses.forEach(bus => {
-        const busCard = document.createElement('div');
-        busCard.classList.add('bus-card');
-        busCard.innerHTML = `
-          <strong>${bus.bus_type} 🚌</strong><br>
-          <div class="bus-id"><span>Bus ID:</span> ${bus.bus_id}</div>
-          <div class="departure">Departure: ${bus.departure_time} → Arrival: ${bus.arrival_time}</div>
-          <div class="route">${bus.boarding_point} to ${bus.dropping_point}</div>
-          <div class="fare">Fare: ₹${bus.fare}</div>
-        `;
-        const selectBtn = document.createElement('button');
-        selectBtn.textContent = "Select";
-        selectBtn.classList.add('select-btn');
-        selectBtn.addEventListener('click', () => {
-          sessionStorage.setItem('selectedBusId', bus.bus_id);
-          window.location.href = 'select.html';
-        });
-        busCard.appendChild(selectBtn);
-        resultsDiv.appendChild(busCard);
-      });
-    } catch (err) {
-      console.error(err);
-      document.getElementById("results").innerHTML = "<p>Failed to load buses.</p>";
+    const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const source = sessionStorage.getItem('source');
+    const destination = sessionStorage.getItem('destination');
+
+    if (!source || !destination) {
+      alert("Missing search parameters. Redirecting to Search Desk...");
+      window.location.href = "dashboard.html";
     }
-  }
 
-  document.addEventListener('DOMContentLoaded', loadBuses);
-</script>
+    document.getElementById("routeHeading").textContent = `Route: ${source} ➝ ${destination}`;
+    document.getElementById("backBtn").addEventListener("click", () => window.location.href = "dashboard.html");
+
+    async function loadBuses() {
+      const resultsDiv = document.getElementById("results");
+      resultsDiv.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Querying live schedules...</p>';
+
+      try {
+        const { data: buses, error } = await supabase
+          .from('buses')
+          .select('*')
+          .ilike('source', source)
+          .ilike('destination', destination);
+
+        if (error) throw error;
+
+        resultsDiv.innerHTML = '';
+
+        if (!buses || buses.length === 0) {
+          resultsDiv.innerHTML = `
+            <div class="glass-panel" style="padding: 40px; text-align: center;">
+              <p style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 20px;">No active buses operating on this route today.</p>
+              <a href="dashboard.html" class="premium-btn">Try Another Search</a>
+            </div>`;
+          return;
+        }
+
+        buses.forEach(bus => {
+          const busCard = document.createElement('div');
+          busCard.classList.add('bus-card', 'glass-panel');
+          
+          const rate = (bus.bus_type || "").toLowerCase() === "super fast" ? 15 :
+                       (bus.bus_type || "").toLowerCase() === "fast" ? 12 : 10;
+          const fare = bus.fare || rate;
+          
+          busCard.innerHTML = `
+            <div class="bus-card-main">
+              <div class="bus-info-left">
+                <span class="bus-type-badge">${bus.bus_type || "Ordinary"}</span>
+                <div class="bus-id-label">ID: <span class="bus-id-value">${bus.bus_id}</span></div>
+                <div class="bus-route-path">${bus.boarding_point || source} to ${bus.dropping_point || destination}</div>
+              </div>
+              
+              <div class="bus-timeline">
+                <div class="time-block">
+                  <span class="time-val">${bus.departure_time || "N/A"}</span>
+                  <span class="stop-label">${bus.boarding_point || source}</span>
+                </div>
+                <div class="timeline-line"></div>
+                <div class="time-block">
+                  <span class="time-val">${bus.arrival_time || "N/A"}</span>
+                  <span class="stop-label">${bus.dropping_point || destination}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bus-card-action">
+              <div class="fare-section">
+                <span class="fare-label">Ticket Fare</span>
+                <span class="fare-value">₹${fare}</span>
+              </div>
+            </div>
+          `;
+          
+          const selectBtn = document.createElement('button');
+          selectBtn.textContent = "Select Bus";
+          selectBtn.classList.add('premium-btn', 'select-btn');
+          selectBtn.addEventListener('click', () => {
+            sessionStorage.setItem('selectedBusId', bus.bus_id);
+            sessionStorage.setItem('fare', fare); // Cache fare for booking page fallback
+            window.location.href = 'select.html';
+          });
+          
+          busCard.querySelector('.bus-card-action').appendChild(selectBtn);
+          resultsDiv.appendChild(busCard);
+        });
+      } catch (err) {
+        console.error("Results query error:", err);
+        resultsDiv.innerHTML = '<div class="glass-panel" style="padding: 30px; text-align: center;"><p style="color: var(--accent-rose);">⚠️ Failed to connect. Verify your connection or credentials.</p></div>';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadBuses);
+  </script>
 </body>
 </html>

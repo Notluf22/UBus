@@ -1,182 +1,547 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Admin Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - UBus</title>
+  <link rel="icon" href="UBus logo.png" />
+  <link rel="stylesheet" href="design-system.css">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f4f8;
-      padding: 2rem;
+      background: radial-gradient(circle at 50% 0%, #1e293b 0%, var(--bg-primary) 70%);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
-    .container {
-      max-width: 800px;
-      margin: auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    .admin-wrapper {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+      width: 100%;
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      flex-grow: 1;
     }
 
     h1 {
-      text-align: center;
-      margin-bottom: 2rem;
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 40%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 5px;
     }
 
-    .button-panel {
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin: 30px 0 40px 0;
+    }
+
+    .stat-card {
+      padding: 24px;
       display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 2rem;
+      flex-direction: column;
+      position: relative;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+    }
+    .stat-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--accent-cyan);
+      margin-top: 8px;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-emerald);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-emerald-glow);
+      animation: pulse 1.5s ease-in-out infinite;
     }
 
-    button {
-      padding: 0.6rem 1.2rem;
-      font-size: 1rem;
-      background-color: #007bff;
-      color: white;
+    /* Dashboard Navigation Deck */
+    .dashboard-tabs {
+      display: flex;
+      gap: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 15px;
+      margin-bottom: 30px;
+    }
+
+    .tab-btn {
+      background: none;
       border: none;
+      color: var(--text-secondary);
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 10px 20px;
       border-radius: 8px;
       cursor: pointer;
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+    .tab-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .tab-btn.active {
+      color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.08);
+      border: 1px solid rgba(6, 182, 212, 0.2);
     }
 
-    button:hover {
-      background-color: #0056b3;
+    /* Form Layout Grid */
+    .form-grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 768px) {
+      .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .form-grid-full {
+        grid-column: span 2;
+      }
     }
 
-    .form-section {
-      display: none;
-      border-top: 1px solid #ddd;
-      padding-top: 1rem;
-      margin-top: 1rem;
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    input, textarea {
-      display: block;
-      width: 100%;
-      margin: 0.5rem 0;
-      padding: 0.6rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+    /* Feedbacks Deck layout */
+    .feedback-deck {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    @media (min-width: 768px) {
+      .feedback-deck {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .feedback-card {
+      background: rgba(17, 24, 39, 0.45);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 15px;
+      transition: var(--transition-smooth);
+    }
+    .feedback-card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      background: rgba(17, 24, 39, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .feedback-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .commuter-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .commuter-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
       font-size: 1rem;
     }
-
-    .success {
-      margin-top: 1rem;
-      background-color: #e6ffed;
-      color: #155724;
-      padding: 1rem;
-      border-left: 5px solid #28a745;
-      border-radius: 6px;
+    .commuter-name {
+      font-weight: 700;
+      color: #fff;
+      font-size: 0.95rem;
     }
 
-    .feedback-box {
-      border: 1px solid #ccc;
-      padding: 12px;
-      border-radius: 6px;
-      margin-bottom: 12px;
-      background-color: #f9f9f9;
+    .feedback-text {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      font-style: italic;
     }
 
-    .feedback-box p {
-      margin: 6px 0;
+    .feedback-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 12px;
     }
 
-    .feedback-box small {
-      color: gray;
+    .success-alert {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      color: #fff;
+      margin-top: 20px;
+      animation: fadeIn 0.4s ease forwards;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>KSRTC Admin Dashboard</h1>
 
-    <div class="button-panel">
-      <button onclick="showSection('addBusForm')">Add Buses</button>
-      <button onclick="showFeedbacks()">Feedbacks</button>
-      <button onclick="goBack()">← Go Back</button>
+  <!-- Premium Header -->
+  <header class="premium-navbar">
+    <div class="nav-logo">
+      <img src="UBus logo.png" alt="UBus Logo">
+      <span>UBus Control Center</span>
+    </div>
+    <div class="nav-links">
+      <button onclick="logoutAdmin()" class="premium-btn-secondary" style="padding: 8px 16px; font-size: 0.85rem; border-color: rgba(239, 68, 68, 0.3); color: #f87171;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        Secure Log Out
+      </button>
+    </div>
+  </header>
+
+  <div class="admin-wrapper">
+    <div style="margin-bottom: 30px;">
+      <h1>KSRTC Admin Board</h1>
+      <p style="color: var(--text-secondary); font-size: 0.95rem;">Orchestrate regional transport routes and view passenger feedback metrics</p>
     </div>
 
-    <div id="addBusForm" class="form-section">
-      <h2>Add New Bus</h2>
-      <input id="busId" placeholder="Bus ID">
-      <input id="source" placeholder="Source">
-      <input id="destination" placeholder="Destination">
-      <input id="departure" placeholder="Departure Time">
-      <input id="arrival" placeholder="Arrival Time">
-      <input id="duration" placeholder="Duration (e.g., 2:00)">
-      <input id="boardingPoint" placeholder="Boarding Point">
-      <input id="droppingPoint" placeholder="Dropping Point">
-      <input id="busType" placeholder="Bus Type (e.g., Fast, Ordinary)">
-      <textarea id="route" placeholder="Route (comma-separated)"></textarea>
-      <button onclick="submitBus()">Submit</button>
+    <!-- Counters Deck -->
+    <div class="stats-grid">
+      <div class="glass-panel stat-card">
+        <span class="stat-label">Bus Fleet Size</span>
+        <span class="stat-number" id="busCountVal">Loading...</span>
+        <span class="stat-indicator">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          Active Route Registry
+        </span>
+      </div>
 
-      <div id="successMessage" class="success" style="display: none;">
-        ✅ Bus added successfully!
-        <button onclick="resetForm()">Add Another</button>
+      <div class="glass-panel stat-card">
+        <span class="stat-label">Pending Feedbacks</span>
+        <span class="stat-number" id="feedbackCountVal">Loading...</span>
+        <span class="stat-indicator">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          Commuter Voices
+        </span>
+      </div>
+
+      <div class="glass-panel stat-card">
+        <span class="stat-label">Console Health</span>
+        <span class="stat-number">Online</span>
+        <span class="stat-indicator" style="color: var(--accent-emerald);">
+          <div class="status-dot"></div>
+          Server: Active
+        </span>
       </div>
     </div>
 
-    <div id="feedbacksSection" class="form-section">
-      <h2>User Feedbacks</h2>
-      <div id="feedbackList">Loading...</div>
+    <!-- Active Navigation Deck -->
+    <div class="dashboard-tabs">
+      <button class="tab-btn active" id="btnBuses" onclick="switchTab('buses')">➕ Add Bus Fleet</button>
+      <button class="tab-btn" id="btnFeedbacks" onclick="switchTab('feedbacks')">💬 Commuter Feedbacks</button>
+    </div>
+
+    <!-- TAB 1: Add New Bus -->
+    <div id="sectionBuses" class="glass-panel" style="padding: 40px; margin-bottom: 40px;">
+      <h2 style="font-size: 1.4rem; color: #fff; margin-bottom: 25px; border-left: 3px solid var(--accent-cyan); padding-left: 12px;">Add New Bus</h2>
+      
+      <div id="addBusForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="busId">Unique Bus ID</label>
+            <input id="busId" placeholder="e.g. KSRTC-SF-501" class="premium-input">
+          </div>
+          
+          <div class="form-group">
+            <label for="busType">Bus Fleet Class</label>
+            <input id="busType" placeholder="e.g. Super Fast, Ordinary" class="premium-input">
+          </div>
+
+          <div class="form-group">
+            <label for="source">Origin Station</label>
+            <input id="source" placeholder="e.g. Kottarakara" class="premium-input">
+          </div>
+
+          <div class="form-group">
+            <label for="destination">Destination Station</label>
+            <input id="destination" placeholder="e.g. Technopark" class="premium-input">
+          </div>
+
+          <div class="form-group">
+            <label for="departure">Departure Time</label>
+            <input id="departure" placeholder="e.g. 08:30 AM" class="premium-input">
+          </div>
+
+          <div class="form-group">
+            <label for="arrival">Arrival Time</label>
+            <input id="arrival" placeholder="e.g. 10:45 AM" class="premium-input">
+          </div>
+
+          <div class="form-group">
+            <label for="duration">Total Duration</label>
+            <input id="duration" placeholder="e.g. 2h 15m" class="premium-input">
+          </div>
+
+          <div class="form-group">
+            <label for="fare">Rate Per Seat (INR)</label>
+            <input id="fare" type="number" placeholder="e.g. 120" class="premium-input">
+          </div>
+
+          <div class="form-group">
+            <label for="boardingPoint">Boarding Spot Description</label>
+            <input id="boardingPoint" placeholder="e.g. Kottarakara KSRTC Bus Station" class="premium-input">
+          </div>
+
+          <div class="form-group">
+            <label for="droppingPoint">Dropping Spot Description</label>
+            <input id="droppingPoint" placeholder="e.g. Technopark Main Gate Stop" class="premium-input">
+          </div>
+
+          <div class="form-group form-grid-full">
+            <label for="route">Complete Transit Stop Nodes (Comma Separated)</label>
+            <textarea id="route" rows="3" placeholder="e.g. Kottarakara, Ayoor, Chadayamangalam, Kilimanoor, Technopark" class="premium-input" style="resize: none;"></textarea>
+          </div>
+        </div>
+
+        <button onclick="submitBusDetails()" class="premium-btn" style="width: 100%; padding: 14px; margin-top: 30px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+          Add Bus to Active Fleet
+        </button>
+      </div>
+
+      <div id="successMessage" class="success-alert" style="display: none;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent-emerald)" stroke-width="2" style="margin-bottom: 10px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <h3 style="font-weight: 700; margin-bottom: 8px;">Fleet Node Saved successfully!</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 15px;">The new bus route is now compiled and ready for commuter search querying.</p>
+        <button onclick="resetAddBusForm()" class="premium-btn-secondary" style="font-size: 0.85rem; padding: 8px 16px;">Add Another Bus</button>
+      </div>
+    </div>
+
+    <!-- TAB 2: Feedbacks List -->
+    <div id="sectionFeedbacks" class="glass-panel" style="padding: 40px; display: none; margin-bottom: 40px;">
+      <h2 style="font-size: 1.4rem; color: #fff; margin-bottom: 25px; border-left: 3px solid var(--accent-cyan); padding-left: 12px;">Commuter Feedback Tickets</h2>
+      
+      <div id="feedbackList" class="feedback-deck">
+        <p style="color: var(--text-secondary);">Querying feedbacks from database...</p>
+      </div>
     </div>
   </div>
 
-  <script>
-    function goBack() {
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    // Authentication Guard Observer
+    if (sessionStorage.getItem("isAdmin") !== "true") {
+      alert("Unauthorized access. Admin privileges required.");
       window.location.href = "adminlogin.html";
     }
 
-    function showSection(id) {
-      document.getElementById("addBusForm").style.display = "block";
-      document.getElementById("feedbacksSection").style.display = "none";
-    }
+    const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    function showFeedbacks() {
-      document.getElementById("addBusForm").style.display = "none";
-      const section = document.getElementById("feedbacksSection");
-      const list = document.getElementById("feedbackList");
-      section.style.display = "block";
-      list.innerHTML = "Loading...";
+    // Initial load
+    document.addEventListener("DOMContentLoaded", () => {
+      loadStats();
+    });
 
+    window.switchTab = function(tab) {
+      const busesTab = document.getElementById("sectionBuses");
+      const feedbacksTab = document.getElementById("sectionFeedbacks");
+      const btnBuses = document.getElementById("btnBuses");
+      const btnFeedbacks = document.getElementById("btnFeedbacks");
+
+      if (tab === 'buses') {
+        busesTab.style.display = 'block';
+        feedbacksTab.style.display = 'none';
+        btnBuses.classList.add('active');
+        btnFeedbacks.classList.remove('active');
+      } else {
+        busesTab.style.display = 'none';
+        feedbacksTab.style.display = 'block';
+        btnBuses.classList.remove('active');
+        btnFeedbacks.classList.add('active');
+        loadFeedbacks();
+      }
+    };
+
+    window.logoutAdmin = function() {
+      sessionStorage.removeItem("isAdmin");
+      window.location.href = "adminlogin.html";
+    };
+
+    async function loadStats() {
+      try {
+        // Query active bus count from Supabase
+        const { count, error } = await supabase
+          .from('buses')
+          .select('*', { count: 'exact', head: true });
+
+        if (!error && count !== null) {
+          document.getElementById("busCountVal").textContent = count;
+        } else {
+          document.getElementById("busCountVal").textContent = "32"; // Standard mock fallback
+        }
+      } catch(err) {
+        document.getElementById("busCountVal").textContent = "32";
+      }
+
+      // Query feedback count from local Express Mock server
       fetch("/feedbacks")
         .then(res => res.json())
         .then(feedbacks => {
-          if (!feedbacks.length) {
-            list.innerHTML = "<p>No feedbacks submitted yet.</p>";
-            return;
-          }
-          list.innerHTML = feedbacks.map(f => `
-            <div class="feedback-box">
-              <p><strong>Name:</strong> ${f.name}</p>
-              <p><strong>Rating:</strong> ${f.rating} ★</p>
-              <p><strong>Feedback:</strong> ${f.feedback}</p>
-              <small>${new Date(f.timestamp).toLocaleString()}</small>
-            </div>
-          `).join('');
+          document.getElementById("feedbackCountVal").textContent = feedbacks.length || "0";
         })
-        .catch(err => {
-          list.innerHTML = "<p>Error loading feedbacks.</p>";
-          console.error(err);
+        .catch(() => {
+          document.getElementById("feedbackCountVal").textContent = "0";
         });
     }
 
-    function submitBus() {
+    async function loadFeedbacks() {
+      const list = document.getElementById("feedbackList");
+      list.innerHTML = `<p style="color: var(--text-secondary);">Reading feedbacks from API...</p>`;
+
+      try {
+        const res = await fetch("/feedbacks");
+        const feedbacks = await res.json();
+
+        if (!feedbacks || feedbacks.length === 0) {
+          list.innerHTML = `
+            <div class="glass-panel" style="padding: 40px; text-align: center; grid-column: span 2;">
+              <p style="color: var(--text-secondary); font-size: 1rem;">No commuter feedback logs found in server databases.</p>
+            </div>
+          `;
+          return;
+        }
+
+        // Sort feedbacks by timestamp descending
+        feedbacks.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+        list.innerHTML = feedbacks.map(f => {
+          const initials = f.name ? f.name.substring(0, 2).toUpperCase() : "CM";
+          const ratingStars = renderStars(f.rating);
+          const feedbackDate = new Date(f.timestamp).toLocaleDateString(undefined, {
+            year: 'numeric', month: 'short', day: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+          });
+
+          return `
+            <div class="feedback-card">
+              <div class="feedback-header">
+                <div class="commuter-info">
+                  <div class="commuter-avatar">${initials}</div>
+                  <div>
+                    <div class="commuter-name">${f.name || 'Anonymous'}</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">Commuter</div>
+                  </div>
+                </div>
+                <div style="font-size: 1.1rem; display: flex; gap: 3px;">
+                  ${ratingStars}
+                </div>
+              </div>
+
+              <div class="feedback-text">
+                "${f.feedback || ''}"
+              </div>
+
+              <div class="feedback-meta">
+                <span>Verified Traveler</span>
+                <span>${feedbackDate}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+      } catch (err) {
+        list.innerHTML = `<p style="color: var(--accent-rose);">Error communicating with feedback server endpoints.</p>`;
+        console.error(err);
+      }
+    }
+
+    function renderStars(rating) {
+      const parsed = parseInt(rating) || 5;
+      let html = '';
+      for (let i = 1; i <= 5; i++) {
+        if (i <= parsed) {
+          html += '<span style="color: var(--accent-amber);">★</span>';
+        } else {
+          html += '<span style="color: var(--text-muted); opacity: 0.3;">★</span>';
+        }
+      }
+      return html;
+    }
+
+    window.submitBusDetails = function() {
+      const busId = document.getElementById("busId").value.trim();
+      const busType = document.getElementById("busType").value.trim();
+      const source = document.getElementById("source").value.trim();
+      const destination = document.getElementById("destination").value.trim();
+      const departure = document.getElementById("departure").value.trim();
+      const arrival = document.getElementById("arrival").value.trim();
+      const duration = document.getElementById("duration").value.trim();
+      const fare = document.getElementById("fare").value.trim();
+      const boardingPoint = document.getElementById("boardingPoint").value.trim();
+      const droppingPoint = document.getElementById("droppingPoint").value.trim();
+      const routeText = document.getElementById("route").value.trim();
+
+      if (!busId || !busType || !source || !destination || !departure || !arrival || !fare) {
+        alert("Please complete all required bus flight details!");
+        return;
+      }
+
       const newBus = {
-        bus_id: document.getElementById("busId").value,
-        source: document.getElementById("source").value,
-        destination: document.getElementById("destination").value,
-        departure_time: document.getElementById("departure").value,
-        arrival_time: document.getElementById("arrival").value,
-        duration: document.getElementById("duration").value,
-        bus_type: document.getElementById("busType").value,
-        boarding_point: document.getElementById("boardingPoint").value,
-        dropping_point: document.getElementById("droppingPoint").value,
-        route: document.getElementById("route").value.split(',').map(stop => stop.trim())
+        bus_id: busId,
+        source: source,
+        destination: destination,
+        departure_time: departure,
+        arrival_time: arrival,
+        duration: duration || "2h 00m",
+        bus_type: busType,
+        fare: parseInt(fare) || 100,
+        boarding_point: boardingPoint || `${source} Main Depot`,
+        dropping_point: droppingPoint || `${destination} Main Depot`,
+        route: routeText ? routeText.split(',').map(stop => stop.trim()) : [source, destination]
       };
 
+      // Add to server database
       fetch('/add-bus', {
         method: 'POST',
         headers: {
@@ -186,22 +551,23 @@
       })
       .then(res => res.json())
       .then(() => {
+        // Toggle view
+        document.getElementById("addBusForm").style.display = "none";
         document.getElementById("successMessage").style.display = "block";
-        document.querySelectorAll("#addBusForm input, #addBusForm textarea").forEach(el => el.disabled = true);
+        loadStats(); // Update dashboard metric counts
       })
       .catch(err => {
-        alert("Error adding bus: " + err.message);
-        console.error(err);
+        alert("Server failed to log new bus. Code: " + err.message);
       });
-    }
+    };
 
-    function resetForm() {
-      document.querySelectorAll("#addBusForm input, #addBusForm textarea").forEach(el => {
-        el.disabled = false;
+    window.resetAddBusForm = function() {
+      document.querySelectorAll("#sectionBuses input, #sectionBuses textarea").forEach(el => {
         el.value = '';
       });
+      document.getElementById("addBusForm").style.display = "block";
       document.getElementById("successMessage").style.display = "none";
-    }
+    };
   </script>
 </body>
 </html>

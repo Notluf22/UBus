@@ -1,166 +1,407 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UBus - Confirm Booking</title>
-<style>
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    background: rgb(152, 166, 139);
-    margin: 0;
-    padding: 20px;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seat Selection & Booking - UBus</title>
+  <link rel="icon" href="UBus logo.png" />
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+    body {
+      background: radial-gradient(circle at 50% 0%, #1e293b 0%, var(--bg-primary) 70%);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    .booking-wrapper {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+      width: 100%;
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 30px;
+      background: linear-gradient(135deg, #ffffff 40%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .booking-grid {
+      display: grid;
+      gap: 30px;
+    }
+    
+    @media (min-width: 768px) {
+      .booking-grid {
+        grid-template-columns: 1fr 1.2fr;
+      }
+    }
+    
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 20px;
+      border-left: 3px solid var(--accent-cyan);
+      padding-left: 10px;
+    }
+    
+    /* Seat map details */
+    .bus-cabin {
+      max-width: 320px;
+      margin: 0 auto;
+      background: rgba(10, 15, 29, 0.6);
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 30px 20px 20px 20px;
+      position: relative;
+    }
+    
+    .driver-section {
+      display: flex;
+      justify-content: flex-end;
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+    
+    .driver-wheel {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      border: 4px double var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+    
+    .seat-legend {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+      font-size: 0.8rem;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-secondary);
+    }
+    
+    .legend-box {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+    }
+    
+    .legend-box.avail { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); }
+    .legend-box.sel { background: var(--accent-cyan); }
+    .legend-box.bkd { background: rgba(255, 255, 255, 0.03); border: 1px dashed rgba(255, 255, 255, 0.04); }
+    
+    /* Confirmation Overlay */
+    .confirmation {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      border-radius: 16px;
+      padding: 40px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    
+    .glow-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, var(--accent-emerald) 0%, #065f46 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    
+    .checkmark {
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+    }
+    
+    #successText {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.5;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Invoice details overlay */
+    .invoice-card {
+      background: rgba(17, 24, 39, 0.45);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 25px;
+    }
+    
+    .invoice-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+    
+    .invoice-item:last-child {
+      margin-bottom: 0;
+      border-top: 1px dashed rgba(255, 255, 255, 0.1);
+      padding-top: 8px;
+      font-weight: 700;
+      color: #fff;
+    }
 
-  .booking-container {
-    background: white;
-    padding: 25px;
-    max-width: 500px;
-    margin: 140px auto;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    text-align: center;
-    animation: slideUp 0.5s ease-out;
-  }
-
-  h2 { font-size: 35px; margin-bottom: 20px; }
-
-  .btn {
-    margin-top: 20px;
-    padding: 10px 16px;
-    background-color: rgb(18, 179, 18);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-
-  .btn:hover { background-color: green; }
-
-  .confirmation {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.8);
-    background: white;
-    border-radius: 12px;
-    padding: 40px;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-    box-shadow: 0 0 40px rgba(0,0,0,0.2);
-    animation: pop 0.6s ease-out forwards;
-  }
-
-  .glow-circle {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background: radial-gradient(circle at center, #4caf50, #2e7d32);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: pulse 1.2s ease-in-out infinite;
-  }
-
-  .checkmark { color: white; font-size: 50px; }
-
-  .bus-info p {
-    text-align: left;
-    font-size: large;
-    margin: 5px 0;
-  }
-
-  @keyframes pop {
-    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
-    50% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
-    100% { transform: translate(-50%, -50%) scale(1); }
-  }
-
-  @keyframes pulse {
-    0%,100% { box-shadow: 0 0 0 0 rgba(76,175,80,0.6); }
-    50% { box-shadow: 0 0 0 20px rgba(76,175,80,0); }
-  }
-
-  @keyframes slideUp {
-    from { transform: translateY(30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-</style>
+    @keyframes pop {
+      to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+  </style>
 </head>
 <body>
 
-<div class="booking-container">
-  <h2>Confirm Booking 🚌</h2>
-  <div class="bus-info" id="busInfo">Loading bus details...</div>
-  <form id="bookingForm">
-    <button type="submit" class="btn">Confirm Booking</button>
-  </form>
-</div>
+  <!-- Premium Header -->
+  <header class="premium-navbar">
+    <a href="mainpage.html" class="nav-logo">
+      <img src="UBus logo.png" alt="UBus Logo">
+      <span>UBus</span>
+    </a>
+    <div class="nav-links">
+      <a href="dashboard.html" style="color: var(--accent-cyan);">Commute Hub</a>
+      <a href="feedback.html">Feedback</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact Team</a>
+      <a href="account.html" class="nav-profile">
+        <img src="account.png" alt="Account Settings">
+      </a>
+    </div>
+  </header>
 
-<div class="confirmation" id="confirmationMsg">
-  <div class="glow-circle">
-    <div class="checkmark">✔</div>
+  <div class="booking-wrapper">
+    <h1>Confirm Booking</h1>
+    
+    <div class="booking-grid">
+      <!-- Seat Map Visualizer -->
+      <div class="glass-panel" style="padding: 30px;">
+        <div class="card-title">Interactive Seat Map</div>
+        
+        <div class="bus-cabin">
+          <div class="driver-section">
+            <div class="driver-wheel" title="Driver's Seat">⎈</div>
+          </div>
+          
+          <div class="bus-seat-grid" id="seatGrid">
+            <!-- Dynamically populated seats -->
+          </div>
+        </div>
+        
+        <div class="seat-legend">
+          <div class="legend-item"><div class="legend-box avail"></div>Available</div>
+          <div class="legend-item"><div class="legend-box sel"></div>Selected</div>
+          <div class="legend-item"><div class="legend-box bkd"></div>Occupied</div>
+        </div>
+      </div>
+      
+      <!-- Booking Details Form -->
+      <div class="glass-panel" style="padding: 30px;">
+        <div class="card-title">Passenger Details</div>
+        
+        <form id="bookingForm">
+          <div class="form-group">
+            <label for="passengerName">Full Name</label>
+            <input type="text" id="passengerName" placeholder="Enter traveler name" class="premium-input" required />
+          </div>
+          
+          <div class="form-group">
+            <label for="passengerEmail">Email Address</label>
+            <input type="email" id="passengerEmail" placeholder=" traveler@example.com" class="premium-input" required />
+          </div>
+          
+          <div class="form-group">
+            <label for="passengerPhone">Mobile Number</label>
+            <input type="tel" id="passengerPhone" placeholder="Enter 10-digit number" class="premium-input" required pattern="[0-9]{10}" />
+          </div>
+          
+          <!-- Live Invoice Calculator -->
+          <div class="invoice-card">
+            <div class="invoice-item">
+              <span style="color: var(--text-secondary);">Seats Selected</span>
+              <span id="selectedSeatsLabel" style="font-weight: 700; color: var(--accent-cyan);">None</span>
+            </div>
+            <div class="invoice-item">
+              <span style="color: var(--text-secondary);">Rate Per Seat</span>
+              <span id="farePerSeatLabel">₹0</span>
+            </div>
+            <div class="invoice-item">
+              <span>Total Price</span>
+              <span id="totalFareLabel" style="color: var(--accent-emerald);">₹0</span>
+            </div>
+          </div>
+          
+          <button type="submit" class="premium-btn" style="width: 100%; padding: 14px; margin-top: 25px;">Confirm Ticket Booking</button>
+        </form>
+      </div>
+    </div>
   </div>
-  <div id="successText">Booking Confirmed!<br>Redirecting to your ticket...</div>
-</div>
 
-<script type="module">
-  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+  <!-- Animated Success Overlay -->
+  <div class="confirmation glass-panel" id="confirmationMsg">
+    <div class="glow-circle">
+      <div class="checkmark">✔</div>
+    </div>
+    <div id="successText">Booking Verified!<br><span style="font-size: 0.95rem; font-weight: 500; color: var(--text-secondary);">Generating your E-Ticket...</span></div>
+  </div>
 
-  const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
-  const client = createClient(SUPABASE_URL, SUPABASE_KEY);
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    import { auth } from './firebase.js';
 
-  async function initBooking() {
+    // Route Protection
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        document.getElementById("passengerEmail").value = user.email;
+        // Default passenger name based on email prefix
+        const username = user.email.split('@')[0];
+        document.getElementById("passengerName").value = username.charAt(0).toUpperCase() + username.slice(1);
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+
+    const SUPABASE_URL = "https://wztfguawfjvjuvkwairh.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6dGZndWF3Zmp2anV2a3dhaXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MTc4OTAsImV4cCI6MjA3NjA5Mzg5MH0.3P2_rRQH4lcRyvzf00swTyte0bz68GSVSJjDobY8CsE";
+    const client = createClient(SUPABASE_URL, SUPABASE_KEY);
+
     const selectedBusId = sessionStorage.getItem("selectedBusId");
-    const farePerSeat = parseInt(sessionStorage.getItem("fare") || "0");
-    const busInfoDiv = document.getElementById("busInfo");
+    const baseFare = parseInt(sessionStorage.getItem("fare") || "10");
+    
+    let activeSelectedSeats = [];
+    const occupiedSeats = ["A3", "B1", "C4", "E2"]; // Pre-occupy a few seats to make it realistic
 
-    if (!selectedBusId) {
-      busInfoDiv.innerHTML = "<p>❌ No bus selected. Please go back and select a bus.</p>";
-      document.getElementById("bookingForm").style.display = "none";
-      return;
-    }
+    document.getElementById("farePerSeatLabel").textContent = `₹${baseFare}`;
 
-    try {
-      const { data: bus, error } = await client
-        .from("buses")
-        .select("*")
-        .eq("bus_id", selectedBusId)
-        .single();
-
-      if (error || !bus) throw error;
-
-      busInfoDiv.innerHTML = `
-        <p><strong>Bus:</strong> ${bus.bus_type}</p>
-        <p><strong>From:</strong> ${bus.source} ➝ <strong>To:</strong> ${bus.destination}</p>
-        <p><strong>Departure:</strong> ${bus.departure_time || "N/A"}</p>
-        <p><strong>Arrival:</strong> ${bus.arrival_time || "N/A"}</p>
-        <p><strong>Fare per seat:</strong> ₹${bus.fare || farePerSeat}</p>
-      `;
-
-      document.getElementById("bookingForm").addEventListener("submit", (e) => {
-        e.preventDefault();
-        document.getElementById("confirmationMsg").style.display = "flex";
-
-        setTimeout(() => {
-          window.location.href = "ticket.html";
-        }, 1800);
+    function renderSeats() {
+      const grid = document.getElementById("seatGrid");
+      grid.innerHTML = "";
+      
+      const rows = ["A", "B", "C", "D", "E", "F"];
+      
+      rows.forEach(row => {
+        for(let seatNum = 1; seatNum <= 4; seatNum++) {
+          const seatId = `${row}${seatNum}`;
+          
+          if (seatNum === 3) {
+            // Aisle spacer column
+            const aisle = document.createElement("div");
+            aisle.classList.add("bus-aisle");
+            grid.appendChild(aisle);
+          }
+          
+          const seatElement = document.createElement("div");
+          seatElement.classList.add("seat");
+          seatElement.textContent = seatId;
+          
+          if(occupiedSeats.includes(seatId)) {
+            seatElement.classList.add("booked");
+            seatElement.title = "Seat occupied";
+          } else {
+            seatElement.classList.add("available");
+            seatElement.addEventListener("click", () => toggleSeatSelection(seatId, seatElement));
+          }
+          
+          grid.appendChild(seatElement);
+        }
       });
-
-    } catch (err) {
-      console.error("Error loading bus:", err);
-      busInfoDiv.innerHTML = "<p>⚠️ Unable to load bus details.</p>";
-      document.getElementById("bookingForm").style.display = "none";
     }
-  }
 
-  window.addEventListener("DOMContentLoaded", initBooking);
-</script>
+    function toggleSeatSelection(seatId, element) {
+      if(activeSelectedSeats.includes(seatId)) {
+        activeSelectedSeats = activeSelectedSeats.filter(id => id !== seatId);
+        element.classList.remove("selected");
+      } else {
+        activeSelectedSeats.push(seatId);
+        element.classList.add("selected");
+      }
+      
+      updateInvoice();
+    }
 
+    function updateInvoice() {
+      const selectedSeatsText = activeSelectedSeats.length > 0 ? activeSelectedSeats.join(", ") : "None";
+      document.getElementById("selectedSeatsLabel").textContent = selectedSeatsText;
+      
+      const totalFare = activeSelectedSeats.length * baseFare;
+      document.getElementById("totalFareLabel").textContent = `₹${totalFare}`;
+    }
+
+    document.getElementById("bookingForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      
+      if(activeSelectedSeats.length === 0) {
+        alert("Please select at least one seat from the bus seat map!");
+        return;
+      }
+      
+      const passengerName = document.getElementById("passengerName").value.trim();
+      const passengerEmail = document.getElementById("passengerEmail").value.trim();
+      const passengerPhone = document.getElementById("passengerPhone").value.trim();
+      const totalFare = activeSelectedSeats.length * baseFare;
+      
+      // Save full booking metadata to sessionStorage
+      sessionStorage.setItem("passengerName", passengerName);
+      sessionStorage.setItem("passengerEmail", passengerEmail);
+      sessionStorage.setItem("passengerPhone", passengerPhone);
+      sessionStorage.setItem("seatsBooked", activeSelectedSeats.length.toString());
+      sessionStorage.setItem("selectedSeatsList", activeSelectedSeats.join(", "));
+      sessionStorage.setItem("totalFare", totalFare.toString());
+      
+      // Show success animation overlay
+      document.getElementById("confirmationMsg").style.display = "flex";
+      
+      setTimeout(() => {
+        window.location.href = "ticket.html";
+      }, 1800);
+    });
+
+    renderSeats();
+  </script>
 </body>
 </html>
